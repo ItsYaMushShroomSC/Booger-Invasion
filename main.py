@@ -1,3 +1,5 @@
 # Authors: Sophia, Ayushi, Katherine
 
-# Test
+class Plants():
+    def __init__(self):
+        pass
