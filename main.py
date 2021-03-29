@@ -7,6 +7,8 @@ from pygame.locals import *
 
 pygame.init()
 
+# Hi
+
 # Global Variables:
 
  # Surface:
