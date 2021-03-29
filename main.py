@@ -1,4 +1,4 @@
-# Authors: Sophia, Ayushi, Katherine
+# Authors: Sophia, Ayushi, Theo
 
 # Imports:
 import pygame
@@ -7,10 +7,13 @@ from pygame.locals import *
 
 pygame.init()
 
+
+#This is a test to see if I can do a pull request
+
 # Global Variables:
 
  # Surface:
-DISPLAYSURF = pygame.display.set_mode((0, 0), pygame.NOFRAME)
+DISPLAYSURF = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 pygame.display.set_caption('Cleaning Supplies vs Bugs')
 
 
