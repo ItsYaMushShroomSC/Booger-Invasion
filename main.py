@@ -44,11 +44,15 @@ PINK  = (255, 153, 204)
 
 gameLevel = 0 # 0 means that there is no game being played and the opening screen should be displayed
 openScreenRects = []  # stores rectangles/buttons of the opening screen
-
+floorGrid = [] # floor grid 2D array
 
 # Classes Are in other .py files
 
 # Non-Class Methods:
+
+def drawTiles():
+    global floorGrid
+    pass
 
 def drawBackground():
 
@@ -105,7 +109,6 @@ def drawOpeningScreen():
     openScreenRects.append((textRect))  # adds Holiday snake rect at index 3
     textRect.midtop = (windowWidth / 2, windowHeight / 7 + (fontSize*10))
     DISPLAYSURF.blit(textSurface, textRect)
-
 
 
 def resetVariables():
