@@ -24,8 +24,9 @@ scaleFactorW = int(windowWidth/1536)
 scaleFactorH = int(windowHeight/864)
 
  # Text Font:
-bugFont = pygame.font.Font('bugFont.ttf', 54*scaleFactorH)
-cleaningFont = pygame.font.Font('CleaningSupplyFont.otf', 54 * scaleFactorH)
+fontSize = 54 * scaleFactorH
+bugFont = pygame.font.Font('bugFont.ttf', fontSize)
+cleaningFont = pygame.font.Font('CleaningSupplyFont.otf', fontSize)
 
  # Time:
 FPS = 160
@@ -77,32 +78,32 @@ def drawOpeningScreen():
 
     textSurface = cleaningFont.render('Cleaning Supplies Vs. Bugs:', True, WHITE, BLACK)
     textRect = textSurface.get_rect()
-    textRect.midtop = (windowWidth / 2, windowHeight / 7)
+    textRect.midtop = (windowWidth / 2, windowHeight / 8 + (fontSize))
     DISPLAYSURF.blit(textSurface, textRect)
     textSurface = bugFont.render('Level One', True, BLACK, RED) #LADYBUGS??
     textRect = textSurface.get_rect()
     openScreenRects.append((textRect))  # adds Classic snake rect at index 0
-    textRect.midtop = (windowWidth / 2, 2 * windowHeight / 7)
+    textRect.midtop = (windowWidth / 2, windowHeight / 7 + (fontSize*2))
     DISPLAYSURF.blit(textSurface, textRect)
     textSurface = bugFont.render('Level Two', True, BLACK, GREEN)
     textRect = textSurface.get_rect()
     openScreenRects.append((textRect))  # adds Accelerate snake rect at index 1
-    textRect.midtop = (windowWidth / 2, 3 * windowHeight / 7)
+    textRect.midtop = (windowWidth / 2, windowHeight / 7 + (fontSize*4))
     DISPLAYSURF.blit(textSurface, textRect)
     textSurface = bugFont.render('Level Three', True, BLACK, LBLUE)
     textRect = textSurface.get_rect()
     openScreenRects.append((textRect))  # adds 2P snake rect at index 2
-    textRect.midtop = (windowWidth / 2, 4 * windowHeight / 7)
+    textRect.midtop = (windowWidth / 2, windowHeight / 7 + (fontSize*6))
     DISPLAYSURF.blit(textSurface, textRect)
     textSurface = bugFont.render('Level Four', True, BLACK, CYAN)
     textRect = textSurface.get_rect()
     openScreenRects.append((textRect))  # adds Holiday snake rect at index 3
-    textRect.midtop = (windowWidth / 2, 5 * windowHeight / 7)
+    textRect.midtop = (windowWidth / 2, windowHeight / 7 + (fontSize*8))
     DISPLAYSURF.blit(textSurface, textRect)
     textSurface = bugFont.render('Level Five', True, BLACK, PINK)
     textRect = textSurface.get_rect()
     openScreenRects.append((textRect))  # adds Holiday snake rect at index 3
-    textRect.midtop = (windowWidth / 2, 6 * windowHeight / 7)
+    textRect.midtop = (windowWidth / 2, windowHeight / 7 + (fontSize*10))
     DISPLAYSURF.blit(textSurface, textRect)
 
 
