@@ -52,8 +52,24 @@ floorGrid = [] # floor grid 2D array
 
 # Non-Class Methods:
 
-def formFloorGridArray():
+def drawAllCleaningSupplies():
     pass
+
+def getCleaningSupplyPos(x, y): # the pixel position of the top left corner of the box is returned
+    pass
+
+def getTile(x, y): # (0, 0) is the top left tile
+    return floorGrid[y][x]
+
+def setTile(x, y, cleaningSupplyType): # the tile in that position is set as cleaningSupplyType (0,0) is top left tile
+    floorGrid[y][x] = cleaningSupplyType
+
+def formFloorGridArray():# Fills all places in FloorGridArray with None
+    global floorGrid
+
+    row = 5
+    col = 9
+    floorGrid = [[None] * row for i in range(col)]
 
 def drawTiles():
     global floorGrid # 5 by 7 grid 5 height and 7 length
@@ -139,7 +155,7 @@ def drawOpeningScreen():
 
 
 def resetVariables():
-    pass
+    formFloorGridArray()
 
 def terminate(): # terminates game
    pygame.quit()
@@ -149,6 +165,8 @@ def main():
     global DISPLAYSURF, gameLevel
 
     clicked = False
+
+    resetVariables()
 
     while True:
         for event in pygame.event.get():
@@ -190,6 +208,12 @@ def main():
         pygame.display.update()
         FPSCLOCK.tick(FPS)
 
+#TESTS
+def printFloorGridAry(): # Print the floor grid array contents whenever you want to see it
+    for row in range(5):
+        for col in range(9):
+            print(str(floorGrid[col][row]) + " ", end='')
+        print()
 
 # RUN MAIN
 
@@ -197,5 +221,4 @@ if __name__ == '__main__':
    main()
 
 
-# TESTS
 
