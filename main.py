@@ -22,6 +22,8 @@ windowWidth = DISPLAYSURF.get_width() # resized to fullscreen
 windowHeight = DISPLAYSURF.get_height() # resized to fullscreen
 scaleFactorW = int(windowWidth/1536)
 scaleFactorH = int(windowHeight/864)
+XMARGIN = 200 * scaleFactorW
+YMARGIN = 100 * scaleFactorH
 
  # Text Font:
 fontSize = 54 * scaleFactorH
@@ -50,14 +52,39 @@ floorGrid = [] # floor grid 2D array
 
 # Non-Class Methods:
 
-def drawTiles():
-    global floorGrid
+def formFloorGridArray():
     pass
+
+def drawTiles():
+    global floorGrid # 5 by 7 grid 5 height and 7 length
+    scaleFactor = scaleFactorH
+    if scaleFactorW < scaleFactorH:
+        scaleFactor = scaleFactorW
+
+    img1 = pygame.transform.smoothscale(pygame.image.load('Floor Tile-1.png.png'), (100 * scaleFactor, 121 * scaleFactor))
+    img2 = pygame.transform.smoothscale(pygame.image.load('Floor Tile-2.png.png'), (100 * scaleFactor, 121 * scaleFactor))
+    img = img1
+    XMARGIN, YMARGIN = int((windowWidth-(100*scaleFactor * 9))/2), int((windowHeight-(121 * scaleFactor * 5))/2)
+    left, top = XMARGIN, YMARGIN
+    floorNum = 1
+
+    for col in range(9):
+        for row in range(5):
+            if floorNum % 2 == 0:
+                img = img2
+            else:
+                img = img1
+
+            floorNum += 1
+            imgRect = img.get_rect()
+            imgRect.topleft = (left + col*100, top + row*121)
+            DISPLAYSURF.blit(img, imgRect)
 
 def drawBackground():
 
     img = pygame.transform.smoothscale(pygame.image.load('bugsWorldBackground.jpg').convert_alpha(),  (windowWidth, windowHeight))
     DISPLAYSURF.blit(img, (0, 0))
+    drawTiles()
 
 def determineLevel(mousePosX, mousePosY):
     global openScreenRects
