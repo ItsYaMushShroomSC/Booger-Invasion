@@ -4,6 +4,7 @@
 import pygame
 import sys
 from pygame.locals import *
+from bug import *
 
 pygame.init()
 
@@ -49,31 +50,6 @@ openScreenRects = []  # stores rectangles/buttons of the opening screen
 floorGrid = [] # floor grid 2D array
 
 # Classes Are in other .py files
-# Sprite
-all_sprites = pygame.sprite.Group()
-
-class Bug(pygame.sprite.Sprite):
-
-    def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
-        # self.image = pygame.image.load("spider.png")
-        # self.rect = self.image.get_rect()
-        # self.rect.center = (200,200)
-        self.image = pygame.Surface((50, 50))
-        self.image = pygame.transform.scale(pygame.image.load("spider.png"), (100,100))
-
-        self.rect = self.image.get_rect()
-        self.rect.center = (DISPLAYSURF.get_width() / 2, DISPLAYSURF.get_height() / 2)
-
-
-    def update(self):
-        self.rect.x += 5
-        if self.rect.left > DISPLAYSURF.get_width():
-            self.rect.right = 0
-
-
-bug1 = Bug()
-all_sprites.add(bug1)
 
 # Non-Class Methods:
 
@@ -88,6 +64,7 @@ def drawTiles():
 
     img1 = pygame.transform.smoothscale(pygame.image.load('Floor Tile-1.png.png'), (100 * scaleFactor, 121 * scaleFactor))
     img2 = pygame.transform.smoothscale(pygame.image.load('Floor Tile-2.png.png'), (100 * scaleFactor, 121 * scaleFactor))
+
     img = img1
     XMARGIN, YMARGIN = int((windowWidth-(100*scaleFactor * 9))/2), int((windowHeight-(121 * scaleFactor * 5))/2)
     left, top = XMARGIN, YMARGIN
@@ -193,6 +170,7 @@ def main():
             if gameLevel == 1:
                 drawBackground()
                 all_sprites.draw(DISPLAYSURF)
+
 
             if gameLevel == 2:
                 drawBackground()
