@@ -3,6 +3,7 @@
 # Imports:
 import pygame
 import sys
+import cleaningSupply
 from pygame.locals import *
 
 pygame.init()
@@ -50,15 +51,17 @@ floorGrid = [] # floor grid 2D array
 tileWidth = None
 tileHeight = None
 
-#cleaningSupplyGroup = pygame.sprite.Group(CleaningSupply)
+cleaningSupplyGroup = pygame.sprite.Group()
 
 # Classes Are in other .py files
 
 # Non-Class Methods:
 
-def drawAllCleaningSupplies():
-    pass
+def addCleaningSupply(posX, posY, name):
+    #cleaningSupplyGroup.add(cleaningSupply.CleaningSupply())
 
+def drawAllCleaningSupplies():
+    cleaningSupplyGroup.draw(DISPLAYSURF)
 
 def getCleaningSupplyPos(x, y): # the pixel position of the top left corner of the box is returned
     left, top = XMARGIN, YMARGIN
