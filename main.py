@@ -47,16 +47,40 @@ PINK  = (255, 153, 204)
 gameLevel = 0 # 0 means that there is no game being played and the opening screen should be displayed
 openScreenRects = []  # stores rectangles/buttons of the opening screen
 floorGrid = [] # floor grid 2D array
+tileWidth = None
+tileHeight = None
+
+#cleaningSupplyGroup = pygame.sprite.Group(CleaningSupply)
 
 # Classes Are in other .py files
 
 # Non-Class Methods:
 
-def formFloorGridArray():
+def drawAllCleaningSupplies():
     pass
 
+
+def getCleaningSupplyPos(x, y): # the pixel position of the top left corner of the box is returned
+    left, top = XMARGIN, YMARGIN
+
+    return XMARGIN + (x * tileWidth), YMARGIN + (y*tileHeight)
+
+def getTile(x, y): # (0, 0) is the top left tile
+
+    return floorGrid[y][x]
+
+def setTile(x, y, cleaningSupplyType): # the tile in that position is set as cleaningSupplyType (0,0) is top left tile
+    floorGrid[y][x] = cleaningSupplyType
+
+def formFloorGridArray():# Fills all places in FloorGridArray with None
+    global floorGrid
+
+    row = 5
+    col = 9
+    floorGrid = [[None] * row for i in range(col)]
+
 def drawTiles():
-    global floorGrid # 5 by 7 grid 5 height and 7 length
+    global floorGrid, tileHeight, tileWidth  # 5 by 9 grid 5 height and 9 length
     scaleFactor = scaleFactorH
     if scaleFactorW < scaleFactorH:
         scaleFactor = scaleFactorW
@@ -64,6 +88,7 @@ def drawTiles():
     img1 = pygame.transform.smoothscale(pygame.image.load('Floor Tile-1.png.png'), (100 * scaleFactor, 121 * scaleFactor))
     img2 = pygame.transform.smoothscale(pygame.image.load('Floor Tile-2.png.png'), (100 * scaleFactor, 121 * scaleFactor))
     img = img1
+    tileWidth, tileHeight  = (100 * scaleFactor), (121 * scaleFactor)
     XMARGIN, YMARGIN = int((windowWidth-(100*scaleFactor * 9))/2), int((windowHeight-(121 * scaleFactor * 5))/2)
     left, top = XMARGIN, YMARGIN
     floorNum = 1
@@ -139,7 +164,7 @@ def drawOpeningScreen():
 
 
 def resetVariables():
-    pass
+    formFloorGridArray()
 
 def terminate(): # terminates game
    pygame.quit()
@@ -149,6 +174,8 @@ def main():
     global DISPLAYSURF, gameLevel
 
     clicked = False
+
+    resetVariables()
 
     while True:
         for event in pygame.event.get():
@@ -190,6 +217,12 @@ def main():
         pygame.display.update()
         FPSCLOCK.tick(FPS)
 
+#TESTS
+def printFloorGridAry(): # Print the floor grid array contents whenever you want to see it
+    for row in range(5):
+        for col in range(9):
+            print(str(floorGrid[col][row]) + " ", end='')
+        print()
 
 # RUN MAIN
 
@@ -197,5 +230,4 @@ if __name__ == '__main__':
    main()
 
 
-# TESTS
 
