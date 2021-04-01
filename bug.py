@@ -26,10 +26,10 @@ class Bug(pygame.sprite.Sprite):
 
 
 bug1 = Bug((DISPLAYSURF.get_width() / 2, DISPLAYSURF.get_height() / 2))
-bug2 = Bug((DISPLAYSURF.get_width() / 2 + 121, DISPLAYSURF.get_height() / 2 + 121))
-bug3 = Bug((DISPLAYSURF.get_width() / 2 + 242, DISPLAYSURF.get_height() / 2 + 241))
-bug4 = Bug((DISPLAYSURF.get_width() / 2 - 121, DISPLAYSURF.get_height() / 2 - 121))
-bug5 = Bug((DISPLAYSURF.get_width() / 2 - 242, DISPLAYSURF.get_height() / 2 - 242))
+bug2 = Bug((DISPLAYSURF.get_width() / 2, DISPLAYSURF.get_height() / 2 + 121))
+bug3 = Bug((DISPLAYSURF.get_width() / 2, DISPLAYSURF.get_height() / 2 + 241))
+bug4 = Bug((DISPLAYSURF.get_width() / 2, DISPLAYSURF.get_height() / 2 - 121))
+bug5 = Bug((DISPLAYSURF.get_width() / 2, DISPLAYSURF.get_height() / 2 - 242))
 all_sprites.add(bug1)
 all_sprites.add(bug2)
 all_sprites.add(bug3)
