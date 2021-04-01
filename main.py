@@ -58,6 +58,7 @@ cleaningSupplyGroup = pygame.sprite.Group()
 # Non-Class Methods:
 
 def addCleaningSupply(posX, posY, name):
+    pass
     #cleaningSupplyGroup.add(cleaningSupply.CleaningSupply())
 
 def drawAllCleaningSupplies():
