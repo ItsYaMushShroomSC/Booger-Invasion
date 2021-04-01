@@ -47,6 +47,10 @@ PINK  = (255, 153, 204)
 gameLevel = 0 # 0 means that there is no game being played and the opening screen should be displayed
 openScreenRects = []  # stores rectangles/buttons of the opening screen
 floorGrid = [] # floor grid 2D array
+tileWidth = None
+tileHeight = None
+
+#cleaningSupplyGroup = pygame.sprite.Group(CleaningSupply)
 
 # Classes Are in other .py files
 
@@ -55,10 +59,14 @@ floorGrid = [] # floor grid 2D array
 def drawAllCleaningSupplies():
     pass
 
+
 def getCleaningSupplyPos(x, y): # the pixel position of the top left corner of the box is returned
-    pass
+    left, top = XMARGIN, YMARGIN
+
+    return XMARGIN + (x * tileWidth), YMARGIN + (y*tileHeight)
 
 def getTile(x, y): # (0, 0) is the top left tile
+
     return floorGrid[y][x]
 
 def setTile(x, y, cleaningSupplyType): # the tile in that position is set as cleaningSupplyType (0,0) is top left tile
@@ -72,7 +80,7 @@ def formFloorGridArray():# Fills all places in FloorGridArray with None
     floorGrid = [[None] * row for i in range(col)]
 
 def drawTiles():
-    global floorGrid # 5 by 7 grid 5 height and 7 length
+    global floorGrid, tileHeight, tileWidth  # 5 by 9 grid 5 height and 9 length
     scaleFactor = scaleFactorH
     if scaleFactorW < scaleFactorH:
         scaleFactor = scaleFactorW
@@ -80,6 +88,7 @@ def drawTiles():
     img1 = pygame.transform.smoothscale(pygame.image.load('Floor Tile-1.png.png'), (100 * scaleFactor, 121 * scaleFactor))
     img2 = pygame.transform.smoothscale(pygame.image.load('Floor Tile-2.png.png'), (100 * scaleFactor, 121 * scaleFactor))
     img = img1
+    tileWidth, tileHeight  = (100 * scaleFactor), (121 * scaleFactor)
     XMARGIN, YMARGIN = int((windowWidth-(100*scaleFactor * 9))/2), int((windowHeight-(121 * scaleFactor * 5))/2)
     left, top = XMARGIN, YMARGIN
     floorNum = 1
