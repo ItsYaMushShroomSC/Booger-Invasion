@@ -4,10 +4,11 @@ from pygame.locals import *
 
 
 class CleaningSupply(pygame.sprite.Sprite):
-    def __init__(self, row, column, type, price, health, cooldown, img):
-        self.x = row  # the row and column are in the game board grid, not the pixel x coordinate
+  
+    def __init__(self, row, column, type, price, supplyhealth, cooldown, img):
+        self.x = row #the row and column are in the game board grid, not the pixel x coordinate
         self.y = column
-        self.type = type  # string name of plant
+        self.type = type # string name
         self.price = price
         self.destroyed = False
         self.image = img
