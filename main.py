@@ -5,6 +5,8 @@ import pygame
 import sys
 import cleaningSupply
 from pygame.locals import *
+from bug import *
+
 
 pygame.init()
 
@@ -196,8 +198,10 @@ def main():
                 if clicked:
                     gameLevel = determineLevel(posX, posY)
 
+
             if gameLevel == 1:
                 drawBackground()
+                all_sprites.draw(DISPLAYSURF)
 
             if gameLevel == 2:
                 drawBackground()
@@ -219,6 +223,7 @@ def main():
                     terminate()
 
         pygame.display.update()
+        all_sprites.update()
         FPSCLOCK.tick(FPS)
 
 #TESTS
