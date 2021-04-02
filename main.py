@@ -183,6 +183,9 @@ def main():
     resetVariables()
 
     while True:
+        start_time = time.time()
+
+
         for event in pygame.event.get():
 
             posX, posY = pygame.mouse.get_pos()
@@ -200,6 +203,7 @@ def main():
             if gameLevel == 1:
                 drawBackground()
                 all_sprites.draw(DISPLAYSURF)
+
 
             if gameLevel == 2:
                 drawBackground()
@@ -220,6 +224,8 @@ def main():
                 if event.key == K_ESCAPE:
                     terminate()
 
+        if int(start_time - time.time()) == 5:
+            print("5")
         pygame.display.update()
         all_sprites.update()
         FPSCLOCK.tick(FPS)

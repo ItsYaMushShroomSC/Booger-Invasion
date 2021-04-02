@@ -1,4 +1,4 @@
-import pygame
+import pygame, time
 import sys
 from pygame.locals import *
 from main import *
@@ -19,7 +19,11 @@ class Spider(pygame.sprite.Sprite):
         self.rect.center = (x,y)
 
 
+
     def update(self):
+
+        # your code
+
         self.rect.x += 5
         if self.rect.left > DISPLAYSURF.get_width():
             self.rect.right = 0
