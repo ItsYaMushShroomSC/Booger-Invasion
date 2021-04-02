@@ -3,6 +3,7 @@
 # Imports:
 import pygame
 import sys
+import time
 import cleaningSupply
 from pygame.locals import *
 
@@ -32,6 +33,7 @@ bugFont = pygame.font.Font('bugFont.ttf', fontSize)
 cleaningFont = pygame.font.Font('CleaningSupplyFont.otf', fontSize)
 
  # Time:
+frames = 0
 FPS = 160
 FPSCLOCK = pygame.time.Clock()
 
@@ -58,6 +60,7 @@ cleaningSupplyGroup = pygame.sprite.Group()
 # Non-Class Methods:
 
 def addCleaningSupply(posX, posY, name):
+    pass
     #cleaningSupplyGroup.add(cleaningSupply.CleaningSupply())
 
 def drawAllCleaningSupplies():
@@ -174,7 +177,7 @@ def terminate(): # terminates game
    sys.exit()
 
 def main():
-    global DISPLAYSURF, gameLevel
+    global DISPLAYSURF, gameLevel, frames
 
     clicked = False
 
@@ -217,6 +220,7 @@ def main():
                 if event.key == K_ESCAPE:
                     terminate()
 
+        frames = frames + 1
         pygame.display.update()
         FPSCLOCK.tick(FPS)
 
