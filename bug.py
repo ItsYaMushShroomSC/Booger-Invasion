@@ -20,11 +20,11 @@ class Spider(pygame.sprite.Sprite):
 
 
 
-    def update(self):
+    def move(self):
 
         # your code
 
-        self.rect.x += 5
+        self.rect.x += 15
         if self.rect.left > DISPLAYSURF.get_width():
             self.rect.right = 0
 
@@ -40,10 +40,11 @@ class Cockroach(pygame.sprite.Sprite):
         self.rect.center = (x,y)
 
 
-    def update(self):
-        self.rect.x += 5
+    def move(self):
+        self.rect.x += 15
         if self.rect.left > DISPLAYSURF.get_width():
             self.rect.right = 0
+
 
 
 bug1 = Spider((DISPLAYSURF.get_width() / 2, DISPLAYSURF.get_height() / 2))
@@ -57,3 +58,6 @@ all_sprites.add(bug3)
 all_sprites.add(bug4)
 all_sprites.add(bug5)
 
+def moveAll():
+    for bug in all_sprites:
+        bug.move()

@@ -185,7 +185,11 @@ def main():
 
     resetVariables()
 
+    my_eventTime = USEREVENT + 1
+    pygame.time.set_timer(my_eventTime, 150)
+
     while True:
+
         start_time = time.time()
 
 
@@ -203,10 +207,11 @@ def main():
                 if clicked:
                     gameLevel = determineLevel(posX, posY)
 
-            if gameLevel == 1:
+            if gameLevel == 1 and event.type == my_eventTime:
                 drawBackground()
+                moveAll()
                 all_sprites.draw(DISPLAYSURF)
-
+                all_sprites.update()
 
             if gameLevel == 2:
                 drawBackground()
@@ -230,7 +235,7 @@ def main():
         frames = frames + 1
         
         pygame.display.update()
-        all_sprites.update()
+        #all_sprites.update()
         FPSCLOCK.tick(FPS)
 
 #TESTS
