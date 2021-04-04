@@ -4,6 +4,9 @@
 import pygame
 import sys
 import cleaningSupply
+from bug import *
+import time
+import cleaningSupply
 from pygame.locals import *
 
 pygame.init()
@@ -32,6 +35,7 @@ bugFont = pygame.font.Font('bugFont.ttf', fontSize)
 cleaningFont = pygame.font.Font('CleaningSupplyFont.otf', fontSize)
 
  # Time:
+frames = 0
 FPS = 160
 FPSCLOCK = pygame.time.Clock()
 
@@ -175,13 +179,16 @@ def terminate(): # terminates game
    sys.exit()
 
 def main():
-    global DISPLAYSURF, gameLevel
+    global DISPLAYSURF, gameLevel, frames
 
     clicked = False
 
     resetVariables()
 
     while True:
+        start_time = time.time()
+
+
         for event in pygame.event.get():
 
             posX, posY = pygame.mouse.get_pos()
@@ -198,6 +205,8 @@ def main():
 
             if gameLevel == 1:
                 drawBackground()
+                all_sprites.draw(DISPLAYSURF)
+
 
             if gameLevel == 2:
                 drawBackground()
@@ -218,7 +227,10 @@ def main():
                 if event.key == K_ESCAPE:
                     terminate()
 
+        frames = frames + 1
+        
         pygame.display.update()
+        all_sprites.update()
         FPSCLOCK.tick(FPS)
 
 #TESTS
@@ -232,6 +244,4 @@ def printFloorGridAry(): # Print the floor grid array contents whenever you want
 
 if __name__ == '__main__':
    main()
-
-
 
