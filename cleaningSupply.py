@@ -14,16 +14,25 @@ class CleaningSupply(pygame.sprite.Sprite):
         self.image = img
         self.rect = self.image.getRect()
         self.cooldown = cooldown  # how long between the supply being able to use its abilities.
+        self.elapsedCooldown
         self.startcooldownframes
         self.health = health  # the amount of times the supply can be attacked before it is destroyed.
 
     # this will be used to activate the cleaning supply's ability, whether it is attacking bugs, healing other plants, producing money, etc.
     def activate(self):
+        if (self.elapsedCooldown == 0):
+            return
+
+    # this will be used to keep track of the cleaningsupply's health when it is attacked by bugs.
+    def attacked(self):
+        self.supplyhealth -= 1
+
         global frames, startcooldownframes, cooldown
         if (frames - startcooldownframes == cooldown):
             pass
             startcooldownframes = frames
     # this will be used to keep track of the cleaningsupply's health when it is attacked by bugs.
+    
     def attacked(self):
         global health
         health -= 1

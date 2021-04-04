@@ -3,6 +3,8 @@
 # Imports:
 import pygame
 import sys
+import cleaningSupply
+from bug import *
 import time
 import cleaningSupply
 from pygame.locals import *
@@ -184,6 +186,9 @@ def main():
     resetVariables()
 
     while True:
+        start_time = time.time()
+
+
         for event in pygame.event.get():
 
             posX, posY = pygame.mouse.get_pos()
@@ -200,6 +205,8 @@ def main():
 
             if gameLevel == 1:
                 drawBackground()
+                all_sprites.draw(DISPLAYSURF)
+
 
             if gameLevel == 2:
                 drawBackground()
@@ -221,7 +228,9 @@ def main():
                     terminate()
 
         frames = frames + 1
+        
         pygame.display.update()
+        all_sprites.update()
         FPSCLOCK.tick(FPS)
 
 #TESTS
@@ -235,6 +244,4 @@ def printFloorGridAry(): # Print the floor grid array contents whenever you want
 
 if __name__ == '__main__':
    main()
-
-
 
