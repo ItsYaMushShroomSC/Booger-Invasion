@@ -11,51 +11,50 @@ from pygame.locals import *
 
 pygame.init()
 
-
-#This is a test to see if I can do a pull request
+# This is a test to see if I can do a pull request
 
 # Global Variables:
 
- # Surface:
+# Surface:
 DISPLAYSURF = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 pygame.display.set_caption('Cleaning Supplies vs Bugs')
 
-
- # Constants:
-windowWidth = DISPLAYSURF.get_width() # resized to fullscreen
-windowHeight = DISPLAYSURF.get_height() # resized to fullscreen
-scaleFactorW = int(windowWidth/1536)
-scaleFactorH = int(windowHeight/864)
+# Constants:
+windowWidth = DISPLAYSURF.get_width()  # resized to fullscreen
+windowHeight = DISPLAYSURF.get_height()  # resized to fullscreen
+scaleFactorW = int(windowWidth / 1536)
+scaleFactorH = int(windowHeight / 864)
 XMARGIN = 200 * scaleFactorW
 YMARGIN = 100 * scaleFactorH
 
- # Text Font:
+# Text Font:
 fontSize = 54 * scaleFactorH
 bugFont = pygame.font.Font('bugFont.ttf', fontSize)
 cleaningFont = pygame.font.Font('CleaningSupplyFont.otf', fontSize)
 
- # Time:
+# Time:
 frames = 0
 FPS = 160
 FPSCLOCK = pygame.time.Clock()
 
- # Colors:
+# Colors:
 WHITE = (255, 255, 255)
-BLACK = (  0,   0,   0)
-RED   = (230,  47,  47)
-GREEN = (  0, 102,   0)
+BLACK = (0, 0, 0)
+RED = (230, 47, 47)
+GREEN = (0, 102, 0)
 LBLUE = (102, 102, 255)
-CYAN  = (  0, 153, 153)
-PINK  = (255, 153, 204)
- # Game variables:
+CYAN = (0, 153, 153)
+PINK = (255, 153, 204)
+# Game variables:
 
-gameLevel = 0 # 0 means that there is no game being played and the opening screen should be displayed
+gameLevel = 0  # 0 means that there is no game being played and the opening screen should be displayed
 openScreenRects = []  # stores rectangles/buttons of the opening screen
-floorGrid = [] # floor grid 2D array
+floorGrid = []  # floor grid 2D array
 tileWidth = None
 tileHeight = None
 
 cleaningSupplyGroup = pygame.sprite.Group()
+
 
 # Classes Are in other .py files
 
@@ -63,29 +62,35 @@ cleaningSupplyGroup = pygame.sprite.Group()
 
 def addCleaningSupply(posX, posY, name):
     pass
-    #cleaningSupplyGroup.add(cleaningSupply.CleaningSupply())
+    # cleaningSupplyGroup.add(cleaningSupply.CleaningSupply())
+
 
 def drawAllCleaningSupplies():
     cleaningSupplyGroup.draw(DISPLAYSURF)
 
-def getCleaningSupplyPos(x, y): # the pixel position of the top left corner of the box is returned
+
+def getCleaningSupplyPos(x, y):  # the pixel position of the top left corner of the box is returned
     left, top = XMARGIN, YMARGIN
 
-    return XMARGIN + (x * tileWidth), YMARGIN + (y*tileHeight)
+    return XMARGIN + (x * tileWidth), YMARGIN + (y * tileHeight)
 
-def getTile(x, y): # (0, 0) is the top left tile
+
+def getTile(x, y):  # (0, 0) is the top left tile
 
     return floorGrid[y][x]
 
-def setTile(x, y, cleaningSupplyType): # the tile in that position is set as cleaningSupplyType (0,0) is top left tile
+
+def setTile(x, y, cleaningSupplyType):  # the tile in that position is set as cleaningSupplyType (0,0) is top left tile
     floorGrid[y][x] = cleaningSupplyType
 
-def formFloorGridArray():# Fills all places in FloorGridArray with None
+
+def formFloorGridArray():  # Fills all places in FloorGridArray with None
     global floorGrid
 
     row = 5
     col = 9
     floorGrid = [[None] * row for i in range(col)]
+
 
 def drawTiles():
     global floorGrid, tileHeight, tileWidth  # 5 by 9 grid 5 height and 9 length
@@ -93,11 +98,14 @@ def drawTiles():
     if scaleFactorW < scaleFactorH:
         scaleFactor = scaleFactorW
 
-    img1 = pygame.transform.smoothscale(pygame.image.load('Floor Tile-1.png.png'), (100 * scaleFactor, 121 * scaleFactor))
-    img2 = pygame.transform.smoothscale(pygame.image.load('Floor Tile-2.png.png'), (100 * scaleFactor, 121 * scaleFactor))
+    img1 = pygame.transform.smoothscale(pygame.image.load('Floor Tile-1.png.png'),
+                                        (100 * scaleFactor, 121 * scaleFactor))
+    img2 = pygame.transform.smoothscale(pygame.image.load('Floor Tile-2.png.png'),
+                                        (100 * scaleFactor, 121 * scaleFactor))
     img = img1
-    tileWidth, tileHeight  = (100 * scaleFactor), (121 * scaleFactor)
-    XMARGIN, YMARGIN = int((windowWidth-(100*scaleFactor * 9))/2), int((windowHeight-(121 * scaleFactor * 5))/2)
+    tileWidth, tileHeight = (100 * scaleFactor), (121 * scaleFactor)
+    XMARGIN, YMARGIN = int((windowWidth - (100 * scaleFactor * 9)) / 2), int(
+        (windowHeight - (121 * scaleFactor * 5)) / 2)
     left, top = XMARGIN, YMARGIN
     floorNum = 1
 
@@ -110,14 +118,16 @@ def drawTiles():
 
             floorNum += 1
             imgRect = img.get_rect()
-            imgRect.topleft = (left + col*100, top + row*121)
+            imgRect.topleft = (left + col * 100, top + row * 121)
             DISPLAYSURF.blit(img, imgRect)
 
-def drawBackground():
 
-    img = pygame.transform.smoothscale(pygame.image.load('bugsWorldBackground.jpg').convert_alpha(),  (windowWidth, windowHeight))
+def drawBackground():
+    img = pygame.transform.smoothscale(pygame.image.load('bugsWorldBackground.jpg').convert_alpha(),
+                                       (windowWidth, windowHeight))
     DISPLAYSURF.blit(img, (0, 0))
     drawTiles()
+
 
 def determineLevel(mousePosX, mousePosY):
     global openScreenRects
@@ -135,6 +145,7 @@ def determineLevel(mousePosX, mousePosY):
     else:
         return 0
 
+
 def drawOpeningScreen():
     global openScreenRects
 
@@ -144,39 +155,41 @@ def drawOpeningScreen():
     textRect = textSurface.get_rect()
     textRect.midtop = (windowWidth / 2, windowHeight / 8 + (fontSize))
     DISPLAYSURF.blit(textSurface, textRect)
-    textSurface = bugFont.render('Level One', True, BLACK, RED) #LADYBUGS??
+    textSurface = bugFont.render('Level One', True, BLACK, RED)  # LADYBUGS??
     textRect = textSurface.get_rect()
     openScreenRects.append((textRect))
-    textRect.midtop = (windowWidth / 2, windowHeight / 7 + (fontSize*2))
+    textRect.midtop = (windowWidth / 2, windowHeight / 7 + (fontSize * 2))
     DISPLAYSURF.blit(textSurface, textRect)
     textSurface = bugFont.render('Level Two', True, BLACK, GREEN)
     textRect = textSurface.get_rect()
     openScreenRects.append((textRect))
-    textRect.midtop = (windowWidth / 2, windowHeight / 7 + (fontSize*4))
+    textRect.midtop = (windowWidth / 2, windowHeight / 7 + (fontSize * 4))
     DISPLAYSURF.blit(textSurface, textRect)
     textSurface = bugFont.render('Level Three', True, BLACK, LBLUE)
     textRect = textSurface.get_rect()
     openScreenRects.append((textRect))
-    textRect.midtop = (windowWidth / 2, windowHeight / 7 + (fontSize*6))
+    textRect.midtop = (windowWidth / 2, windowHeight / 7 + (fontSize * 6))
     DISPLAYSURF.blit(textSurface, textRect)
     textSurface = bugFont.render('Level Four', True, BLACK, CYAN)
     textRect = textSurface.get_rect()
     openScreenRects.append((textRect))
-    textRect.midtop = (windowWidth / 2, windowHeight / 7 + (fontSize*8))
+    textRect.midtop = (windowWidth / 2, windowHeight / 7 + (fontSize * 8))
     DISPLAYSURF.blit(textSurface, textRect)
     textSurface = bugFont.render('Level Five', True, BLACK, PINK)
     textRect = textSurface.get_rect()
     openScreenRects.append((textRect))
-    textRect.midtop = (windowWidth / 2, windowHeight / 7 + (fontSize*10))
+    textRect.midtop = (windowWidth / 2, windowHeight / 7 + (fontSize * 10))
     DISPLAYSURF.blit(textSurface, textRect)
 
 
 def resetVariables():
     formFloorGridArray()
 
-def terminate(): # terminates game
-   pygame.quit()
-   sys.exit()
+
+def terminate():  # terminates game
+    pygame.quit()
+    sys.exit()
+
 
 def main():
     global DISPLAYSURF, gameLevel, frames
@@ -185,9 +198,12 @@ def main():
 
     resetVariables()
 
-    while True:
-        start_time = time.time()
+    my_eventTime = USEREVENT + 1
+    pygame.time.set_timer(my_eventTime, 150)
 
+    while True:
+
+        #start_time = time.time()
 
         for event in pygame.event.get():
 
@@ -203,10 +219,12 @@ def main():
                 if clicked:
                     gameLevel = determineLevel(posX, posY)
 
-            if gameLevel == 1:
+            if gameLevel == 1 and event.type == my_eventTime:
                 drawBackground()
-                all_sprites.draw(DISPLAYSURF)
-
+                # sprayBottleGroup.draw()
+                # moveAll()
+                enemy_sprites.draw(DISPLAYSURF)
+                enemy_sprites.update()
 
             if gameLevel == 2:
                 drawBackground()
@@ -228,20 +246,21 @@ def main():
                     terminate()
 
         frames = frames + 1
-        
+
         pygame.display.update()
-        all_sprites.update()
+        # all_sprites.update()
         FPSCLOCK.tick(FPS)
 
-#TESTS
-def printFloorGridAry(): # Print the floor grid array contents whenever you want to see it
-    for row in range(5):
-        for col in range(9):
-            print(str(floorGrid[col][row]) + " ", end='')
-        print()
+
+# TESTS
+# def printFloorGridAry():  # Print the floor grid array contents whenever you want to see it
+#     for row in range(5):
+#         for col in range(9):
+#             print(str(floorGrid[col][row]) + " ", end='')
+#         print()
+
 
 # RUN MAIN
 
 if __name__ == '__main__':
-   main()
-
+    main()
