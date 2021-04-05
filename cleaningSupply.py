@@ -1,22 +1,22 @@
 import pygame
 import sys
 from pygame.locals import *
+from main import *
 
 
 class CleaningSupply(pygame.sprite.Sprite):
 
-    def __init__(self, row, column, type):
+    def __init__(self, row, column, img):
         self.x = row  # the row Reand column are in the game board grid, not the pixel x coordinate
         self.y = column
-        self.type = type  # string name
-
-        if(type == "spray bottle"):
-            self.img = pygame.image.load("sprayneutral.png")
-            self.cooldown = 480
-            self.health = 10
         self.destroyed = False
-        self.rect = self.img.get_rect() # how long between the supply being able to use its abilities.
-        self.startcooldownframes
+        self.image = img
+        self.rect = self.image.get_rect() # how long between the supply being able to use its abilities.
+        self.startcooldownframes = self.cooldown
+
+    def setRectPos(self):
+        self.rect.topleft = getCleaningSupplyPos(self.x, self.y)
+
 
 
     # this will be used to activate the cleaning supply's ability, whether it is attacking bugs, healing other plants, producing money, etc.
