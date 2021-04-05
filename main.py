@@ -3,8 +3,6 @@
 # Imports:
 import pygame
 import sys
-import cleaningSupply
-from bug import *
 import time
 import cleaningSupply
 from pygame.locals import *
@@ -62,8 +60,7 @@ cleaningSupplyGroup = pygame.sprite.Group()
 # Non-Class Methods:
 
 def addCleaningSupply(posX, posY, name):
-    pass
-    #cleaningSupplyGroup.add(cleaningSupply.CleaningSupply())
+    cleaningSupplyGroup.add(cleaningSupply.CleaningSupply(posX, posY, name))
 
 def drawAllCleaningSupplies():
     cleaningSupplyGroup.draw(DISPLAYSURF)
@@ -184,15 +181,8 @@ def main():
     clicked = False
 
     resetVariables()
-
-    my_eventTime = USEREVENT + 1
-    pygame.time.set_timer(my_eventTime, 150)
-
+    addCleaningSupply(0, 0, "spray bottle")
     while True:
-
-        start_time = time.time()
-
-
         for event in pygame.event.get():
 
             posX, posY = pygame.mouse.get_pos()
@@ -207,11 +197,8 @@ def main():
                 if clicked:
                     gameLevel = determineLevel(posX, posY)
 
-            if gameLevel == 1 and event.type == my_eventTime:
+            if gameLevel == 1:
                 drawBackground()
-                moveAll()
-                all_sprites.draw(DISPLAYSURF)
-                all_sprites.update()
 
             if gameLevel == 2:
                 drawBackground()
@@ -233,9 +220,7 @@ def main():
                     terminate()
 
         frames = frames + 1
-        
         pygame.display.update()
-        #all_sprites.update()
         FPSCLOCK.tick(FPS)
 
 #TESTS
@@ -249,4 +234,6 @@ def printFloorGridAry(): # Print the floor grid array contents whenever you want
 
 if __name__ == '__main__':
    main()
+
+
 

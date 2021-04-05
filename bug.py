@@ -24,7 +24,7 @@ class Spider(pygame.sprite.Sprite):
 
         # your code
 
-        self.rect.x += 15
+        self.rect.x += 5
         if self.rect.left > DISPLAYSURF.get_width():
             self.rect.right = 0
 
@@ -41,7 +41,7 @@ class Cockroach(pygame.sprite.Sprite):
 
 
     def move(self):
-        self.rect.x += 15
+        self.rect.x += 5
         if self.rect.left > DISPLAYSURF.get_width():
             self.rect.right = 0
 
