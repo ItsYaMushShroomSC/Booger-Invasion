@@ -1,7 +1,8 @@
 import pygame
 import sys
 from pygame.locals import *
-from main import *
+import main
+#from main import getCleaningSupplyPos
 
 
 class CleaningSupply(pygame.sprite.Sprite):
@@ -12,10 +13,10 @@ class CleaningSupply(pygame.sprite.Sprite):
         self.destroyed = False
         self.image = img
         self.rect = self.image.get_rect() # how long between the supply being able to use its abilities.
-        self.startcooldownframes = self.cooldown
+        #self.setRectPos()
 
     def setRectPos(self):
-        self.rect.topleft = getCleaningSupplyPos(self.x, self.y)
+        self.rect.topleft = main.getCleaningSupplyPos(self.x, self.y)
 
 
 
