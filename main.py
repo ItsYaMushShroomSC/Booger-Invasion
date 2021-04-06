@@ -9,6 +9,8 @@ from bug import *
 import time
 from pygame.locals import *
 
+from sprayBottle import *
+
 pygame.init()
 
 # This is a test to see if I can do a pull request
@@ -94,7 +96,7 @@ def formFloorGridArray():  # Fills all places in FloorGridArray with None
 
 
 def drawTiles():
-    global floorGrid, tileHeight, tileWidth  # 5 by 9 grid 5 height and 9 length
+    global floorGrid, tileHeight, tileWidth, XMARGIN, YMARGIN  # 5 by 9 grid 5 height and 9 length
     scaleFactor = scaleFactorH
     if scaleFactorW < scaleFactorH:
         scaleFactor = scaleFactorW
@@ -193,7 +195,7 @@ def terminate():  # terminates game
 
 
 
-def main():
+def mainGame():
     global DISPLAYSURF, gameLevel, frames
 
     clicked = False
@@ -223,7 +225,7 @@ def main():
 
             if gameLevel == 1 and event.type == my_eventTime:
                 drawBackground()
-                #sprayBottleGroup.draw()
+                sprayBottleGroup.draw(DISPLAYSURF)
                 moveAll()
                 all_sprites.draw(DISPLAYSURF)
                 all_sprites.update()
@@ -265,4 +267,4 @@ def printFloorGridAry():  # Print the floor grid array contents whenever you wan
 # RUN MAIN
 
 if __name__ == '__main__':
-    main()
+    mainGame()

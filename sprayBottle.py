@@ -9,13 +9,12 @@ sprayBottleGroup = pygame.sprite.Group()
 class SprayBottle(CleaningSupply):
 
     def __init__(self, row, column):
-        self.image = pygame.image.load("sprayneutral.png")
 
-        super().__init__(row, column, self.image)
+        super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("sprayneutral.png"), (100, 121)))
 
         self.cooldown = 480
         self.health = 10
         self.startcooldownframes = self.cooldown
 
 
-sprayBottleGroup.add(SprayBottle(0, 0))
+sprayBottleGroup.add_internal(SprayBottle(0, 0))
