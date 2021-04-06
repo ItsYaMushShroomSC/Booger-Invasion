@@ -2,11 +2,11 @@
 
 # Imports:
 import pygame
+from pygame.locals import *
 import sys
-import cleaningSupply
+#import cleaningSupply
 from bug import *
 import time
-import cleaningSupply
 from pygame.locals import *
 
 pygame.init()
@@ -63,6 +63,7 @@ cleaningSupplyGroup = pygame.sprite.Group()
 def addCleaningSupply(posX, posY, name):
     pass
     # cleaningSupplyGroup.add(cleaningSupply.CleaningSupply())
+
 
 
 def drawAllCleaningSupplies():
@@ -191,6 +192,7 @@ def terminate():  # terminates game
     sys.exit()
 
 
+
 def main():
     global DISPLAYSURF, gameLevel, frames
 
@@ -222,9 +224,9 @@ def main():
             if gameLevel == 1 and event.type == my_eventTime:
                 drawBackground()
                 #sprayBottleGroup.draw()
-                #moveAll()
-                #all_sprites.draw(DISPLAYSURF)
-                #all_sprites.update()
+                moveAll()
+                all_sprites.draw(DISPLAYSURF)
+                all_sprites.update()
 
             if gameLevel == 2:
                 drawBackground()
