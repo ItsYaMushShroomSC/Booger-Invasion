@@ -2,12 +2,14 @@
 
 # Imports:
 import pygame
+from pygame.locals import *
 import sys
-import cleaningSupply
+#import cleaningSupply
 from bug import *
 import time
-import cleaningSupply
 from pygame.locals import *
+
+from cleaningSupplies import *
 
 pygame.init()
 
@@ -45,6 +47,7 @@ GREEN = (0, 102, 0)
 LBLUE = (102, 102, 255)
 CYAN = (0, 153, 153)
 PINK = (255, 153, 204)
+
 # Game variables:
 
 gameLevel = 0  # 0 means that there is no game being played and the opening screen should be displayed
@@ -53,30 +56,22 @@ floorGrid = []  # floor grid 2D array
 tileWidth = None
 tileHeight = None
 
+# Sprite Groups:
 cleaningSupplyGroup = pygame.sprite.Group()
 
 
 # Classes Are in other .py files
 
+
 # Non-Class Methods:
 
 def addCleaningSupply(posX, posY, name):
-    pass
-    # cleaningSupplyGroup.add(cleaningSupply.CleaningSupply())
-
-
-def drawAllCleaningSupplies():
-    cleaningSupplyGroup.draw(DISPLAYSURF)
-
-
-def getCleaningSupplyPos(x, y):  # the pixel position of the top left corner of the box is returned
-    left, top = XMARGIN, YMARGIN
-
-    return XMARGIN + (x * tileWidth), YMARGIN + (y * tileHeight)
-
+    if name == "spraybottle":
+        cs = SprayBottle(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
+        cleaningSupplyGroup.add_internal(cs)
+        setTile(posX, posY, cs)
 
 def getTile(x, y):  # (0, 0) is the top left tile
-
     return floorGrid[y][x]
 
 
@@ -93,7 +88,7 @@ def formFloorGridArray():  # Fills all places in FloorGridArray with None
 
 
 def drawTiles():
-    global floorGrid, tileHeight, tileWidth  # 5 by 9 grid 5 height and 9 length
+    global floorGrid, tileHeight, tileWidth, XMARGIN, YMARGIN  # 5 by 9 grid 5 height and 9 length
     scaleFactor = scaleFactorH
     if scaleFactorW < scaleFactorH:
         scaleFactor = scaleFactorW
@@ -191,7 +186,8 @@ def terminate():  # terminates game
     sys.exit()
 
 
-def main():
+
+def mainGame():
     global DISPLAYSURF, gameLevel, frames
 
     clicked = False
@@ -221,10 +217,11 @@ def main():
 
             if gameLevel == 1 and event.type == my_eventTime:
                 drawBackground()
-                # sprayBottleGroup.draw()
-                # moveAll()
-                enemy_sprites.draw(DISPLAYSURF)
-                enemy_sprites.update()
+                addCleaningSupply(0, 0, "spraybottle")
+                cleaningSupplyGroup.draw(DISPLAYSURF)
+                moveAll()
+                all_sprites.draw(DISPLAYSURF)
+                all_sprites.update()
 
             if gameLevel == 2:
                 drawBackground()
@@ -253,14 +250,14 @@ def main():
 
 
 # TESTS
-# def printFloorGridAry():  # Print the floor grid array contents whenever you want to see it
-#     for row in range(5):
-#         for col in range(9):
-#             print(str(floorGrid[col][row]) + " ", end='')
-#         print()
+def printFloorGridAry():  # Print the floor grid array contents whenever you want to see it
+    for row in range(5):
+        for col in range(9):
+            print(str(floorGrid[col][row]) + " ", end='')
+        print()
 
 
 # RUN MAIN
 
 if __name__ == '__main__':
-    main()
+    mainGame()
