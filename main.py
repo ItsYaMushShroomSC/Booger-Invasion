@@ -10,6 +10,7 @@ import time
 from pygame.locals import *
 
 from cleaningSupplies import *
+from cleaningSupplySeed import *
 
 pygame.init()
 
@@ -52,18 +53,31 @@ PINK = (255, 153, 204)
 
 gameLevel = 0  # 0 means that there is no game being played and the opening screen should be displayed
 openScreenRects = []  # stores rectangles/buttons of the opening screen
+
 floorGrid = []  # floor grid 2D array
 tileWidth = None
 tileHeight = None
 
 # Sprite Groups:
 cleaningSupplyGroup = pygame.sprite.Group()
-
+cleaningSupplyBackGrounds = pygame.sprite.Group()
+cleaningSupplySeedsGroup = pygame.sprite.Group
 
 # Classes Are in other .py files
 
 
 # Non-Class Methods:
+
+# TODO: make a dictionary where (key: <name of cleaningsupply>, value: tuple(<order>, <price>))
+# the dictionary will be read and the appropriate img will be
+def addCleaningSupplySeeds():
+    global cleaningSupplySeedGroup
+    img = pygame.image.load('SeedPacketBackground.png')
+    for i in range(1, 10):
+        cleaningSupplyBackGrounds.add_internal(CleaningSupplySeed(img, 'name', 1, i, 1, XMARGIN, windowWidth, windowHeight))
+
+
+
 
 def addCleaningSupply(posX, posY, name):
     if name == "spraybottle":
@@ -217,7 +231,9 @@ def mainGame():
 
             if gameLevel == 1 and event.type == my_eventTime:
                 drawBackground()
-                addCleaningSupply(0, 0, "spraybottle")
+                #addCleaningSupplySeeds()
+                #cleaningSupplyBackGrounds.draw(DISPLAYSURF)
+                #addCleaningSupply(0, 0, "spraybottle")
                 cleaningSupplyGroup.draw(DISPLAYSURF)
                 moveAll()
                 all_sprites.draw(DISPLAYSURF)
