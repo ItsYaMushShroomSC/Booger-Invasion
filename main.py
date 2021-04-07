@@ -47,6 +47,7 @@ GREEN = (0, 102, 0)
 LBLUE = (102, 102, 255)
 CYAN = (0, 153, 153)
 PINK = (255, 153, 204)
+
 # Game variables:
 
 gameLevel = 0  # 0 means that there is no game being played and the opening screen should be displayed
@@ -55,31 +56,22 @@ floorGrid = []  # floor grid 2D array
 tileWidth = None
 tileHeight = None
 
+# Sprite Groups:
 cleaningSupplyGroup = pygame.sprite.Group()
 
 
 # Classes Are in other .py files
 
+
 # Non-Class Methods:
 
 def addCleaningSupply(posX, posY, name):
-    pass
-    # cleaningSupplyGroup.add(cleaningSupply.CleaningSupply())
-
-
-
-def drawAllCleaningSupplies():
-    cleaningSupplyGroup.draw(DISPLAYSURF)
-
-
-def getCleaningSupplyPos(x, y):  # the pixel position of the top left corner of the box is returned
-    left, top = XMARGIN, YMARGIN
-
-    return XMARGIN + (x * tileWidth), YMARGIN + (y * tileHeight)
-
+    if name == "spraybottle":
+        cs = SprayBottle(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
+        cleaningSupplyGroup.add_internal(cs)
+        setTile(posX, posY, cs)
 
 def getTile(x, y):  # (0, 0) is the top left tile
-
     return floorGrid[y][x]
 
 
@@ -225,7 +217,8 @@ def mainGame():
 
             if gameLevel == 1 and event.type == my_eventTime:
                 drawBackground()
-                sprayBottleGroup.draw(DISPLAYSURF)
+                addCleaningSupply(0, 0, "spraybottle")
+                cleaningSupplyGroup.draw(DISPLAYSURF)
                 moveAll()
                 all_sprites.draw(DISPLAYSURF)
                 all_sprites.update()
