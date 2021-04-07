@@ -9,7 +9,7 @@ from bug import *
 import time
 from pygame.locals import *
 
-from sprayBottle import *
+from cleaningSupplies import *
 
 pygame.init()
 

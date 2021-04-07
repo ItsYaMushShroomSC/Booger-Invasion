@@ -2,9 +2,6 @@ import pygame
 import sys
 from pygame.locals import *
 from cleaningSupply import *
-#from main import *
-
-#sprayBottleGroup = pygame.sprite.Group()
 
 class SprayBottle(CleaningSupply):
 
@@ -17,4 +14,3 @@ class SprayBottle(CleaningSupply):
         self.startcooldownframes = self.cooldown
 
 
-#sprayBottleGroup.add_internal(SprayBottle(0, 0, ))
