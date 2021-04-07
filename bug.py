@@ -49,7 +49,7 @@ class Cockroach(pygame.sprite.Sprite):
             scaleFactor = scaleFactorW
         self.health = 7
         self.image = pygame.transform.scale(pygame.image.load("cockroach.png"), (100 * scaleFactor, 121 * scaleFactor))
-
+        self.health = 7
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
 
