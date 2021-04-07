@@ -186,9 +186,9 @@ def terminate():  # terminates game
     sys.exit()
 
 
-
+curr_time = 0
 def mainGame():
-    global DISPLAYSURF, gameLevel, frames
+    global DISPLAYSURF, gameLevel, frames, curr_time
 
     clicked = False
 
@@ -196,6 +196,7 @@ def mainGame():
 
     my_eventTime = USEREVENT + 1
     pygame.time.set_timer(my_eventTime, 150)
+    curr_time = pygame.time.get_ticks()
 
     while True:
 
@@ -219,9 +220,9 @@ def mainGame():
                 drawBackground()
                 addCleaningSupply(0, 0, "spraybottle")
                 cleaningSupplyGroup.draw(DISPLAYSURF)
-                moveAll()
-                all_sprites.draw(DISPLAYSURF)
-                all_sprites.update()
+
+                enemy_sprites.draw(DISPLAYSURF)
+                enemy_sprites.update()
 
             if gameLevel == 2:
                 drawBackground()

@@ -2,14 +2,18 @@ import pygame, time
 import sys
 from pygame.locals import *
 from main import *
-# spider should take 5 hits before its death
+import random
 
+# spider should take 5 hits before its death
+choices = [DISPLAYSURF.get_height() / 2, DISPLAYSURF.get_height() / 2 - 121, DISPLAYSURF.get_height() / 2 - 242,
+           DISPLAYSURF.get_height() / 2 + 121, DISPLAYSURF.get_height() / 2 + 242]
 
 enemy_sprites = pygame.sprite.Group()
 
+
 class Spider(pygame.sprite.Sprite):
 
-    def __init__(self, x,y):
+    def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
         self.x = x
         self.y = y
@@ -20,14 +24,11 @@ class Spider(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(pygame.image.load("spider.png"), (100 * scaleFactor, 121 * scaleFactor))
 
         self.rect = self.image.get_rect()
-        self.rect.center = (x,y)
-
-
-
+        self.rect.center = (x, y)
 
     def update(self):
         self.rect.x -= 10
-        if (self.rect.x <= (DISPLAYSURF.get_width())/4):
+        if (self.rect.x <= (DISPLAYSURF.get_width()) / 4):
             self.rect.x += 10
             self.health = 0
         self.die()
@@ -39,14 +40,14 @@ class Spider(pygame.sprite.Sprite):
 
 class Cockroach(pygame.sprite.Sprite):
 
-    def __init__(self,x,y):
+    def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
         self.x = x
         self.y = y
         scaleFactor = scaleFactorH
         if scaleFactorW < scaleFactorH:
             scaleFactor = scaleFactorW
-
+        self.health = 7
         self.image = pygame.transform.scale(pygame.image.load("cockroach.png"), (100 * scaleFactor, 121 * scaleFactor))
 
         self.rect = self.image.get_rect()
@@ -64,18 +65,22 @@ class Cockroach(pygame.sprite.Sprite):
             self.kill()
 
 
+# cock1 = Cockroach(3*DISPLAYSURF.get_width() / 4 + 50, DISPLAYSURF.get_height() / 2 + 242)
+
+# enemy_sprites.add(cock1)
+# if gameLevel == 1:
+for i in range(5):
+    #random spawning
+
+    x = 3 * DISPLAYSURF.get_width() / 4
+    y = random.choice(choices)
+    spider = Spider(x, y)
+    # rep_time = pygame.time.get_ticks()
+    # if rep_time - curr_time > 100:
+    enemy_sprites.add(spider)
+    #
+    # print(f'{curr_time} 1')
+    # print(f'{rep_time} 2')
 
 
-bug1 = Spider(3*DISPLAYSURF.get_width() / 4, DISPLAYSURF.get_height() / 2)
-bug2 = Spider(3*DISPLAYSURF.get_width() / 4, DISPLAYSURF.get_height() / 2 - 121)
-bug3 = Spider(3*DISPLAYSURF.get_width() / 4, DISPLAYSURF.get_height() / 2 - 242)
-bug4 = Spider(3*DISPLAYSURF.get_width() / 4, DISPLAYSURF.get_height() / 2 + 121)
-bug5 = Spider(3*DISPLAYSURF.get_width() / 4, DISPLAYSURF.get_height() / 2 + 242)
-cock1 = Cockroach(3*DISPLAYSURF.get_width() / 4 + 50, DISPLAYSURF.get_height() / 2 + 242)
 
-enemy_sprites.add(bug1)
-enemy_sprites.add(bug2)
-enemy_sprites.add(bug3)
-enemy_sprites.add(bug4)
-enemy_sprites.add(bug5)
-enemy_sprites.add(cock1)
