@@ -8,7 +8,7 @@ import random
 choices = [DISPLAYSURF.get_height() / 2, DISPLAYSURF.get_height() / 2 - 121, DISPLAYSURF.get_height() / 2 - 242,
            DISPLAYSURF.get_height() / 2 + 121, DISPLAYSURF.get_height() / 2 + 242]
 
-enemy_sprites = pygame.sprite.Group()
+# enemy_sprites = pygame.sprite.Group()
 
 
 class Spider(pygame.sprite.Sprite):
@@ -69,15 +69,30 @@ class Cockroach(pygame.sprite.Sprite):
 
 # enemy_sprites.add(cock1)
 # if gameLevel == 1:
-for i in range(5):
-    #random spawning
+class Dirt():
+    def __init__(self):
+        self.joy = 10
 
-    x = 3 * DISPLAYSURF.get_width() / 4
-    y = random.choice(choices)
-    spider = Spider(x, y)
-    # rep_time = pygame.time.get_ticks()
-    # if rep_time - curr_time > 100:
-    enemy_sprites.add(spider)
+class Sprites:
+    def __init__(self):
+        self.enemy_sprites = pygame.sprite.Group()
+        self.add_Sprite()
+
+    def add_Sprite(self):
+        for i in range(5):
+            # random spawning
+
+            x = 3 * DISPLAYSURF.get_width() / 4
+            y = random.choice(choices)
+            spider = Spider(x, y)
+            # rep_time = pygame.time.get_ticks()
+            # if rep_time - curr_time > 100:
+            self.enemy_sprites.add(spider)
+
+
+
+
+
     #
     # print(f'{curr_time} 1')
     # print(f'{rep_time} 2')

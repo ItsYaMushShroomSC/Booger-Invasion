@@ -6,6 +6,7 @@ from pygame.locals import *
 import sys
 #import cleaningSupply
 from bug import *
+
 import time
 from pygame.locals import *
 
@@ -214,8 +215,9 @@ def terminate():  # terminates game
     pygame.quit()
     sys.exit()
 
+sprite = Sprites()
+sprite.add_Sprite()
 
-curr_time = 0
 def mainGame():
     global DISPLAYSURF, gameLevel, frames, curr_time
 
@@ -248,14 +250,15 @@ def mainGame():
             if gameLevel == 1 and event.type == my_eventTime:
                 drawBackground()
 
-                enemy_sprites.draw(DISPLAYSURF)
-                enemy_sprites.update()
-
-                #addCleaningSupplySeeds()
-                #cleaningSupplyBackGrounds.draw(DISPLAYSURF)
-                #cleaningSupplySeedsGroup.draw(DISPLAYSURF)
-                #addCleaningSupply(0, 0, "spraybottle")
-                #cleaningSupplyGroup.draw(DISPLAYSURF)
+                sprite.enemy_sprites.draw(DISPLAYSURF)
+                sprite.enemy_sprites.update()
+                # addingbug()
+                #
+                # addCleaningSupplySeeds()
+                # cleaningSupplyBackGrounds.draw(DISPLAYSURF)
+                # cleaningSupplySeedsGroup.draw(DISPLAYSURF)
+                # addCleaningSupply(0, 0, "spraybottle")
+                cleaningSupplyGroup.draw(DISPLAYSURF)
 
             if gameLevel == 2:
                 drawBackground()
