@@ -29,7 +29,7 @@ class CleaningSupplySeed(pygame.sprite.Sprite):
 
     def setImgPos(self): # setsTheImgPos
         centerX = int(XMARGIN/2)
-        centerY = int(windowHeight * 1/9 + self.rect.h*self.order)
+        centerY = int(windowHeight * 1/9 - self.rect.h + self.rect.h*self.order)
         self.rect.center = (centerX, centerY)
 
     def updateLoadingBar(self): # draws a transparent gray loading bar while the seed is restocking

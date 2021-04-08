@@ -58,26 +58,41 @@ floorGrid = []  # floor grid 2D array
 tileWidth = None
 tileHeight = None
 
+# dictionary where (key: <name of cleaningsupply>, value: tuple(<order>, <price>))
+# @see https://www.w3schools.com/python/python_dictionaries.asp
+seedDict = {"spraybottle": (100, 5000)}
+
 # Sprite Groups:
 cleaningSupplyGroup = pygame.sprite.Group()
 cleaningSupplyBackGrounds = pygame.sprite.Group()
-cleaningSupplySeedsGroup = pygame.sprite.Group
+cleaningSupplySeedsGroup = pygame.sprite.Group()
 
 # Classes Are in other .py files
 
 
 # Non-Class Methods:
 
-# TODO: make a dictionary where (key: <name of cleaningsupply>, value: tuple(<order>, <price>))
 # the dictionary will be read and the appropriate img will be
 def addCleaningSupplySeeds():
-    global cleaningSupplySeedGroup
+    global cleaningSupplySeedsGroup
+
     img = pygame.image.load('SeedPacketBackground.png')
+    w, h = img.get_width()*scaleFactorH, img.get_height()*scaleFactorH
+    img = pygame.transform.smoothscale(img, (w, h))
+
+    indexOrder = 1
+
     for i in range(1, 10):
-        cleaningSupplyBackGrounds.add_internal(CleaningSupplySeed(img, 'name', 1, i, 1, XMARGIN, windowWidth, windowHeight))
+        cleaningSupplyBackGrounds.add_internal(CleaningSupplySeed(img, 'bg', 1, i, 1, XMARGIN, windowWidth, windowHeight))
 
+    for name, values in seedDict.items():
+        price, restockTime = values
+        img = pygame.transform.smoothscale(getImg(name), (w, h))
+        cleaningSupplySeedsGroup.add_internal(CleaningSupplySeed(img, name, price, indexOrder, restockTime, XMARGIN, windowWidth, windowHeight))
 
-
+def getImg(name):
+    if name == "spraybottle":
+        return pygame.image.load('sprayneutral.png')
 
 def addCleaningSupply(posX, posY, name):
     if name == "spraybottle":
@@ -233,8 +248,9 @@ def mainGame():
                 drawBackground()
                 #addCleaningSupplySeeds()
                 #cleaningSupplyBackGrounds.draw(DISPLAYSURF)
+                #cleaningSupplySeedsGroup.draw(DISPLAYSURF)
                 #addCleaningSupply(0, 0, "spraybottle")
-                cleaningSupplyGroup.draw(DISPLAYSURF)
+                #cleaningSupplyGroup.draw(DISPLAYSURF)
                 moveAll()
                 all_sprites.draw(DISPLAYSURF)
                 all_sprites.update()
