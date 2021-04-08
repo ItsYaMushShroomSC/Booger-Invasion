@@ -7,17 +7,30 @@ from pygame.locals import *
 
 # There is no need for any child classes of this because they are all the same
 
+XMARGIN = None
+windowWidth = None
+windowHeight = None
+
 class CleaningSupplySeed(pygame.sprite.Sprite):
 
-    def __init__(self, img, price, order, restockTime): # order is a number that represents where the seed is in order from (1-9) top to bottom
+    def __init__(self, img, name, price, order, restockTime, XMARG, windowW, windowH):
+        global XMARGIN, windowWidth, windowHeight
+        # order is a number that represents where the seed is in order from (1-9) top to bottom
         self.image = img
-        self.price
-        self.rect = img.getRect()
+        self.name = name
+        self.price = price
+        self.rect = img.get_rect()
         self.order = order
         self.restockTime = restockTime # if restockTime = 0, then the cleaningSupplySeed is in stock/available
+        XMARGIN = XMARG
+        windowWidth = windowW
+        windowHeight = windowH
+        self.setImgPos()
 
     def setImgPos(self): # setsTheImgPos
-        pass
+        centerX = int(XMARGIN/2)
+        centerY = int(windowHeight * 1/9 - self.rect.h + self.rect.h*self.order)
+        self.rect.center = (centerX, centerY)
 
     def updateLoadingBar(self): # draws a transparent gray loading bar while the seed is restocking
         pass
