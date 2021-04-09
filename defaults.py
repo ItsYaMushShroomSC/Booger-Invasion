@@ -22,6 +22,7 @@ bugFont = pygame.font.Font('bugFont.ttf', fontSize)
 cleaningFont = pygame.font.Font('CleaningSupplyFont.otf', fontSize)
 
 # Time:
+time_since_enter = 0
 frames = 0
 FPS = 160
 FPSCLOCK = pygame.time.Clock()

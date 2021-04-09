@@ -218,14 +218,15 @@ sprite = Sprites()
 def mainGame():
     global DISPLAYSURF, gameLevel, frames, curr_time
 
+
     clicked = False
 
     resetVariables()
 
     my_eventTime = USEREVENT + 1
     pygame.time.set_timer(my_eventTime, 150)
-    curr_time = pygame.time.get_ticks()
 
+    start = None
     while True:
 
         curr = time.time()
@@ -235,6 +236,7 @@ def mainGame():
             posX, posY = pygame.mouse.get_pos()
 
             if event.type == MOUSEBUTTONDOWN:
+                start = pygame.time.get_ticks()
                 clicked = True
             else:
                 clicked = False
@@ -244,16 +246,24 @@ def mainGame():
             if clicked:
                 gameLevel = determineLevel(posX, posY)
 
-            if gameLevel == 1 and event.type == my_eventTime:
+            if gameLevel == 1 and event.type == my_eventTime and start:
+                time_since_enter = int((pygame.time.get_ticks() - start) / 1000)
+                # print(time_since_enter)
+
                 drawBackground()
-                game_l = 1
-                sprite.enemy_sprites.draw(DISPLAYSURF)
-                sprite.enemy_sprites.update()
+                if time_since_enter >= 5:
+                    sprite.enemy_sprites.draw(DISPLAYSURF)
+                    sprite.enemy_sprites.update()
                 # addCleaningSupplySeeds()
                 # cleaningSupplyBackGrounds.draw(DISPLAYSURF)
                 # cleaningSupplySeedsGroup.draw(DISPLAYSURF)
                 addCleaningSupply(0, 0, "spraybottle")
                 cleaningSupplyGroup.draw(DISPLAYSURF)
+
+
+
+
+
 
             if gameLevel == 2:
                 drawBackground()
@@ -276,7 +286,8 @@ def mainGame():
 
         frames = frames + 1
 
-        print()
+
+
         pygame.display.update()
         # all_sprites.update()
         FPSCLOCK.tick(FPS)

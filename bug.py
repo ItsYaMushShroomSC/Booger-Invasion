@@ -69,36 +69,19 @@ class Sprites:
         self.enemy_sprites = pygame.sprite.Group()
         self.add_Sprite()
         self.game_Stat()
-        self.rep = time.time()
-        # print(self.rep)
-
-
 
     def add_Sprite(self):
 
         for i in range(5):
-            # random spawning
-
             x = 3 * DISPLAYSURF.get_width() / 4
             y = random.choice(choices)
             spider = Spider(x, y)
-            # rep_time = pygame.time.get_ticks()
-            # if rep_time - curr_time > 100:
-            self.enemy_sprites.add(spider)
+            cockroach = Cockroach(x,y)
+
+            # self.enemy_sprites.add(spider)
+            self.enemy_sprites.add(cockroach)
 
 
     def game_Stat(self):
-        if game_l== 1:
-            print("oo")
-
-
-
-
-
-
-    #
-    # print(f'{curr_time} 1')
-    # print(f'{rep_time} 2')
-
-
+        print(time_since_enter)
 
