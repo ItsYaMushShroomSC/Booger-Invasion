@@ -33,7 +33,7 @@ class Flypaper(CleaningSupply):
     def __init__(self, row, column, XMARG, YMARG, tileW, tileH):
 
         super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("flypaper.png"), (tileW-2, tileH-2)), XMARG, YMARG, tileW, tileH)
-        self.health = 1
+        self.health = 10 # when flypaper is stepped on, it will explode
 
 
 #flypaperGroup.add(Flypaper(0, 0))

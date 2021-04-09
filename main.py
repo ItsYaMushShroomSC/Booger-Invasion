@@ -61,7 +61,7 @@ tileHeight = None
 
 # dictionary where (key: <name of cleaningsupply>, value: tuple(<order>, <price>))
 # @see https://www.w3schools.com/python/python_dictionaries.asp
-seedDict = {"spraybottle": (100, 5000)}
+seedDict = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000), 3: ("soapdispenser", 50, 5000), 4: ("flypaper", 10000, 25)}
 
 # Sprite Groups:
 cleaningSupplyGroup = pygame.sprite.Group()
@@ -86,14 +86,21 @@ def addCleaningSupplySeeds():
     for i in range(1, 10):
         cleaningSupplyBackGrounds.add_internal(CleaningSupplySeed(img, 'bg', 1, i, 1, XMARGIN, windowWidth, windowHeight))
 
-    for name, values in seedDict.items():
-        price, restockTime = values
+    for order, values in seedDict.items():
+        name, price, restockTime = values
         img = pygame.transform.smoothscale(getImg(name), (w, h))
-        cleaningSupplySeedsGroup.add_internal(CleaningSupplySeed(img, name, price, indexOrder, restockTime, XMARGIN, windowWidth, windowHeight))
+        cleaningSupplySeedsGroup.add_internal(CleaningSupplySeed(img, name, price, order, restockTime, XMARGIN, windowWidth, windowHeight))
 
 def getImg(name):
+
     if name == "spraybottle":
-        return pygame.image.load('sprayneutral.png')
+        return pygame.image.load('spraybottle.PNG')
+    if name == "sponge":
+        return pygame.image.load('sponge.PNG')
+    if name == "soapdispenser":
+        return pygame.image.load('soapdispenser.PNG')
+    if name == "flypaper":
+        return pygame.image.load('flypaper.PNG')
 
 def addCleaningSupply(posX, posY, name):
     if name == "spraybottle":
@@ -129,7 +136,7 @@ def formFloorGridArray():  # Fills all places in FloorGridArray with None
     floorGrid = [[None] * row for i in range(col)]
 
 
-def drawTiles():
+def drawTiles(shouldDraw):
     global floorGrid, tileHeight, tileWidth, XMARGIN, YMARGIN  # 5 by 9 grid 5 height and 9 length
     scaleFactor = scaleFactorH
     if scaleFactorW < scaleFactorH:
@@ -146,24 +153,25 @@ def drawTiles():
     left, top = XMARGIN, YMARGIN
     floorNum = 1
 
-    for col in range(9):
-        for row in range(5):
-            if floorNum % 2 == 0:
-                img = img2
-            else:
-                img = img1
+    if shouldDraw == True:
+        for col in range(9):
+            for row in range(5):
+                if floorNum % 2 == 0:
+                    img = img2
+                else:
+                    img = img1
 
-            floorNum += 1
-            imgRect = img.get_rect()
-            imgRect.topleft = (left + col * 100, top + row * 121)
-            DISPLAYSURF.blit(img, imgRect)
+                floorNum += 1
+                imgRect = img.get_rect()
+                imgRect.topleft = (left + col * 100, top + row * 121)
+                DISPLAYSURF.blit(img, imgRect)
 
 
 def drawBackground():
     img = pygame.transform.smoothscale(pygame.image.load('bugsWorldBackground.jpg').convert_alpha(),
                                        (windowWidth, windowHeight))
     DISPLAYSURF.blit(img, (0, 0))
-    drawTiles()
+    drawTiles(True)
 
 
 def determineLevel(mousePosX, mousePosY):
@@ -221,7 +229,7 @@ def drawOpeningScreen():
 
 def resetVariables():
     formFloorGridArray()
-
+    drawTiles(False)
 
 def terminate():  # terminates game
     pygame.quit()
@@ -238,6 +246,13 @@ def mainGame():
 
     my_eventTime = USEREVENT + 1
     pygame.time.set_timer(my_eventTime, 150)
+
+    addCleaningSupply(0, 0, "spraybottle")
+    addCleaningSupply(0, 1, "sponge")
+    addCleaningSupply(0, 2, "soapdispenser")
+    addCleaningSupply(0, 3, "flypaper")
+    addCleaningSupplySeeds()
+
 
     while True:
 
@@ -264,17 +279,10 @@ def mainGame():
                 enemy_sprites.update()
 
                 #addCleaningSupplySeeds()
-                #cleaningSupplyBackGrounds.draw(DISPLAYSURF)
-                #cleaningSupplySeedsGroup.draw(DISPLAYSURF)
+                cleaningSupplyBackGrounds.draw(DISPLAYSURF)
+                cleaningSupplySeedsGroup.draw(DISPLAYSURF)
                 #addCleaningSupply(0, 0, "spraybottle")
-                #cleaningSupplyGroup.draw(DISPLAYSURF)
-                addCleaningSupply(0, 0, "spraybottle")
                 cleaningSupplyGroup.draw(DISPLAYSURF)
-                addCleaningSupply(0, 1, "sponge")
-                cleaningSupplyGroup.draw(DISPLAYSURF)
-                addCleaningSupply(0, 2, "soapdispenser")
-                cleaningSupplyGroup.draw(DISPLAYSURF)
-                addCleaningSupply(0, 3, "flypaper")
                 cleaningSupplyGroup.draw(DISPLAYSURF)
                 #printFloorGridAry()
                 #moveAll()
