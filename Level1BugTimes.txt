@@ -1,0 +1,22 @@
+'bugs are coming', 1
+'spider', 5
+'spider', 8
+'cockroach', 12
+'spider', 13
+'cockroach', 17
+'cockroach', 17
+'big wave', 24
+'spider', 25
+'spider', 25
+'cockroach', 25
+'cockroach', 27
+'final wave', 32
+'spider', 34
+'cockroach', 35
+'cockroach', 36
+'cockroach', 36
+'spider', 36
+'cockroach', 38
+'spider', 38
+'spider', 39
+'cockroach', 39
