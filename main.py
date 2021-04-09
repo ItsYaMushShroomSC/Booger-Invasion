@@ -6,6 +6,7 @@ from pygame.locals import *
 import sys
 #import cleaningSupply
 from bug import *
+from cleaningSupply import *
 import time
 from pygame.locals import *
 
@@ -97,6 +98,18 @@ def getImg(name):
 def addCleaningSupply(posX, posY, name):
     if name == "spraybottle":
         cs = SprayBottle(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
+        cleaningSupplyGroup.add_internal(cs)
+        setTile(posX, posY, cs)
+    if name == "sponge":
+        cs = Sponge(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
+        cleaningSupplyGroup.add_internal(cs)
+        setTile(posX, posY, cs)
+    if name == "soapdispenser":
+        cs = SoapDispenser(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
+        cleaningSupplyGroup.add_internal(cs)
+        setTile(posX, posY, cs)
+    if name == "flypaper":
+        cs = Flypaper(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
         cleaningSupplyGroup.add_internal(cs)
         setTile(posX, posY, cs)
 
@@ -225,7 +238,6 @@ def mainGame():
 
     my_eventTime = USEREVENT + 1
     pygame.time.set_timer(my_eventTime, 150)
-    curr_time = pygame.time.get_ticks()
 
     while True:
 
@@ -256,6 +268,18 @@ def mainGame():
                 #cleaningSupplySeedsGroup.draw(DISPLAYSURF)
                 #addCleaningSupply(0, 0, "spraybottle")
                 #cleaningSupplyGroup.draw(DISPLAYSURF)
+                addCleaningSupply(0, 0, "spraybottle")
+                cleaningSupplyGroup.draw(DISPLAYSURF)
+                addCleaningSupply(0, 1, "sponge")
+                cleaningSupplyGroup.draw(DISPLAYSURF)
+                addCleaningSupply(0, 2, "soapdispenser")
+                cleaningSupplyGroup.draw(DISPLAYSURF)
+                addCleaningSupply(0, 3, "flypaper")
+                cleaningSupplyGroup.draw(DISPLAYSURF)
+                #printFloorGridAry()
+                #moveAll()
+                #all_sprites.draw(DISPLAYSURF)
+                #all_sprites.update()
 
             if gameLevel == 2:
                 drawBackground()
