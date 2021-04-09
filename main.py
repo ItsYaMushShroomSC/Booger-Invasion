@@ -6,9 +6,9 @@ from pygame.locals import *
 import sys
 #import cleaningSupply
 from bug import *
-
+from defaults import *
 import time
-from pygame.locals import *
+
 
 from cleaningSupplies import *
 from cleaningSupplySeed import *
@@ -18,8 +18,6 @@ pygame.init()
 # This is a test to see if I can do a pull request
 
 # Global Variables:
-
-# Surface:
 DISPLAYSURF = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 pygame.display.set_caption('Cleaning Supplies vs Bugs')
 
@@ -58,7 +56,6 @@ openScreenRects = []  # stores rectangles/buttons of the opening screen
 floorGrid = []  # floor grid 2D array
 tileWidth = None
 tileHeight = None
-
 # dictionary where (key: <name of cleaningsupply>, value: tuple(<order>, <price>))
 # @see https://www.w3schools.com/python/python_dictionaries.asp
 seedDict = {"spraybottle": (100, 5000)}
@@ -216,7 +213,7 @@ def terminate():  # terminates game
     sys.exit()
 
 sprite = Sprites()
-sprite.add_Sprite()
+# # sprite.add_Sprite()
 
 def mainGame():
     global DISPLAYSURF, gameLevel, frames, curr_time
@@ -231,7 +228,7 @@ def mainGame():
 
     while True:
 
-        #start_time = time.time()
+        curr = time.time()
 
         for event in pygame.event.get():
 
@@ -244,20 +241,18 @@ def mainGame():
 
             if gameLevel == 0:
                 drawOpeningScreen()
-                if clicked:
-                    gameLevel = determineLevel(posX, posY)
+            if clicked:
+                gameLevel = determineLevel(posX, posY)
 
             if gameLevel == 1 and event.type == my_eventTime:
                 drawBackground()
-
+                game_l = 1
                 sprite.enemy_sprites.draw(DISPLAYSURF)
                 sprite.enemy_sprites.update()
-                # addingbug()
-                #
                 # addCleaningSupplySeeds()
                 # cleaningSupplyBackGrounds.draw(DISPLAYSURF)
                 # cleaningSupplySeedsGroup.draw(DISPLAYSURF)
-                # addCleaningSupply(0, 0, "spraybottle")
+                addCleaningSupply(0, 0, "spraybottle")
                 cleaningSupplyGroup.draw(DISPLAYSURF)
 
             if gameLevel == 2:
@@ -281,6 +276,7 @@ def mainGame():
 
         frames = frames + 1
 
+        print()
         pygame.display.update()
         # all_sprites.update()
         FPSCLOCK.tick(FPS)

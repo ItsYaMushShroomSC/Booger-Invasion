@@ -1,7 +1,7 @@
 import pygame, time
 import sys
 from pygame.locals import *
-from main import *
+from defaults import *
 import random
 
 # spider should take 5 hits before its death
@@ -64,21 +64,18 @@ class Cockroach(pygame.sprite.Sprite):
         if self.health == 0:
             self.kill()
 
-
-# cock1 = Cockroach(3*DISPLAYSURF.get_width() / 4 + 50, DISPLAYSURF.get_height() / 2 + 242)
-
-# enemy_sprites.add(cock1)
-# if gameLevel == 1:
-class Dirt():
-    def __init__(self):
-        self.joy = 10
-
 class Sprites:
     def __init__(self):
         self.enemy_sprites = pygame.sprite.Group()
         self.add_Sprite()
+        self.game_Stat()
+        self.rep = time.time()
+        # print(self.rep)
+
+
 
     def add_Sprite(self):
+
         for i in range(5):
             # random spawning
 
@@ -88,6 +85,12 @@ class Sprites:
             # rep_time = pygame.time.get_ticks()
             # if rep_time - curr_time > 100:
             self.enemy_sprites.add(spider)
+
+
+    def game_Stat(self):
+        if game_l== 1:
+            print("oo")
+
 
 
 
