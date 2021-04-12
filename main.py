@@ -6,9 +6,9 @@ from pygame.locals import *
 import sys
 #import cleaningSupply
 from bug import *
-from defaults import *
+from cleaningSupply import *
 import time
-
+from pygame.locals import *
 
 from cleaningSupplies import *
 from cleaningSupplySeed import *
@@ -18,14 +18,16 @@ pygame.init()
 # This is a test to see if I can do a pull request
 
 # Global Variables:
+
+# Surface:
 DISPLAYSURF = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 pygame.display.set_caption('Cleaning Supplies vs Bugs')
 
 # Constants:
 windowWidth = DISPLAYSURF.get_width()  # resized to fullscreen
 windowHeight = DISPLAYSURF.get_height()  # resized to fullscreen
-scaleFactorW = int(windowWidth / 1536)
-scaleFactorH = int(windowHeight / 864)
+scaleFactorW = int(windowWidth / 1920)
+scaleFactorH = int(windowHeight / 1080)
 XMARGIN = 200 * scaleFactorW
 YMARGIN = 100 * scaleFactorH
 
@@ -56,9 +58,12 @@ openScreenRects = []  # stores rectangles/buttons of the opening screen
 floorGrid = []  # floor grid 2D array
 tileWidth = None
 tileHeight = None
+
+bugEnterAry = []
+
 # dictionary where (key: <name of cleaningsupply>, value: tuple(<order>, <price>))
 # @see https://www.w3schools.com/python/python_dictionaries.asp
-seedDict = {"spraybottle": (100, 5000)}
+seedDict = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000), 3: ("soapdispenser", 50, 5000), 4: ("flypaper", 10000, 25)}
 
 # Sprite Groups:
 cleaningSupplyGroup = pygame.sprite.Group()
@@ -71,6 +76,22 @@ cleaningSupplySeedsGroup = pygame.sprite.Group()
 # Non-Class Methods:
 
 # the dictionary will be read and the appropriate img will be
+def printBugEnterAry(index): # index starts from 0
+    for i, line in enumerate(bugEnterAry):
+        if i == index:
+            line
+
+def readBugText():
+    filepath = 'Level1BugTimes.txt'
+    with open(filepath) as fp:
+        line = fp.readline()
+        counter = 1
+        while line:
+            print("Line {}: {}".format(counter, line.strip()))
+            line = fp.readline()
+            bugEnterAry.append(line)
+            counter += 1
+
 def addCleaningSupplySeeds():
     global cleaningSupplySeedsGroup
 
@@ -83,18 +104,37 @@ def addCleaningSupplySeeds():
     for i in range(1, 10):
         cleaningSupplyBackGrounds.add_internal(CleaningSupplySeed(img, 'bg', 1, i, 1, XMARGIN, windowWidth, windowHeight))
 
-    for name, values in seedDict.items():
-        price, restockTime = values
+    for order, values in seedDict.items():
+        name, price, restockTime = values
         img = pygame.transform.smoothscale(getImg(name), (w, h))
-        cleaningSupplySeedsGroup.add_internal(CleaningSupplySeed(img, name, price, indexOrder, restockTime, XMARGIN, windowWidth, windowHeight))
+        cleaningSupplySeedsGroup.add_internal(CleaningSupplySeed(img, name, price, order, restockTime, XMARGIN, windowWidth, windowHeight))
 
 def getImg(name):
+
     if name == "spraybottle":
-        return pygame.image.load('sprayneutral.png')
+        return pygame.image.load('spraybottle.PNG')
+    if name == "sponge":
+        return pygame.image.load('sponge.PNG')
+    if name == "soapdispenser":
+        return pygame.image.load('soapdispenser.PNG')
+    if name == "flypaper":
+        return pygame.image.load('flypaper.PNG')
 
 def addCleaningSupply(posX, posY, name):
     if name == "spraybottle":
         cs = SprayBottle(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
+        cleaningSupplyGroup.add_internal(cs)
+        setTile(posX, posY, cs)
+    if name == "sponge":
+        cs = Sponge(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
+        cleaningSupplyGroup.add_internal(cs)
+        setTile(posX, posY, cs)
+    if name == "soapdispenser":
+        cs = SoapDispenser(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
+        cleaningSupplyGroup.add_internal(cs)
+        setTile(posX, posY, cs)
+    if name == "flypaper":
+        cs = Flypaper(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
         cleaningSupplyGroup.add_internal(cs)
         setTile(posX, posY, cs)
 
@@ -114,7 +154,7 @@ def formFloorGridArray():  # Fills all places in FloorGridArray with None
     floorGrid = [[None] * row for i in range(col)]
 
 
-def drawTiles():
+def drawTiles(shouldDraw):
     global floorGrid, tileHeight, tileWidth, XMARGIN, YMARGIN  # 5 by 9 grid 5 height and 9 length
     scaleFactor = scaleFactorH
     if scaleFactorW < scaleFactorH:
@@ -131,24 +171,25 @@ def drawTiles():
     left, top = XMARGIN, YMARGIN
     floorNum = 1
 
-    for col in range(9):
-        for row in range(5):
-            if floorNum % 2 == 0:
-                img = img2
-            else:
-                img = img1
+    if shouldDraw == True:
+        for col in range(9):
+            for row in range(5):
+                if floorNum % 2 == 0:
+                    img = img2
+                else:
+                    img = img1
 
-            floorNum += 1
-            imgRect = img.get_rect()
-            imgRect.topleft = (left + col * 100, top + row * 121)
-            DISPLAYSURF.blit(img, imgRect)
+                floorNum += 1
+                imgRect = img.get_rect()
+                imgRect.topleft = (left + col * 100, top + row * 121)
+                DISPLAYSURF.blit(img, imgRect)
 
 
 def drawBackground():
     img = pygame.transform.smoothscale(pygame.image.load('bugsWorldBackground.jpg').convert_alpha(),
                                        (windowWidth, windowHeight))
     DISPLAYSURF.blit(img, (0, 0))
-    drawTiles()
+    drawTiles(True)
 
 
 def determineLevel(mousePosX, mousePosY):
@@ -206,18 +247,16 @@ def drawOpeningScreen():
 
 def resetVariables():
     formFloorGridArray()
-
+    drawTiles(False)
 
 def terminate():  # terminates game
     pygame.quit()
     sys.exit()
 
-sprite = Sprites()
-# # sprite.add_Sprite()
 
+curr_time = 0
 def mainGame():
     global DISPLAYSURF, gameLevel, frames, curr_time
-
 
     clicked = False
 
@@ -226,44 +265,50 @@ def mainGame():
     my_eventTime = USEREVENT + 1
     pygame.time.set_timer(my_eventTime, 150)
 
-    start = None
+    addCleaningSupply(0, 0, "spraybottle")
+    addCleaningSupply(0, 1, "sponge")
+    addCleaningSupply(0, 2, "soapdispenser")
+    addCleaningSupply(0, 3, "flypaper")
+    addCleaningSupplySeeds()
+
+
     while True:
 
-        curr = time.time()
+        #start_time = time.time()
 
         for event in pygame.event.get():
 
             posX, posY = pygame.mouse.get_pos()
 
             if event.type == MOUSEBUTTONDOWN:
-                start = pygame.time.get_ticks()
                 clicked = True
             else:
                 clicked = False
 
             if gameLevel == 0:
                 drawOpeningScreen()
-            if clicked:
-                gameLevel = determineLevel(posX, posY)
+                if clicked:
+                    gameLevel = determineLevel(posX, posY)
 
-            if gameLevel == 1 and event.type == my_eventTime and start:
-                time_since_enter = int((pygame.time.get_ticks() - start) / 1000)
-                # print(time_since_enter)
-
+            if gameLevel == 1 and event.type == my_eventTime:
                 drawBackground()
-                if time_since_enter >= 5:
-                    sprite.enemy_sprites.draw(DISPLAYSURF)
-                    sprite.enemy_sprites.update()
-                # addCleaningSupplySeeds()
-                # cleaningSupplyBackGrounds.draw(DISPLAYSURF)
-                # cleaningSupplySeedsGroup.draw(DISPLAYSURF)
-                addCleaningSupply(0, 0, "spraybottle")
+
+                enemy_sprites.draw(DISPLAYSURF)
+                enemy_sprites.update()
+
+                #addCleaningSupplySeeds()
+                cleaningSupplyBackGrounds.draw(DISPLAYSURF)
+                cleaningSupplySeedsGroup.draw(DISPLAYSURF)
+                #addCleaningSupply(0, 0, "spraybottle")
                 cleaningSupplyGroup.draw(DISPLAYSURF)
-
-
-
-
-
+                cleaningSupplyGroup.draw(DISPLAYSURF)
+                #printFloorGridAry()
+                #moveAll()
+                #all_sprites.draw(DISPLAYSURF)
+                #all_sprites.update()
+                #readBugText()
+                print(str(windowWidth))
+                print(str(windowHeight))
 
             if gameLevel == 2:
                 drawBackground()
@@ -285,8 +330,6 @@ def mainGame():
                     terminate()
 
         frames = frames + 1
-
-
 
         pygame.display.update()
         # all_sprites.update()
