@@ -59,6 +59,8 @@ floorGrid = []  # floor grid 2D array
 tileWidth = None
 tileHeight = None
 
+bugEnterAry = []
+
 # dictionary where (key: <name of cleaningsupply>, value: tuple(<order>, <price>))
 # @see https://www.w3schools.com/python/python_dictionaries.asp
 seedDict = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000), 3: ("soapdispenser", 50, 5000), 4: ("flypaper", 10000, 25)}
@@ -74,6 +76,20 @@ cleaningSupplySeedsGroup = pygame.sprite.Group()
 # Non-Class Methods:
 
 # the dictionary will be read and the appropriate img will be
+#def printBugEnterAry():
+    #for i in bugEnterAry:
+
+def readBugText():
+    filepath = 'Level1BugTimes.txt'
+    with open(filepath) as fp:
+        line = fp.readline()
+        counter = 1
+        while line:
+            print("Line {}: {}".format(counter, line.strip()))
+            line = fp.readline()
+            bugEnterAry.append(line)
+            counter += 1
+
 def addCleaningSupplySeeds():
     global cleaningSupplySeedsGroup
 
@@ -288,6 +304,7 @@ def mainGame():
                 #moveAll()
                 #all_sprites.draw(DISPLAYSURF)
                 #all_sprites.update()
+                readBugText()
 
             if gameLevel == 2:
                 drawBackground()
