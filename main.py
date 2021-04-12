@@ -26,8 +26,8 @@ pygame.display.set_caption('Cleaning Supplies vs Bugs')
 # Constants:
 windowWidth = DISPLAYSURF.get_width()  # resized to fullscreen
 windowHeight = DISPLAYSURF.get_height()  # resized to fullscreen
-scaleFactorW = int(windowWidth / 1536)
-scaleFactorH = int(windowHeight / 864)
+scaleFactorW = int(windowWidth / 1920)
+scaleFactorH = int(windowHeight / 1080)
 XMARGIN = 200 * scaleFactorW
 YMARGIN = 100 * scaleFactorH
 
@@ -76,8 +76,10 @@ cleaningSupplySeedsGroup = pygame.sprite.Group()
 # Non-Class Methods:
 
 # the dictionary will be read and the appropriate img will be
-#def printBugEnterAry():
-    #for i in bugEnterAry:
+def printBugEnterAry(index): # index starts from 0
+    for i, line in enumerate(bugEnterAry):
+        if i == index:
+            line
 
 def readBugText():
     filepath = 'Level1BugTimes.txt'
@@ -304,7 +306,9 @@ def mainGame():
                 #moveAll()
                 #all_sprites.draw(DISPLAYSURF)
                 #all_sprites.update()
-                readBugText()
+                #readBugText()
+                print(str(windowWidth))
+                print(str(windowHeight))
 
             if gameLevel == 2:
                 drawBackground()
