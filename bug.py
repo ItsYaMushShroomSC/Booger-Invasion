@@ -66,20 +66,25 @@ class Cockroach(pygame.sprite.Sprite):
 
 class Sprites:
     def __init__(self):
+        # self.move_time = move_time
         self.enemy_sprites = pygame.sprite.Group()
-        self.add_Sprite()
+
         self.game_Stat()
 
-    def add_Sprite(self):
+    def add_Sprite(self, a):
 
-        for i in range(5):
-            x = 3 * DISPLAYSURF.get_width() / 4
-            y = random.choice(choices)
-            spider = Spider(x, y)
-            cockroach = Cockroach(x,y)
+            for i in range(5):
+                if a % 10 == 0:
 
-            # self.enemy_sprites.add(spider)
-            self.enemy_sprites.add(cockroach)
+                    x = 3 * DISPLAYSURF.get_width() / 4
+                    y = random.choice(choices)
+                    spider = Spider(x, y)
+                    cockroach = Cockroach(x,y)
+                    a += 2
+                    # self.enemy_sprites.add(spider)
+
+                    self.enemy_sprites.add(cockroach)
+
 
 
     def game_Stat(self):

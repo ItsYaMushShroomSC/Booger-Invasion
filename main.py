@@ -9,7 +9,7 @@ from bug import *
 from cleaningSupply import *
 import time
 from pygame.locals import *
-
+from defaults import *
 from cleaningSupplies import *
 from cleaningSupplySeed import *
 
@@ -254,9 +254,9 @@ def terminate():  # terminates game
     sys.exit()
 
 
-curr_time = 0
+time_since_enter = 0
 def mainGame():
-    global DISPLAYSURF, gameLevel, frames, curr_time
+    global DISPLAYSURF, gameLevel, frames, curr_time, time_since_enter
 
     clicked = False
 
@@ -270,11 +270,13 @@ def mainGame():
     addCleaningSupply(0, 2, "soapdispenser")
     addCleaningSupply(0, 3, "flypaper")
     addCleaningSupplySeeds()
+    sprite = Sprites()
+
 
 
     while True:
 
-        #start_time = time.time()
+
 
         for event in pygame.event.get():
 
@@ -282,6 +284,7 @@ def mainGame():
 
             if event.type == MOUSEBUTTONDOWN:
                 clicked = True
+                start = pygame.time.get_ticks()
             else:
                 clicked = False
 
@@ -291,10 +294,13 @@ def mainGame():
                     gameLevel = determineLevel(posX, posY)
 
             if gameLevel == 1 and event.type == my_eventTime:
+                time_since_enter = int((pygame.time.get_ticks() - start) / 1000)
                 drawBackground()
+                sprite.add_Sprite(time_since_enter)
+                if time_since_enter >= 5:
+                    sprite.enemy_sprites.draw(DISPLAYSURF)
+                    sprite.enemy_sprites.update()
 
-                enemy_sprites.draw(DISPLAYSURF)
-                enemy_sprites.update()
 
                 #addCleaningSupplySeeds()
                 cleaningSupplyBackGrounds.draw(DISPLAYSURF)
@@ -303,9 +309,7 @@ def mainGame():
                 cleaningSupplyGroup.draw(DISPLAYSURF)
                 cleaningSupplyGroup.draw(DISPLAYSURF)
                 #printFloorGridAry()
-                #moveAll()
-                #all_sprites.draw(DISPLAYSURF)
-                #all_sprites.update()
+
                 #readBugText()
                 print(str(windowWidth))
                 print(str(windowHeight))
