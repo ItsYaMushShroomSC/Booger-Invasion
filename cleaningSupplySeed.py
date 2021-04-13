@@ -27,6 +27,7 @@ class CleaningSupplySeed(pygame.sprite.Sprite):
         windowHeight = windowH
         self.setImgPos()
 
+
     def setImgPos(self): # setsTheImgPos
         centerX = int(XMARGIN/2)
         centerY = int(windowHeight * 1/9 - self.rect.h + self.rect.h*self.order)

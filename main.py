@@ -9,7 +9,7 @@ from bug import *
 from cleaningSupply import *
 import time
 from pygame.locals import *
-
+from defaults import *
 from cleaningSupplies import *
 from cleaningSupplySeed import *
 
@@ -285,7 +285,7 @@ def terminate():  # terminates game
     sys.exit()
 
 
-curr_time = 0
+time_since_enter = 0
 def mainGame():
     global DISPLAYSURF, gameLevel, frames, curr_time, bugEnterAry
 
@@ -301,6 +301,8 @@ def mainGame():
     addCleaningSupply(0, 2, "soapdispenser")
     addCleaningSupply(0, 3, "flypaper")
     addCleaningSupplySeeds()
+    sprite = Sprites()
+
 
     timeSinceStart = 0
     curr_time = pygame.time.get_ticks()
@@ -313,6 +315,7 @@ def mainGame():
 
             if event.type == MOUSEBUTTONDOWN:
                 clicked = True
+                start = pygame.time.get_ticks()
             else:
                 clicked = False
 
