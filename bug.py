@@ -8,7 +8,7 @@ import random
 choices = [DISPLAYSURF.get_height() / 2, DISPLAYSURF.get_height() / 2 - 121, DISPLAYSURF.get_height() / 2 - 242,
            DISPLAYSURF.get_height() / 2 + 121, DISPLAYSURF.get_height() / 2 + 242]
 
-# enemy_sprites = pygame.sprite.Group()
+enemy_sprites = pygame.sprite.Group()
 
 
 class Spider(pygame.sprite.Sprite):
