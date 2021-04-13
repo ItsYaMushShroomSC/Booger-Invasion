@@ -285,7 +285,7 @@ def terminate():  # terminates game
     sys.exit()
 
 
-time_since_enter = 0
+
 def mainGame():
     global DISPLAYSURF, gameLevel, frames, curr_time, bugEnterAry
 
@@ -301,7 +301,6 @@ def mainGame():
     addCleaningSupply(0, 2, "soapdispenser")
     addCleaningSupply(0, 3, "flypaper")
     addCleaningSupplySeeds()
-    sprite = Sprites()
 
 
     timeSinceStart = 0
@@ -315,7 +314,8 @@ def mainGame():
 
             if event.type == MOUSEBUTTONDOWN:
                 clicked = True
-                start = pygame.time.get_ticks()
+                timeSinceStart = 0
+                curr_time = pygame.time.get_ticks()
             else:
                 clicked = False
 
