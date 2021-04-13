@@ -26,8 +26,8 @@ pygame.display.set_caption('Cleaning Supplies vs Bugs')
 # Constants:
 windowWidth = DISPLAYSURF.get_width()  # resized to fullscreen
 windowHeight = DISPLAYSURF.get_height()  # resized to fullscreen
-scaleFactorW = int(windowWidth / 1920)
-scaleFactorH = int(windowHeight / 1080)
+scaleFactorW = int(windowWidth / 1536) * int(windowWidth/1536)
+scaleFactorH = int(windowHeight / 864) * int(windowHeight/864)
 XMARGIN = 200 * scaleFactorW
 YMARGIN = 100 * scaleFactorH
 
@@ -60,6 +60,7 @@ tileWidth = None
 tileHeight = None
 
 bugEnterAry = []
+bugEnterIndex = 0
 
 # dictionary where (key: <name of cleaningsupply>, value: tuple(<order>, <price>))
 # @see https://www.w3schools.com/python/python_dictionaries.asp
@@ -76,21 +77,51 @@ cleaningSupplySeedsGroup = pygame.sprite.Group()
 # Non-Class Methods:
 
 # the dictionary will be read and the appropriate img will be
-def printBugEnterAry(index): # index starts from 0
-    for i, line in enumerate(bugEnterAry):
-        if i == index:
-            line
 
-def readBugText():
-    filepath = 'Level1BugTimes.txt'
-    with open(filepath) as fp:
-        line = fp.readline()
-        counter = 1
-        while line:
-            print("Line {}: {}".format(counter, line.strip()))
-            line = fp.readline()
-            bugEnterAry.append(line)
-            counter += 1
+def getBugsEntering(timeElapsed): # adds the bugs entering the screen
+    # timeElapsed is seconds from since the game started
+    global bugEnterIndex
+
+    print(str(len(bugEnterAry)))
+    index = 0
+    for i in range(len(bugEnterAry)):
+        bug = str(bugEnterAry[i][0])
+        time = int(bugEnterAry[i][1]) * 1000
+        print(bug)
+
+        if timeElapsed >= time and bugEnterIndex <= index:
+            print('woo')
+            bugEnterIndex += 1
+            buggy = getBugRandomPos(bug)
+
+            if not buggy == None:
+                enemy_sprites.add(buggy)
+
+        index += 1
+
+
+def readFile(): # opens txt note and adds letters to gameAry which is '2D'
+    global bugEnterAry
+    bugEnterAry.clear()
+    if gameLevel == 1:
+        level1 = open('Level1BugTimes.txt')
+        for line in level1:
+            bugEnterAry.append(line.rstrip().split(' '))
+
+def getBugRandomPos(bugName):
+    choices = [DISPLAYSURF.get_height() / 2, DISPLAYSURF.get_height() / 2 - 121, DISPLAYSURF.get_height() / 2 - 242,
+               DISPLAYSURF.get_height() / 2 + 121, DISPLAYSURF.get_height() / 2 + 242]
+
+    x = 3 * DISPLAYSURF.get_width() / 4
+    y = random.choice(choices)
+
+    if bugName == 'spider':
+        return Spider(x, y)
+    if bugName == 'cockroach':
+        return Cockroach(x, y)
+
+
+
 
 def addCleaningSupplySeeds():
     global cleaningSupplySeedsGroup
@@ -256,7 +287,7 @@ def terminate():  # terminates game
 
 curr_time = 0
 def mainGame():
-    global DISPLAYSURF, gameLevel, frames, curr_time
+    global DISPLAYSURF, gameLevel, frames, curr_time, bugEnterAry
 
     clicked = False
 
@@ -271,10 +302,10 @@ def mainGame():
     addCleaningSupply(0, 3, "flypaper")
     addCleaningSupplySeeds()
 
+    timeSinceStart = 0
+    curr_time = pygame.time.get_ticks()
 
     while True:
-
-        #start_time = time.time()
 
         for event in pygame.event.get():
 
@@ -290,25 +321,33 @@ def mainGame():
                 if clicked:
                     gameLevel = determineLevel(posX, posY)
 
-            if gameLevel == 1 and event.type == my_eventTime:
-                drawBackground()
+            if gameLevel == 1:
+                readFile()
 
-                enemy_sprites.draw(DISPLAYSURF)
-                enemy_sprites.update()
+                if curr_time + 1000 > pygame.time.get_ticks(): # every 1 second that passes this will happen
+                    curr_time = pygame.time.get_ticks()
+                    timeSinceStart += 1000
+                    getBugsEntering(timeSinceStart)
+                    #print('hi')
 
-                #addCleaningSupplySeeds()
-                cleaningSupplyBackGrounds.draw(DISPLAYSURF)
-                cleaningSupplySeedsGroup.draw(DISPLAYSURF)
-                #addCleaningSupply(0, 0, "spraybottle")
-                cleaningSupplyGroup.draw(DISPLAYSURF)
-                cleaningSupplyGroup.draw(DISPLAYSURF)
-                #printFloorGridAry()
-                #moveAll()
-                #all_sprites.draw(DISPLAYSURF)
-                #all_sprites.update()
-                #readBugText()
-                print(str(windowWidth))
-                print(str(windowHeight))
+                if event.type == my_eventTime:
+                    drawBackground()
+
+                    enemy_sprites.draw(DISPLAYSURF)
+                    enemy_sprites.update()
+
+                    #addCleaningSupplySeeds()
+                    cleaningSupplyBackGrounds.draw(DISPLAYSURF)
+                    cleaningSupplySeedsGroup.draw(DISPLAYSURF)
+                    #addCleaningSupply(0, 0, "spraybottle")
+                    cleaningSupplyGroup.draw(DISPLAYSURF)
+                    cleaningSupplyGroup.draw(DISPLAYSURF)
+                    #printFloorGridAry()
+                    #moveAll()
+                    #all_sprites.draw(DISPLAYSURF)
+                    #all_sprites.update()
+                    #print(str(windowWidth))
+                    #print(str(windowHeight))
 
             if gameLevel == 2:
                 drawBackground()
