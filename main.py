@@ -26,8 +26,8 @@ pygame.display.set_caption('Cleaning Supplies vs Bugs')
 # Constants:
 windowWidth = DISPLAYSURF.get_width()  # resized to fullscreen
 windowHeight = DISPLAYSURF.get_height()  # resized to fullscreen
-scaleFactorW = int(windowWidth / 1536) * int(windowWidth/1536)
-scaleFactorH = int(windowHeight / 864) * int(windowHeight/864)
+scaleFactorW = int(windowWidth / 1536)
+scaleFactorH = int(windowHeight / 864)
 XMARGIN = 200 * scaleFactorW
 YMARGIN = 100 * scaleFactorH
 
@@ -65,6 +65,7 @@ bugEnterIndex = 0
 # dictionary where (key: <name of cleaningsupply>, value: tuple(<order>, <price>))
 # @see https://www.w3schools.com/python/python_dictionaries.asp
 seedDict = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000), 3: ("soapdispenser", 50, 5000), 4: ("flypaper", 10000, 25)}
+seedInventoryRects = [] # seed rects for mouse collision
 
 # Sprite Groups:
 cleaningSupplyGroup = pygame.sprite.Group()
@@ -77,6 +78,18 @@ cleaningSupplySeedsGroup = pygame.sprite.Group()
 # Non-Class Methods:
 
 # the dictionary will be read and the appropriate img will be
+
+def getSeedSelected(mouseX, mouseY):
+    index = 1
+    for seedInventoryRect in seedInventoryRects:
+
+        if seedInventoryRect.collidepoint((mouseX, mouseY)):
+            values = seedDict.get(index)
+            seedSelected, noOneCares1, noOneCares2 = values
+
+        index += 1
+
+    return seedSelected
 
 def getBugsEntering(timeElapsed): # adds the bugs entering the screen
     # timeElapsed is seconds from since the game started
@@ -138,7 +151,9 @@ def addCleaningSupplySeeds():
     for order, values in seedDict.items():
         name, price, restockTime = values
         img = pygame.transform.smoothscale(getImg(name), (w, h))
-        cleaningSupplySeedsGroup.add_internal(CleaningSupplySeed(img, name, price, order, restockTime, XMARGIN, windowWidth, windowHeight))
+        supplySeed = CleaningSupplySeed(img, name, price, order, restockTime, XMARGIN, windowWidth, windowHeight)
+        cleaningSupplySeedsGroup.add_internal(supplySeed)
+        seedInventoryRects.append(supplySeed.rect)
 
 def getImg(name):
 
@@ -331,7 +346,6 @@ def mainGame():
                     curr_time = pygame.time.get_ticks()
                     timeSinceStart += 1000
                     getBugsEntering(timeSinceStart)
-                    #print('hi')
 
                 if event.type == my_eventTime:
                     drawBackground()
@@ -339,21 +353,19 @@ def mainGame():
                     enemy_sprites.draw(DISPLAYSURF)
                     enemy_sprites.update()
 
-                    #addCleaningSupplySeeds()
                     cleaningSupplyBackGrounds.draw(DISPLAYSURF)
                     cleaningSupplySeedsGroup.draw(DISPLAYSURF)
-                    #addCleaningSupply(0, 0, "spraybottle")
+
                     cleaningSupplyGroup.draw(DISPLAYSURF)
                     cleaningSupplyGroup.draw(DISPLAYSURF)
-                    #printFloorGridAry()
-                    #moveAll()
-                    #all_sprites.draw(DISPLAYSURF)
-                    #all_sprites.update()
-                    #print(str(windowWidth))
-                    #print(str(windowHeight))
+
+                    print(str(windowWidth))
+                    print(str(windowHeight))
 
             if gameLevel == 2:
                 drawBackground()
+                print(str(windowWidth))
+                print(str(windowHeight))
 
             if gameLevel == 3:
                 drawBackground()

@@ -42,6 +42,12 @@ class CleaningSupplySeed(pygame.sprite.Sprite):
     def getRestockTime(self):
         return self.restockTime
 
+    def getInStock(self):
+        if self.restockTime == 0:
+            return True
+        else:
+            return False
+
 
 
 
