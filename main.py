@@ -55,7 +55,9 @@ PINK = (255, 153, 204)
 gameLevel = 0  # 0 means that there is no game being played and the opening screen should be displayed
 openScreenRects = []  # stores rectangles/buttons of the opening screen
 
-floorGrid = []  # floor grid 2D array
+floorGrid = []  # floor grid 2D array stores the cleaning supply name at each position, None if there isn't one
+floorGridRects = [] # stores the rectangles of the tiles in the floorGrid
+
 tileWidth = None
 tileHeight = None
 
@@ -72,6 +74,9 @@ cleaningSupplyGroup = pygame.sprite.Group()
 cleaningSupplyBackGrounds = pygame.sprite.Group()
 cleaningSupplySeedsGroup = pygame.sprite.Group()
 
+# Money currency
+bubbleCoins = 0
+
 # Classes Are in other .py files
 
 
@@ -79,17 +84,41 @@ cleaningSupplySeedsGroup = pygame.sprite.Group()
 
 # the dictionary will be read and the appropriate img will be
 
-def getSeedSelected(mouseX, mouseY):
+
+def addSelectedCleaningSupply(dictKey, seedSelected, posX, posY):
+    global bubbleCoins
+
+    seedName, price, reloadTime = seedDict.get(dictKey)
+
+    if not seedSelected == None and bubbleCoins >= price:
+
+        for col in range(9):
+            for row in range(5):
+                if floorGridRects[col][row].collidepoint((posX, posY)) and floorGrid[col][row] == None:
+                    bubbleCoins -= price
+                    addCleaningSupply(posX, posY, seedSelected)
+                    return None
+
+    return seedSelected
+
+
+    return seedSelected
+
+def getSeedSelected(mouseX, mouseY, seedSelected): # seedSelected is None when it wasn't set yet
     index = 1
+    price = None
+    dictIndex = 0
+
     for seedInventoryRect in seedInventoryRects:
 
         if seedInventoryRect.collidepoint((mouseX, mouseY)):
             values = seedDict.get(index)
-            seedSelected, noOneCares1, noOneCares2 = values
+            seedSelected, price, noOneCares = values
+            dictIndex = index
 
         index += 1
 
-    return seedSelected
+    return dictIndex, seedSelected # seedSelected and price return None when no seedpackets were selected
 
 def getBugsEntering(timeElapsed): # adds the bugs entering the screen
     # timeElapsed is seconds from since the game started
@@ -184,6 +213,9 @@ def addCleaningSupply(posX, posY, name):
         cleaningSupplyGroup.add_internal(cs)
         setTile(posX, posY, cs)
 
+def getTileRect(x, y):
+    return floorGridRects[y][x]
+
 def getTile(x, y):  # (0, 0) is the top left tile
     return floorGrid[y][x]
 
@@ -191,6 +223,12 @@ def getTile(x, y):  # (0, 0) is the top left tile
 def setTile(x, y, cleaningSupplyType):  # the tile in that position is set as cleaningSupplyType (0,0) is top left tile
     floorGrid[y][x] = cleaningSupplyType
 
+def formFloorGridRectsArray():
+    global floorGridRects
+
+    row = 5
+    col = 9
+    floorGridRects = [[None] * row for i in range(col)]
 
 def formFloorGridArray():  # Fills all places in FloorGridArray with None
     global floorGrid
@@ -218,6 +256,8 @@ def drawTiles(shouldDraw):
     floorNum = 1
 
     if shouldDraw == True:
+        formFloorGridRectsArray()
+
         for col in range(9):
             for row in range(5):
                 if floorNum % 2 == 0:
@@ -229,6 +269,8 @@ def drawTiles(shouldDraw):
                 imgRect = img.get_rect()
                 imgRect.topleft = (left + col * 100, top + row * 121)
                 DISPLAYSURF.blit(img, imgRect)
+
+                floorGridRects[col][row] = imgRect
 
 
 def drawBackground():
@@ -317,6 +359,9 @@ def mainGame():
     addCleaningSupply(0, 3, "flypaper")
     addCleaningSupplySeeds()
 
+    seedSelected = None
+    dictIndex = 0
+    price = None
 
     timeSinceStart = 0
     curr_time = pygame.time.get_ticks()
@@ -342,6 +387,9 @@ def mainGame():
             if gameLevel == 1:
                 readFile()
 
+                dictIndex, seedSelected = getSeedSelected(posX, posY, seedSelected)
+                seedSelected = addSelectedCleaningSupply(dictIndex, seedSelected, posX, posY)
+
                 if curr_time + 1000 > pygame.time.get_ticks(): # every 1 second that passes this will happen
                     curr_time = pygame.time.get_ticks()
                     timeSinceStart += 1000
@@ -359,13 +407,11 @@ def mainGame():
                     cleaningSupplyGroup.draw(DISPLAYSURF)
                     cleaningSupplyGroup.draw(DISPLAYSURF)
 
-                    print(str(windowWidth))
-                    print(str(windowHeight))
+                    #print(str(windowWidth))
+                    #print(str(windowHeight))
 
             if gameLevel == 2:
                 drawBackground()
-                print(str(windowWidth))
-                print(str(windowHeight))
 
             if gameLevel == 3:
                 drawBackground()
