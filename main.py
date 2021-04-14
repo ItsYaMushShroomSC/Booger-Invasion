@@ -117,8 +117,14 @@ def getBugRandomPos(bugName):
 
     if bugName == 'spider':
         return Spider(x, y)
+    if bugName == 'wasp':
+        return Wasp(x, y)
     if bugName == 'cockroach':
         return Cockroach(x, y)
+    if bugName == 'ant':
+        return Ant(x, y)
+    if bugName == 'ladybug':
+        return LadyBug(x, y)
 
 
 
