@@ -9,6 +9,7 @@ class SprayBottle(CleaningSupply):
 
         super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("spraybottle.png"), (tileW, tileH)), XMARG, YMARG, tileW, tileH)
 
+        self.name = 'spraybottle'
         self.cooldown = 480
         self.health = 10
         self.startcooldownframes = self.cooldown
@@ -21,7 +22,9 @@ class Sponge(CleaningSupply):
     def __init__(self, row, column, XMARG, YMARG, tileW, tileH):
 
         super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("sponge.png"), (tileW, tileH)), XMARG, YMARG, tileW, tileH)
+        self.name = 'sponge'
         self.health = 50
+
 
 
 #spongeGroup.add(Sponge(0, 0))
@@ -33,6 +36,7 @@ class Flypaper(CleaningSupply):
     def __init__(self, row, column, XMARG, YMARG, tileW, tileH):
 
         super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("flypaper.png"), (tileW, tileH)), XMARG, YMARG, tileW, tileH)
+        self.name = 'flypaper'
         self.health = 10 # when flypaper is stepped on, it will explode
 
 
@@ -44,6 +48,7 @@ class SoapDispenser(CleaningSupply):
 
     def __init__(self, row, column, XMARG, YMARG, tileW, tileH):
         super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("soapdispenser.png"), (tileW, tileH)), XMARG, YMARG, tileW, tileH)
+        self.name = 'soapdispenser'
 
         self.cooldown = 2400 #15 seconds
         self.health = 10

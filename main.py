@@ -75,7 +75,7 @@ cleaningSupplyBackGrounds = pygame.sprite.Group()
 cleaningSupplySeedsGroup = pygame.sprite.Group()
 
 # Money currency
-bubbleCoins = 0
+bubbleCoins = 1000
 
 # Classes Are in other .py files
 
@@ -87,22 +87,36 @@ bubbleCoins = 0
 
 def addSelectedCleaningSupply(dictKey, seedSelected, posX, posY):
     global bubbleCoins
+    counter = 0
 
-    seedName, price, reloadTime = seedDict.get(dictKey)
+    if not dictKey == 0 and not seedSelected == None:
+        seedName, price, reloadTime = seedDict.get(dictKey)
 
-    if not seedSelected == None and bubbleCoins >= price:
+        if bubbleCoins >= price:
 
-        for col in range(9):
+            #print('hi')
             for row in range(5):
-                if floorGridRects[col][row].collidepoint((posX, posY)) and floorGrid[col][row] == None:
-                    bubbleCoins -= price
-                    addCleaningSupply(posX, posY, seedSelected)
-                    return None
+                for col in range(9):
+                    #if not floorGrid[col][row] == None:
+                        #counter += 1
+                        #print('col' + str(col))
+                        #print('row' + str(row))
+                    #print(floorGrid[col][row])
+                    #if floorGridRects[col][row].collidepoint((posX, posY)):
+                        #print('hi')
+
+                    #if floorGridRects[col][row] == None:
+                        #print('hi')
+
+                    if floorGridRects[col][row].collidepoint((posX, posY)) and floorGrid[col][row] == None:
+                        print('hi')
+                        bubbleCoins -= price
+                        addCleaningSupply(posX, posY, seedSelected)
+                        return None
+            #print(str(counter))
 
     return seedSelected
 
-
-    return seedSelected
 
 def getSeedSelected(mouseX, mouseY, seedSelected): # seedSelected is None when it wasn't set yet
     index = 1
@@ -124,15 +138,12 @@ def getBugsEntering(timeElapsed): # adds the bugs entering the screen
     # timeElapsed is seconds from since the game started
     global bugEnterIndex
 
-    print(str(len(bugEnterAry)))
     index = 0
     for i in range(len(bugEnterAry)):
         bug = str(bugEnterAry[i][0])
         time = int(bugEnterAry[i][1]) * 1000
-        print(bug)
 
         if timeElapsed >= time and bugEnterIndex <= index:
-            print('woo')
             bugEnterIndex += 1
             buggy = getBugRandomPos(bug)
 
@@ -213,15 +224,15 @@ def addCleaningSupply(posX, posY, name):
         cleaningSupplyGroup.add_internal(cs)
         setTile(posX, posY, cs)
 
-def getTileRect(x, y):
-    return floorGridRects[y][x]
+def getTileRect(col, row):
+    return floorGridRects[col][row]
 
-def getTile(x, y):  # (0, 0) is the top left tile
-    return floorGrid[y][x]
+def getTile(col, row):  # (0, 0) is the top left tile
+    return floorGrid[col][row]
 
 
-def setTile(x, y, cleaningSupplyType):  # the tile in that position is set as cleaningSupplyType (0,0) is top left tile
-    floorGrid[y][x] = cleaningSupplyType
+def setTile(col, row, cleaningSupplyType):  # the tile in that position is set as cleaningSupplyType (0,0) is top left tile
+    floorGrid[col][row] = cleaningSupplyType
 
 def formFloorGridRectsArray():
     global floorGridRects
@@ -256,10 +267,10 @@ def drawTiles(shouldDraw):
     floorNum = 1
 
     if shouldDraw == True:
-        formFloorGridRectsArray()
+        #formFloorGridRectsArray()
 
-        for col in range(9):
-            for row in range(5):
+        for row in range(5):
+            for col in range(9):
                 if floorNum % 2 == 0:
                     img = img2
                 else:
@@ -335,6 +346,7 @@ def drawOpeningScreen():
 
 def resetVariables():
     formFloorGridArray()
+    formFloorGridRectsArray()
     drawTiles(False)
 
 def terminate():  # terminates game
@@ -358,6 +370,7 @@ def mainGame():
     addCleaningSupply(0, 2, "soapdispenser")
     addCleaningSupply(0, 3, "flypaper")
     addCleaningSupplySeeds()
+
 
     seedSelected = None
     dictIndex = 0
@@ -387,8 +400,10 @@ def mainGame():
             if gameLevel == 1:
                 readFile()
 
-                dictIndex, seedSelected = getSeedSelected(posX, posY, seedSelected)
-                seedSelected = addSelectedCleaningSupply(dictIndex, seedSelected, posX, posY)
+                if clicked == True:
+                    dictIndex, seedSelected = getSeedSelected(posX, posY, seedSelected)
+                    print(seedSelected)
+                    seedSelected = addSelectedCleaningSupply(dictIndex, seedSelected, posX, posY)
 
                 if curr_time + 1000 > pygame.time.get_ticks(): # every 1 second that passes this will happen
                     curr_time = pygame.time.get_ticks()
@@ -440,7 +455,10 @@ def mainGame():
 def printFloorGridAry():  # Print the floor grid array contents whenever you want to see it
     for row in range(5):
         for col in range(9):
-            print(str(floorGrid[col][row]) + " ", end='')
+            if floorGrid[col][row] == None:
+                print('None' + " ", end='')
+            else:
+                print(str(floorGrid[col][row].name) + " ", end='')
         print()
 
 
