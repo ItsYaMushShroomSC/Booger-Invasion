@@ -66,7 +66,7 @@ bugEnterIndex = 0
 
 # dictionary where (key: <name of cleaningsupply>, value: tuple(<order>, <price>))
 # @see https://www.w3schools.com/python/python_dictionaries.asp
-seedDict = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000), 3: ("soapdispenser", 50, 5000), 4: ("flypaper", 10000, 25)}
+seedDict = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000), 3: ("soapdispenser", 50, 5000), 4: ("flypaper", 25, 10000)}
 seedInventoryRects = [] # seed rects for mouse collision
 
 # Sprite Groups:
@@ -88,7 +88,6 @@ bubbleCoins = 1000
 def addSelectedCleaningSupply(dictKey, seedSelected, posX, posY):
     global bubbleCoins
     counter = 0
-
     if not dictKey == 0 and not seedSelected == None:
         seedName, price, reloadTime = seedDict.get(dictKey)
 
@@ -107,21 +106,21 @@ def addSelectedCleaningSupply(dictKey, seedSelected, posX, posY):
 
                     #if floorGridRects[col][row] == None:
                         #print('hi')
-
+                    #print(str(posX))
                     if floorGridRects[col][row].collidepoint((posX, posY)) and floorGrid[col][row] == None:
-                        print('hi')
+                        print(str(col))
+                        print(str(row))
                         bubbleCoins -= price
-                        addCleaningSupply(posX, posY, seedSelected)
+                        addCleaningSupply(row, col, seedSelected)
                         return None
             #print(str(counter))
 
     return seedSelected
 
 
-def getSeedSelected(mouseX, mouseY, seedSelected): # seedSelected is None when it wasn't set yet
+def getSeedSelected(mouseX, mouseY, seedSelected, dictIndex): # seedSelected is None when it wasn't set yet
     index = 1
     price = None
-    dictIndex = 0
 
     for seedInventoryRect in seedInventoryRects:
 
@@ -224,14 +223,14 @@ def addCleaningSupply(posX, posY, name):
         cleaningSupplyGroup.add_internal(cs)
         setTile(posX, posY, cs)
 
-def getTileRect(col, row):
+def getTileRect(row, col):
     return floorGridRects[col][row]
 
-def getTile(col, row):  # (0, 0) is the top left tile
+def getTile(row, col):  # (0, 0) is the top left tile
     return floorGrid[col][row]
 
 
-def setTile(col, row, cleaningSupplyType):  # the tile in that position is set as cleaningSupplyType (0,0) is top left tile
+def setTile(row, col, cleaningSupplyType):  # the tile in that position is set as cleaningSupplyType (0,0) is top left tile
     floorGrid[col][row] = cleaningSupplyType
 
 def formFloorGridRectsArray():
@@ -266,22 +265,20 @@ def drawTiles(shouldDraw):
     left, top = XMARGIN, YMARGIN
     floorNum = 1
 
-    if shouldDraw == True:
-        #formFloorGridRectsArray()
+    for row in range(5):
+        for col in range(9):
+            if floorNum % 2 == 0:
+                img = img2
+            else:
+                img = img1
 
-        for row in range(5):
-            for col in range(9):
-                if floorNum % 2 == 0:
-                    img = img2
-                else:
-                    img = img1
-
-                floorNum += 1
-                imgRect = img.get_rect()
-                imgRect.topleft = (left + col * 100, top + row * 121)
+            floorNum += 1
+            imgRect = img.get_rect()
+            imgRect.topleft = (left + col * 100, top + row * 121)
+            if shouldDraw == True:
                 DISPLAYSURF.blit(img, imgRect)
 
-                floorGridRects[col][row] = imgRect
+            floorGridRects[col][row] = imgRect
 
 
 def drawBackground():
@@ -379,13 +376,14 @@ def mainGame():
     timeSinceStart = 0
     curr_time = pygame.time.get_ticks()
 
+    posX, posY = None, None
+
     while True:
 
         for event in pygame.event.get():
 
-            posX, posY = pygame.mouse.get_pos()
-
             if event.type == MOUSEBUTTONDOWN:
+                posX, posY = pygame.mouse.get_pos()
                 clicked = True
                 timeSinceStart = 0
                 curr_time = pygame.time.get_ticks()
@@ -401,8 +399,10 @@ def mainGame():
                 readFile()
 
                 if clicked == True:
-                    dictIndex, seedSelected = getSeedSelected(posX, posY, seedSelected)
+                    dictIndex, seedSelected = getSeedSelected(posX, posY, seedSelected, dictIndex)
                     print(seedSelected)
+                    #if floorGridRects[2][2].collidepoint((posX, posY)):
+                        #print('hi')
                     seedSelected = addSelectedCleaningSupply(dictIndex, seedSelected, posX, posY)
 
                 if curr_time + 1000 > pygame.time.get_ticks(): # every 1 second that passes this will happen
@@ -461,7 +461,14 @@ def printFloorGridAry():  # Print the floor grid array contents whenever you wan
                 print(str(floorGrid[col][row].name) + " ", end='')
         print()
 
-
+def printFloorRectsAry():  # Print the floor grid array contents whenever you want to see it
+    for row in range(5):
+        for col in range(9):
+            if floorGridRects[col][row] == None:
+                print('None' + " ", end='')
+            else:
+                print(str(floorGridRects[col][row]) + " ", end='')
+        print()
 # RUN MAIN
 
 if __name__ == '__main__':
