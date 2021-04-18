@@ -75,7 +75,7 @@ cleaningSupplyBackGrounds = pygame.sprite.Group()
 cleaningSupplySeedsGroup = pygame.sprite.Group()
 
 # Money currency
-bubbleCoins = 1000
+bubbleCoins = 10000
 
 # Classes Are in other .py files
 
@@ -93,27 +93,15 @@ def addSelectedCleaningSupply(dictKey, seedSelected, posX, posY):
 
         if bubbleCoins >= price:
 
-            #print('hi')
             for row in range(5):
                 for col in range(9):
-                    #if not floorGrid[col][row] == None:
-                        #counter += 1
-                        #print('col' + str(col))
-                        #print('row' + str(row))
-                    #print(floorGrid[col][row])
-                    #if floorGridRects[col][row].collidepoint((posX, posY)):
-                        #print('hi')
 
-                    #if floorGridRects[col][row] == None:
-                        #print('hi')
-                    #print(str(posX))
                     if floorGridRects[col][row].collidepoint((posX, posY)) and floorGrid[col][row] == None:
-                        print(str(col))
-                        print(str(row))
+                        #print(str(col))
+                        #print(str(row))
                         bubbleCoins -= price
-                        addCleaningSupply(row, col, seedSelected)
+                        addCleaningSupply(col, row, seedSelected)
                         return None
-            #print(str(counter))
 
     return seedSelected
 
@@ -223,14 +211,14 @@ def addCleaningSupply(posX, posY, name):
         cleaningSupplyGroup.add_internal(cs)
         setTile(posX, posY, cs)
 
-def getTileRect(row, col):
+def getTileRect(col, row):
     return floorGridRects[col][row]
 
-def getTile(row, col):  # (0, 0) is the top left tile
+def getTile(col, row):  # (0, 0) is the top left tile
     return floorGrid[col][row]
 
 
-def setTile(row, col, cleaningSupplyType):  # the tile in that position is set as cleaningSupplyType (0,0) is top left tile
+def setTile(col, row, cleaningSupplyType):  # the tile in that position is set as cleaningSupplyType (0,0) is top left tile
     floorGrid[col][row] = cleaningSupplyType
 
 def formFloorGridRectsArray():
@@ -400,12 +388,11 @@ def mainGame():
 
                 if clicked == True:
                     dictIndex, seedSelected = getSeedSelected(posX, posY, seedSelected, dictIndex)
-                    print(seedSelected)
-                    #if floorGridRects[2][2].collidepoint((posX, posY)):
-                        #print('hi')
+                    #print(seedSelected)
+
                     seedSelected = addSelectedCleaningSupply(dictIndex, seedSelected, posX, posY)
 
-                if curr_time + 1000 > pygame.time.get_ticks(): # every 1 second that passes this will happen
+                if curr_time + 1000 <= pygame.time.get_ticks(): # every 1 second that passes this will happen
                     curr_time = pygame.time.get_ticks()
                     timeSinceStart += 1000
                     getBugsEntering(timeSinceStart)
