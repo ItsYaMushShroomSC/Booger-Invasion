@@ -84,22 +84,27 @@ bubbleCoins = 10000
 
 # the dictionary will be read and the appropriate img will be
 
+def drawSeedLoadingBars(timeElapsed):
+    for supplySeed in cleaningSupplySeedsGroup:
+            supplySeed.updateLoadingBar(timeElapsed, DISPLAYSURF)
 
 def addSelectedCleaningSupply(dictKey, seedSelected, posX, posY):
     global bubbleCoins
     counter = 0
-    if not dictKey == 0 and not seedSelected == None:
-        seedName, price, reloadTime = seedDict.get(dictKey)
 
-        if bubbleCoins >= price:
+    if not dictKey == 0 and not seedSelected == None:
+        supplySeed = getCleaningSupplySeed(dictKey)
+
+        if bubbleCoins >= supplySeed.price:
 
             for row in range(5):
                 for col in range(9):
 
-                    if floorGridRects[col][row].collidepoint((posX, posY)) and floorGrid[col][row] == None:
+                    if floorGridRects[col][row].collidepoint((posX, posY)) and floorGrid[col][row] == None and supplySeed.inStock:
                         #print(str(col))
                         #print(str(row))
-                        bubbleCoins -= price
+                        supplySeed.resetRestockTime()
+                        bubbleCoins -= supplySeed.price
                         addCleaningSupply(col, row, seedSelected)
                         return None
 
@@ -162,6 +167,14 @@ def getBugRandomPos(bugName):
 
 
 
+def getCleaningSupplySeed(index):
+    counter = 1
+    for supplySeed in cleaningSupplySeedsGroup:
+        if counter == index:
+            return supplySeed
+        counter += 1
+
+    return None
 
 def addCleaningSupplySeeds():
     global cleaningSupplySeedsGroup
@@ -362,7 +375,8 @@ def mainGame():
     price = None
 
     timeSinceStart = 0
-    curr_time = pygame.time.get_ticks()
+    curr_time1000 = pygame.time.get_ticks()
+    curr_time250 = pygame.time.get_ticks()
 
     posX, posY = None, None
 
@@ -373,8 +387,10 @@ def mainGame():
             if event.type == MOUSEBUTTONDOWN:
                 posX, posY = pygame.mouse.get_pos()
                 clicked = True
-                timeSinceStart = 0
-                curr_time = pygame.time.get_ticks()
+                if gameLevel == 0:
+                    timeSinceStart = 0
+                    curr_time1000 = pygame.time.get_ticks()
+                    curr_time250 = pygame.time.get_ticks()
             else:
                 clicked = False
 
@@ -386,16 +402,21 @@ def mainGame():
             if gameLevel == 1:
                 readFile()
 
+
                 if clicked == True:
                     dictIndex, seedSelected = getSeedSelected(posX, posY, seedSelected, dictIndex)
                     #print(seedSelected)
 
                     seedSelected = addSelectedCleaningSupply(dictIndex, seedSelected, posX, posY)
 
-                if curr_time + 1000 <= pygame.time.get_ticks(): # every 1 second that passes this will happen
-                    curr_time = pygame.time.get_ticks()
+                if curr_time1000 + 1000 <= pygame.time.get_ticks(): # every 1 second that passes this will happen
+                    curr_time1000 = pygame.time.get_ticks()
                     timeSinceStart += 1000
                     getBugsEntering(timeSinceStart)
+
+                if curr_time250 + 250 <= pygame.time.get_ticks():
+                    curr_time250 = pygame.time.get_ticks()
+                    drawSeedLoadingBars(250) # seed will be drawn and updated
 
                 if event.type == my_eventTime:
                     drawBackground()
