@@ -184,7 +184,7 @@ def getCleaningSupplySeed(index):
     return None
 
 def addCleaningSupplySeeds():
-    global cleaningSupplySeedsGroup
+    global cleaningSupplySeedsGroup, seedDict
 
     img = pygame.image.load('SeedPacketBackground.png')
     w, h = img.get_width()*scaleFactorH, img.get_height()*scaleFactorH
@@ -193,12 +193,19 @@ def addCleaningSupplySeeds():
     indexOrder = 1
 
     for i in range(1, 10):
-        cleaningSupplyBackGrounds.add_internal(CleaningSupplySeed(img, 'bg', 1, i, 1, XMARGIN, windowWidth, windowHeight))
+
+        if len(seedDict) >= i:
+            name, price, reloadTime = seedDict.get(i)
+            img = pygame.image.load('SeedPacketBackground' + str(price) + '.png')
+            w, h = img.get_width() * scaleFactorH, img.get_height() * scaleFactorH
+            img = pygame.transform.smoothscale(img, (w, h))
+
+        cleaningSupplyBackGrounds.add_internal(CleaningSupplySeed(img, 'bg', 1, i, 1, XMARGIN, windowWidth, windowHeight, True))
 
     for order, values in seedDict.items():
         name, price, restockTime = values
         img = pygame.transform.smoothscale(getImg(name), (w, h))
-        supplySeed = CleaningSupplySeed(img, name, price, order, restockTime, XMARGIN, windowWidth, windowHeight)
+        supplySeed = CleaningSupplySeed(img, name, price, order, restockTime, XMARGIN, windowWidth, windowHeight, False)
         cleaningSupplySeedsGroup.add_internal(supplySeed)
         seedInventoryRects.append(supplySeed.rect)
 
