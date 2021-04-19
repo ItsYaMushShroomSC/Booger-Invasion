@@ -26,8 +26,8 @@ pygame.display.set_caption('Cleaning Supplies vs Bugs')
 # Constants:
 windowWidth = DISPLAYSURF.get_width()  # resized to fullscreen
 windowHeight = DISPLAYSURF.get_height()  # resized to fullscreen
-scaleFactorW = int(windowWidth / 1536) * int(windowWidth/1536)
-scaleFactorH = int(windowHeight / 864) * int(windowHeight/864)
+scaleFactorW = int(windowWidth / 1536)
+scaleFactorH = int(windowHeight / 864)
 XMARGIN = 200 * scaleFactorW
 YMARGIN = 100 * scaleFactorH
 
@@ -55,7 +55,9 @@ PINK = (255, 153, 204)
 gameLevel = 0  # 0 means that there is no game being played and the opening screen should be displayed
 openScreenRects = []  # stores rectangles/buttons of the opening screen
 
-floorGrid = []  # floor grid 2D array
+floorGrid = []  # floor grid 2D array stores the cleaning supply name at each position, None if there isn't one
+floorGridRects = [] # stores the rectangles of the tiles in the floorGrid
+
 tileWidth = None
 tileHeight = None
 
@@ -64,12 +66,16 @@ bugEnterIndex = 0
 
 # dictionary where (key: <name of cleaningsupply>, value: tuple(<order>, <price>))
 # @see https://www.w3schools.com/python/python_dictionaries.asp
-seedDict = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000), 3: ("soapdispenser", 50, 5000), 4: ("flypaper", 10000, 25)}
+seedDict = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000), 3: ("soapdispenser", 50, 5000), 4: ("flypaper", 25, 10000)}
+seedInventoryRects = [] # seed rects for mouse collision
 
 # Sprite Groups:
 cleaningSupplyGroup = pygame.sprite.Group()
 cleaningSupplyBackGrounds = pygame.sprite.Group()
 cleaningSupplySeedsGroup = pygame.sprite.Group()
+
+# Money currency
+bubbleCoins = 10000
 
 # Classes Are in other .py files
 
@@ -78,19 +84,58 @@ cleaningSupplySeedsGroup = pygame.sprite.Group()
 
 # the dictionary will be read and the appropriate img will be
 
+def drawSeedLoadingBars(timeElapsed):
+    for supplySeed in cleaningSupplySeedsGroup:
+            supplySeed.updateLoadingBar(timeElapsed, DISPLAYSURF)
+
+def addSelectedCleaningSupply(dictKey, seedSelected, posX, posY):
+    global bubbleCoins
+    counter = 0
+
+    if not dictKey == 0 and not seedSelected == None:
+        supplySeed = getCleaningSupplySeed(dictKey)
+
+        if bubbleCoins >= supplySeed.price:
+
+            for row in range(5):
+                for col in range(9):
+
+                    if floorGridRects[col][row].collidepoint((posX, posY)) and floorGrid[col][row] == None and supplySeed.inStock:
+                        #print(str(col))
+                        #print(str(row))
+                        supplySeed.resetRestockTime()
+                        bubbleCoins -= supplySeed.price
+                        addCleaningSupply(col, row, seedSelected)
+                        return None
+
+    return seedSelected
+
+
+def getSeedSelected(mouseX, mouseY, seedSelected, dictIndex): # seedSelected is None when it wasn't set yet
+    index = 1
+    price = None
+
+    for seedInventoryRect in seedInventoryRects:
+
+        if seedInventoryRect.collidepoint((mouseX, mouseY)):
+            values = seedDict.get(index)
+            seedSelected, price, noOneCares = values
+            dictIndex = index
+
+        index += 1
+
+    return dictIndex, seedSelected # seedSelected and price return None when no seedpackets were selected
+
 def getBugsEntering(timeElapsed): # adds the bugs entering the screen
     # timeElapsed is seconds from since the game started
     global bugEnterIndex
 
-    print(str(len(bugEnterAry)))
     index = 0
     for i in range(len(bugEnterAry)):
         bug = str(bugEnterAry[i][0])
         time = int(bugEnterAry[i][1]) * 1000
-        print(bug)
 
         if timeElapsed >= time and bugEnterIndex <= index:
-            print('woo')
             bugEnterIndex += 1
             buggy = getBugRandomPos(bug)
 
@@ -128,6 +173,14 @@ def getBugRandomPos(bugName):
 
 
 
+def getCleaningSupplySeed(index):
+    counter = 1
+    for supplySeed in cleaningSupplySeedsGroup:
+        if counter == index:
+            return supplySeed
+        counter += 1
+
+    return None
 
 def addCleaningSupplySeeds():
     global cleaningSupplySeedsGroup
@@ -144,7 +197,9 @@ def addCleaningSupplySeeds():
     for order, values in seedDict.items():
         name, price, restockTime = values
         img = pygame.transform.smoothscale(getImg(name), (w, h))
-        cleaningSupplySeedsGroup.add_internal(CleaningSupplySeed(img, name, price, order, restockTime, XMARGIN, windowWidth, windowHeight))
+        supplySeed = CleaningSupplySeed(img, name, price, order, restockTime, XMARGIN, windowWidth, windowHeight)
+        cleaningSupplySeedsGroup.add_internal(supplySeed)
+        seedInventoryRects.append(supplySeed.rect)
 
 def getImg(name):
 
@@ -175,13 +230,22 @@ def addCleaningSupply(posX, posY, name):
         cleaningSupplyGroup.add_internal(cs)
         setTile(posX, posY, cs)
 
-def getTile(x, y):  # (0, 0) is the top left tile
-    return floorGrid[y][x]
+def getTileRect(col, row):
+    return floorGridRects[col][row]
+
+def getTile(col, row):  # (0, 0) is the top left tile
+    return floorGrid[col][row]
 
 
-def setTile(x, y, cleaningSupplyType):  # the tile in that position is set as cleaningSupplyType (0,0) is top left tile
-    floorGrid[y][x] = cleaningSupplyType
+def setTile(col, row, cleaningSupplyType):  # the tile in that position is set as cleaningSupplyType (0,0) is top left tile
+    floorGrid[col][row] = cleaningSupplyType
 
+def formFloorGridRectsArray():
+    global floorGridRects
+
+    row = 5
+    col = 9
+    floorGridRects = [[None] * row for i in range(col)]
 
 def formFloorGridArray():  # Fills all places in FloorGridArray with None
     global floorGrid
@@ -208,18 +272,20 @@ def drawTiles(shouldDraw):
     left, top = XMARGIN, YMARGIN
     floorNum = 1
 
-    if shouldDraw == True:
+    for row in range(5):
         for col in range(9):
-            for row in range(5):
-                if floorNum % 2 == 0:
-                    img = img2
-                else:
-                    img = img1
+            if floorNum % 2 == 0:
+                img = img2
+            else:
+                img = img1
 
-                floorNum += 1
-                imgRect = img.get_rect()
-                imgRect.topleft = (left + col * 100, top + row * 121)
+            floorNum += 1
+            imgRect = img.get_rect()
+            imgRect.topleft = (left + col * 100, top + row * 121)
+            if shouldDraw == True:
                 DISPLAYSURF.blit(img, imgRect)
+
+            floorGridRects[col][row] = imgRect
 
 
 def drawBackground():
@@ -284,6 +350,7 @@ def drawOpeningScreen():
 
 def resetVariables():
     formFloorGridArray()
+    formFloorGridRectsArray()
     drawTiles(False)
 
 def terminate():  # terminates game
@@ -309,19 +376,27 @@ def mainGame():
     addCleaningSupplySeeds()
 
 
+    seedSelected = None
+    dictIndex = 0
+    price = None
+
     timeSinceStart = 0
-    curr_time = pygame.time.get_ticks()
+    curr_time1000 = pygame.time.get_ticks()
+    curr_time250 = pygame.time.get_ticks()
+
+    posX, posY = None, None
 
     while True:
 
         for event in pygame.event.get():
 
-            posX, posY = pygame.mouse.get_pos()
-
             if event.type == MOUSEBUTTONDOWN:
+                posX, posY = pygame.mouse.get_pos()
                 clicked = True
-                timeSinceStart = 0
-                curr_time = pygame.time.get_ticks()
+                if gameLevel == 0:
+                    timeSinceStart = 0
+                    curr_time1000 = pygame.time.get_ticks()
+                    curr_time250 = pygame.time.get_ticks()
             else:
                 clicked = False
 
@@ -333,11 +408,21 @@ def mainGame():
             if gameLevel == 1:
                 readFile()
 
-                if curr_time + 1000 > pygame.time.get_ticks(): # every 1 second that passes this will happen
-                    curr_time = pygame.time.get_ticks()
+
+                if clicked == True:
+                    dictIndex, seedSelected = getSeedSelected(posX, posY, seedSelected, dictIndex)
+                    #print(seedSelected)
+
+                    seedSelected = addSelectedCleaningSupply(dictIndex, seedSelected, posX, posY)
+
+                if curr_time1000 + 1000 <= pygame.time.get_ticks(): # every 1 second that passes this will happen
+                    curr_time1000 = pygame.time.get_ticks()
                     timeSinceStart += 1000
                     getBugsEntering(timeSinceStart)
-                    #print('hi')
+
+                if curr_time250 + 250 <= pygame.time.get_ticks():
+                    curr_time250 = pygame.time.get_ticks()
+                    drawSeedLoadingBars(250) # seed will be drawn and updated
 
                 if event.type == my_eventTime:
                     drawBackground()
@@ -345,16 +430,12 @@ def mainGame():
                     enemy_sprites.draw(DISPLAYSURF)
                     enemy_sprites.update()
 
-                    #addCleaningSupplySeeds()
                     cleaningSupplyBackGrounds.draw(DISPLAYSURF)
                     cleaningSupplySeedsGroup.draw(DISPLAYSURF)
-                    #addCleaningSupply(0, 0, "spraybottle")
+
                     cleaningSupplyGroup.draw(DISPLAYSURF)
                     cleaningSupplyGroup.draw(DISPLAYSURF)
-                    #printFloorGridAry()
-                    #moveAll()
-                    #all_sprites.draw(DISPLAYSURF)
-                    #all_sprites.update()
+
                     #print(str(windowWidth))
                     #print(str(windowHeight))
 
@@ -388,10 +469,20 @@ def mainGame():
 def printFloorGridAry():  # Print the floor grid array contents whenever you want to see it
     for row in range(5):
         for col in range(9):
-            print(str(floorGrid[col][row]) + " ", end='')
+            if floorGrid[col][row] == None:
+                print('None' + " ", end='')
+            else:
+                print(str(floorGrid[col][row].name) + " ", end='')
         print()
 
-
+def printFloorRectsAry():  # Print the floor grid array contents whenever you want to see it
+    for row in range(5):
+        for col in range(9):
+            if floorGridRects[col][row] == None:
+                print('None' + " ", end='')
+            else:
+                print(str(floorGridRects[col][row]) + " ", end='')
+        print()
 # RUN MAIN
 
 if __name__ == '__main__':
