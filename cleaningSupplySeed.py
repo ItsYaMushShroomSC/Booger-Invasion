@@ -34,29 +34,39 @@ class CleaningSupplySeed(pygame.sprite.Sprite):
     def resetRestockTime(self): # resets the restockTime after the seed has been planted
         self.restockTime = self.RESTOCKLENGTH
         self.countIncrement = 0
+        self.inStock = False
 
     def setImgPos(self): # setsTheImgPos
         centerX = int(XMARGIN/2)
         centerY = int(windowHeight * 1/9 - self.rect.h + self.rect.h*self.order)
         self.rect.center = (centerX, centerY)
 
-    def updateLoadingBar(self, timeElapsed): # draws a transparent gray loading bar while the seed is restocking
+    def updateLoadingBar(self, timeElapsed, DISPLAYSURF): # draws a transparent gray loading bar while the seed is restocking
         if self.inStock == False:
+
             self.restockTime - 250 # every 250 milliseconds, the loading bar moves
-            transparentRectSurf = pygame.Surface((self.rect.w, self.rect.h-self.loadIncrement*self.countIncrement))
-            transparentRectSurf.set_alpha(128)
-            transparentRectSurf.fill((255, 255, 255))
-            #transparentRect= Rect(self.rect.left, self.rect.top, self.rect.w, self.rect.h-self.loadIncrement*self.countIncrement)
-            self.countIncrement += 1
-            defaults.DISPLAYSURF.blit(transparentRectSurf, (self.rect.left, self.rect.top))
+
+            if int(self.rect.h-self.loadIncrement*self.countIncrement) <= 0:
+
+                self.restockTime = 0
+                self.updateRestockTime()
+            else:
+                transparentRectSurf = pygame.Surface((self.rect.w, int(self.rect.h-self.loadIncrement*self.countIncrement)))
+
+                transparentRectSurf.set_alpha(128)
+                transparentRectSurf.fill((255, 255, 255))
+                #transparentRect= Rect(self.rect.left, self.rect.top, self.rect.w, self.rect.h-self.loadIncrement*self.countIncrement)
+                self.countIncrement += 1
+                DISPLAYSURF.blit(transparentRectSurf, (self.rect.left, self.rect.top))
+                pygame.display.update()
 
 
 
     def updateRestockTime(self):
         if self.restockTime <= 0:
-            self.inStock = False
-        else:
             self.inStock = True
+        else:
+            self.inStock = False
 
 
 
