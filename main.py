@@ -66,7 +66,7 @@ bugEnterIndex = 0
 
 # dictionary where (key: <name of cleaningsupply>, value: tuple(<order>, <price>))
 # @see https://www.w3schools.com/python/python_dictionaries.asp
-seedDict = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000), 3: ("soapdispenser", 50, 5000), 4: ("flypaper", 25, 10000)}
+seedDict = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000), 3: ("soapdispenser", 50, 5000), 4: ("flypaper", 25, 10000), 5: ("flypaper", 25, 10000)}
 seedInventoryRects = [] # seed rects for mouse collision
 
 # Sprite Groups:
@@ -212,6 +212,7 @@ def getImg(name):
     if name == "flypaper":
         return pygame.image.load('flypaper.PNG')
 
+#adds cleaning supplies to the 2Darray field
 def addCleaningSupply(posX, posY, name):
     if name == "spraybottle":
         cs = SprayBottle(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
@@ -369,10 +370,10 @@ def mainGame():
     my_eventTime = USEREVENT + 1
     pygame.time.set_timer(my_eventTime, 150)
 
-    addCleaningSupply(0, 0, "spraybottle")
-    addCleaningSupply(0, 1, "sponge")
-    addCleaningSupply(0, 2, "soapdispenser")
-    addCleaningSupply(0, 3, "flypaper")
+    # addCleaningSupply(0, 0, "spraybottle")
+    # addCleaningSupply(0, 1, "sponge")
+    # addCleaningSupply(0, 2, "soapdispenser")
+    # addCleaningSupply(0, 3, "flypaper")
     addCleaningSupplySeeds()
 
 
@@ -436,8 +437,6 @@ def mainGame():
                     cleaningSupplyGroup.draw(DISPLAYSURF)
                     cleaningSupplyGroup.draw(DISPLAYSURF)
 
-                    #print(str(windowWidth))
-                    #print(str(windowHeight))
 
             if gameLevel == 2:
                 drawBackground()

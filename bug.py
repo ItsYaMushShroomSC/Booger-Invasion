@@ -143,29 +143,3 @@ class Ant(pygame.sprite.Sprite):
         if self.health == 0:
             self.kill()
 
-class Sprites:
-    def __init__(self):
-        # self.move_time = move_time
-        self.enemy_sprites = pygame.sprite.Group()
-
-        self.game_Stat()
-
-    # def add_Sprite(self, a):
-    #
-    #         for i in range(5):
-    #             if a % 10 == 0:
-    #
-    #                 x = 3 * DISPLAYSURF.get_width() / 4
-    #                 y = random.choice(choices)
-    #                 spider = Spider(x, y)
-    #                 cockroach = Cockroach(x,y)
-    #                 a += 2
-    #                 # self.enemy_sprites.add(spider)
-    #
-    #                 self.enemy_sprites.add(cockroach)
-
-
-
-    def game_Stat(self):
-        print(time_since_enter)
-

@@ -1,8 +1,8 @@
 bugs_are_coming 1
 spider 4
-spider 12
-cockroach 16
-spider 20
+ladybug 12
+ant 16
+wasp 20
 spider 22
 cockroach 26
 cockroach 30

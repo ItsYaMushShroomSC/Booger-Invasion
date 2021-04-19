@@ -55,6 +55,14 @@ class SoapDispenser(CleaningSupply):
         self.startcooldownframes = self.cooldown
 
 
-#soapDispenserGroup.add(SoapDispenser(0, 0))
+class BowlCleaner(CleaningSupply):
+
+    def __init__(self, row, column, XMARG, YMARG, tileW, tileH):
+        super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("bowlcleaner.png"), (tileW, tileH)), XMARG, YMARG, tileW, tileH)
+        self.name = 'bowlcleaner'
+
+        self.cooldown = 2400 #15 seconds
+        self.health = 20
+        self.startcooldownframes = self.cooldown
 
 
