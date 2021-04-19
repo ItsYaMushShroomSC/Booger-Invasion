@@ -64,29 +64,82 @@ class Cockroach(pygame.sprite.Sprite):
         if self.health == 0:
             self.kill()
 
-class Sprites:
-    def __init__(self):
-        # self.move_time = move_time
-        self.enemy_sprites = pygame.sprite.Group()
+class LadyBug(pygame.sprite.Sprite):
 
-        self.game_Stat()
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.x = x
+        self.y = y
+        scaleFactor = scaleFactorH
+        if scaleFactorW < scaleFactorH:
+            scaleFactor = scaleFactorW
+        self.health = 7
+        self.image = pygame.transform.scale(pygame.image.load("ladybug.png"), (100 * scaleFactor, 121 * scaleFactor))
+        self.health = 7
+        self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
 
-    def add_Sprite(self, a):
+    def update(self):
+        self.rect.x -= 10
+        if (self.rect.x <= (DISPLAYSURF.get_width()) / 4):
+            self.rect.x += 10
+            self.health = 0
+        self.die()
 
-            for i in range(5):
-                if a % 10 == 0:
+    def die(self):
+        if self.health == 0:
+            self.kill()
 
-                    x = 3 * DISPLAYSURF.get_width() / 4
-                    y = random.choice(choices)
-                    spider = Spider(x, y)
-                    cockroach = Cockroach(x,y)
-                    a += 2
-                    # self.enemy_sprites.add(spider)
+class Wasp(pygame.sprite.Sprite):
 
-                    self.enemy_sprites.add(cockroach)
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.x = x
+        self.y = y
+        scaleFactor = scaleFactorH
+        if scaleFactorW < scaleFactorH:
+            scaleFactor = scaleFactorW
+        self.health = 7
+        self.image = pygame.transform.scale(pygame.image.load("wasp.png"), (100 * scaleFactor, 121 * scaleFactor))
+        self.image = pygame.transform.flip(self.image, True, False)
+        self.health = 7
+        self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
 
+    def update(self):
+        self.rect.x -= 10
+        if (self.rect.x <= (DISPLAYSURF.get_width()) / 4):
+            self.rect.x += 10
+            self.health = 0
+        self.die()
 
+    def die(self):
+        if self.health == 0:
+            self.kill()
 
-    def game_Stat(self):
-        print(time_since_enter)
+class Ant(pygame.sprite.Sprite):
+
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.x = x
+        self.y = y
+        scaleFactor = scaleFactorH
+        if scaleFactorW < scaleFactorH:
+            scaleFactor = scaleFactorW
+        self.health = 7
+        self.image = pygame.transform.scale(pygame.image.load("ant.png"), (100 * scaleFactor, 121 * scaleFactor))
+        self.health = 7
+        self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
+
+    def update(self):
+        self.rect.x -= 10
+        if (self.rect.x <= (DISPLAYSURF.get_width()) / 4):
+            self.rect.x += 10
+            self.health = 0
+        self.die()
+
+    def die(self):
+        if self.health == 0:
+            self.kill()
 
