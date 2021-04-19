@@ -32,9 +32,10 @@ XMARGIN = 200 * scaleFactorW
 YMARGIN = 100 * scaleFactorH
 
 # Text Font:
-fontSize = 54 * scaleFactorH
-bugFont = pygame.font.Font('bugFont.ttf', fontSize)
-cleaningFont = pygame.font.Font('CleaningSupplyFont.otf', fontSize)
+fontSize1 = 54 * scaleFactorH
+bugFont = pygame.font.Font('bugFont.ttf', fontSize1)
+cleaningFont = pygame.font.Font('CleaningSupplyFont.otf', fontSize1)
+bubbleFont = pygame.font.Font('cloudBubbleFont.ttf', fontSize1)
 
 # Time:
 frames = 0
@@ -287,7 +288,26 @@ def drawBackground():
                                        (windowWidth, windowHeight))
     DISPLAYSURF.blit(img, (0, 0))
     drawTiles(True)
+    drawBubbleMoneyAmount()
+    drawLevelNumber()
 
+def drawLevelNumber():
+    global gameLevel, bubbleFont
+
+    textSurface = bubbleFont.render('Level = ' + str(gameLevel), True, WHITE)
+    textRect = textSurface.get_rect()
+    textRect.bottomright = (windowWidth, windowHeight)
+    left, top = textRect.topleft
+    DISPLAYSURF.blit(textSurface, (left, top))
+
+def drawBubbleMoneyAmount():
+    global bubbleCoins, bubbleFont
+
+    textSurface = bubbleFont.render('Bubbles = ' + str(bubbleCoins), True, WHITE)
+    textRect = textSurface.get_rect()
+    textRect.topright = (windowWidth, 0)
+    left, top = textRect.topleft
+    DISPLAYSURF.blit(textSurface, (left, top))
 
 def determineLevel(mousePosX, mousePosY):
     global openScreenRects
@@ -421,14 +441,14 @@ def mainGame():
                 if event.type == my_eventTime:
                     drawBackground()
 
-                    enemy_sprites.draw(DISPLAYSURF)
-                    enemy_sprites.update()
-
                     cleaningSupplyBackGrounds.draw(DISPLAYSURF)
                     cleaningSupplySeedsGroup.draw(DISPLAYSURF)
 
                     cleaningSupplyGroup.draw(DISPLAYSURF)
                     cleaningSupplyGroup.draw(DISPLAYSURF)
+
+                    enemy_sprites.draw(DISPLAYSURF)
+                    enemy_sprites.update()
 
                     #print(str(windowWidth))
                     #print(str(windowHeight))

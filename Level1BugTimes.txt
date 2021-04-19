@@ -1,6 +1,6 @@
 bugs_are_coming 1
 spider 4
-spider 12
+spider 8
 cockroach 16
 spider 20
 spider 22
