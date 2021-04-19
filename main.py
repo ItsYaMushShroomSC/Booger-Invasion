@@ -387,9 +387,10 @@ def mainGame():
             if event.type == MOUSEBUTTONDOWN:
                 posX, posY = pygame.mouse.get_pos()
                 clicked = True
-                timeSinceStart = 0
-                curr_time1000 = pygame.time.get_ticks()
-                curr_time250 = pygame.time.get_ticks()
+                if gameLevel == 0:
+                    timeSinceStart = 0
+                    curr_time1000 = pygame.time.get_ticks()
+                    curr_time250 = pygame.time.get_ticks()
             else:
                 clicked = False
 
@@ -400,6 +401,7 @@ def mainGame():
 
             if gameLevel == 1:
                 readFile()
+
 
                 if clicked == True:
                     dictIndex, seedSelected = getSeedSelected(posX, posY, seedSelected, dictIndex)
