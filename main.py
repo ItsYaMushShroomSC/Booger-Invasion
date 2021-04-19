@@ -84,22 +84,22 @@ bubbleCoins = 10000
 
 # the dictionary will be read and the appropriate img will be
 
-
 def addSelectedCleaningSupply(dictKey, seedSelected, posX, posY):
     global bubbleCoins
     counter = 0
-    if not dictKey == 0 and not seedSelected == None:
-        seedName, price, reloadTime = seedDict.get(dictKey)
 
-        if bubbleCoins >= price:
+    if not dictKey == 0 and not seedSelected == None:
+        supplySeed = getCleaningSupplySeed(dictKey)
+
+        if bubbleCoins >= supplySeed.price:
 
             for row in range(5):
                 for col in range(9):
 
-                    if floorGridRects[col][row].collidepoint((posX, posY)) and floorGrid[col][row] == None:
+                    if floorGridRects[col][row].collidepoint((posX, posY)) and floorGrid[col][row] == None and supplySeed.inStock:
                         #print(str(col))
                         #print(str(row))
-                        bubbleCoins -= price
+                        bubbleCoins -= supplySeed.price
                         addCleaningSupply(col, row, seedSelected)
                         return None
 
@@ -162,6 +162,14 @@ def getBugRandomPos(bugName):
 
 
 
+def getCleaningSupplySeed(index):
+    counter = 1
+    for supplySeed in cleaningSupplySeedsGroup:
+        if counter == index:
+            return supplySeed
+        counter += 1
+
+    return None
 
 def addCleaningSupplySeeds():
     global cleaningSupplySeedsGroup
