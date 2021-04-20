@@ -37,5 +37,6 @@ class CleaningSupply(pygame.sprite.Sprite):
             startcooldownframes = frames
     # this will be used to keep track of the cleaningsupply's health when it is attacked by bugs.
     def attacked(self):
-        global health
-        health -= 1
+        # global health
+        # health -= 1
+        self.kill()

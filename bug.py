@@ -31,9 +31,6 @@ class Spider(pygame.sprite.Sprite):
         if (self.rect.x <= (DISPLAYSURF.get_width()) / 4):
             self.rect.x += 10
             self.health = 0
-        self.die()
-
-    def die(self):
         if self.health == 0:
             self.kill()
 
@@ -58,9 +55,6 @@ class Cockroach(pygame.sprite.Sprite):
         if (self.rect.x <= (DISPLAYSURF.get_width()) / 4):
             self.rect.x += 10
             self.health = 0
-        self.die()
-
-    def die(self):
         if self.health == 0:
             self.kill()
 
@@ -137,9 +131,8 @@ class Ant(pygame.sprite.Sprite):
         if (self.rect.x <= (DISPLAYSURF.get_width()) / 4):
             self.rect.x += 10
             self.health = 0
-        self.die()
-
-    def die(self):
         if self.health == 0:
             self.kill()
+
+
 

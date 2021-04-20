@@ -381,6 +381,12 @@ def resetVariables():
     formFloorGridRectsArray()
     drawTiles(False)
 
+def collision():
+    for supply in cleaningSupplyGroup:
+
+        if pygame.sprite.spritecollide(supply,enemy_sprites, True):
+            print("89")
+
 def terminate():  # terminates game
     pygame.quit()
     sys.exit()
@@ -397,10 +403,6 @@ def mainGame():
     my_eventTime = USEREVENT + 1
     pygame.time.set_timer(my_eventTime, 150)
 
-    # addCleaningSupply(0, 0, "spraybottle")
-    # addCleaningSupply(0, 1, "sponge")
-    # addCleaningSupply(0, 2, "soapdispenser")
-    # addCleaningSupply(0, 3, "flypaper")
     addCleaningSupplySeeds()
 
 
@@ -463,6 +465,8 @@ def mainGame():
 
                     enemy_sprites.draw(DISPLAYSURF)
                     enemy_sprites.update()
+                    cleaningSupplyGroup.update()
+                    collision()
 
                     #print(str(windowWidth))
                     #print(str(windowHeight))
