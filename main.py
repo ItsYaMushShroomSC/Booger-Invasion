@@ -12,6 +12,7 @@ from pygame.locals import *
 from defaults import *
 from cleaningSupplies import *
 from cleaningSupplySeed import *
+from bubbleMoney import *
 
 pygame.init()
 
@@ -76,7 +77,8 @@ cleaningSupplyBackGrounds = pygame.sprite.Group()
 cleaningSupplySeedsGroup = pygame.sprite.Group()
 
 # Money currency
-bubbleCoins = 10000
+bubbleCoins = 0
+bubbleCoinGroup = pygame.sprite.Group()
 
 # Classes Are in other .py files
 
@@ -84,6 +86,27 @@ bubbleCoins = 10000
 # Non-Class Methods:
 
 # the dictionary will be read and the appropriate img will be
+def removeClickedBubbles(mouseX, mouseY):
+    global bubbleCoins
+
+    for coin in bubbleCoinGroup:
+        if coin.rect.collidepoint((mouseX, mouseY)) == True:
+            bubbleCoinGroup.remove_internal(coin)
+            bubbleCoins += 50
+
+def removeExpiredBubbles():
+    global bubbleCoins
+
+    for coin in bubbleCoinGroup:
+        if coin.getShouldRemove() == True:
+            bubbleCoinGroup.remove_internal(coin)
+            bubbleCoins += 50
+
+
+def addBubbleCoin(isCleaningSupplyBubble):
+    global bubbleCoinGroup
+
+    bubbleCoinGroup.add_internal(Bubble(isCleaningSupplyBubble))
 
 def drawSeedLoadingBars(timeElapsed):
     for supplySeed in cleaningSupplySeedsGroup:
@@ -409,6 +432,8 @@ def mainGame():
     price = None
 
     timeSinceStart = 0
+
+    curr_time5000 = pygame.time.get_ticks()
     curr_time1000 = pygame.time.get_ticks()
     curr_time250 = pygame.time.get_ticks()
 
@@ -423,6 +448,7 @@ def mainGame():
                 clicked = True
                 if gameLevel == 0:
                     timeSinceStart = 0
+                    curr_time5000 = pygame.time.get_ticks()
                     curr_time1000 = pygame.time.get_ticks()
                     curr_time250 = pygame.time.get_ticks()
             else:
@@ -439,14 +465,20 @@ def mainGame():
 
                 if clicked == True:
                     dictIndex, seedSelected = getSeedSelected(posX, posY, seedSelected, dictIndex)
-                    #print(seedSelected)
-
                     seedSelected = addSelectedCleaningSupply(dictIndex, seedSelected, posX, posY)
+
+                    removeClickedBubbles(posX, posY)
+
+                if curr_time5000 + 5000 <= pygame.time.get_ticks():
+                    curr_time5000 = pygame.time.get_ticks()
+                    addBubbleCoin(False)
 
                 if curr_time1000 + 1000 <= pygame.time.get_ticks(): # every 1 second that passes this will happen
                     curr_time1000 = pygame.time.get_ticks()
                     timeSinceStart += 1000
                     getBugsEntering(timeSinceStart)
+                    removeExpiredBubbles()
+
 
                 if curr_time250 + 250 <= pygame.time.get_ticks():
                     curr_time250 = pygame.time.get_ticks()
@@ -463,6 +495,9 @@ def mainGame():
 
                     enemy_sprites.draw(DISPLAYSURF)
                     enemy_sprites.update()
+
+                    bubbleCoinGroup.draw(DISPLAYSURF)
+                    bubbleCoinGroup.update()
 
                     #print(str(windowWidth))
                     #print(str(windowHeight))
