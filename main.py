@@ -12,6 +12,7 @@ from pygame.locals import *
 from defaults import *
 from cleaningSupplies import *
 from cleaningSupplySeed import *
+from bubbleMoney import *
 
 pygame.init()
 
@@ -77,6 +78,7 @@ cleaningSupplySeedsGroup = pygame.sprite.Group()
 
 # Money currency
 bubbleCoins = 10000
+bubbleCoinGroup = pygame.sprite.Group()
 
 # Classes Are in other .py files
 
@@ -84,6 +86,11 @@ bubbleCoins = 10000
 # Non-Class Methods:
 
 # the dictionary will be read and the appropriate img will be
+
+def addBubbleCoin(isCleaningSupplyBubble):
+    global bubbleCoinGroup
+
+    bubbleCoinGroup.add_internal(Bubble(isCleaningSupplyBubble))
 
 def drawSeedLoadingBars(timeElapsed):
     for supplySeed in cleaningSupplySeedsGroup:
@@ -409,6 +416,8 @@ def mainGame():
     price = None
 
     timeSinceStart = 0
+
+    curr_time5000 = pygame.time.get_ticks()
     curr_time1000 = pygame.time.get_ticks()
     curr_time250 = pygame.time.get_ticks()
 
@@ -423,6 +432,7 @@ def mainGame():
                 clicked = True
                 if gameLevel == 0:
                     timeSinceStart = 0
+                    curr_time5000 = pygame.time.get_ticks()
                     curr_time1000 = pygame.time.get_ticks()
                     curr_time250 = pygame.time.get_ticks()
             else:
@@ -463,6 +473,9 @@ def mainGame():
 
                     enemy_sprites.draw(DISPLAYSURF)
                     enemy_sprites.update()
+
+                    bubbleCoinGroup.draw(DISPLAYSURF)
+                    bubbleCoinGroup.update()
 
                     #print(str(windowWidth))
                     #print(str(windowHeight))
