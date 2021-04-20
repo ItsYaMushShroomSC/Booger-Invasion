@@ -9,12 +9,21 @@ class Bubble(pygame.sprite.Sprite):
     def __init__(self, isCleaninSupplyBubble):
 
         self.image = pygame.image.load('bubbleimg.PNG')
-        w, h = self.image.get_width() * defaults.scaleFactorH, self.image.get_height() * defaults.scaleFactorH
-        self.image = pygame.transform.smoothscale(pygame.sprite.load('bubbleimg.PNG'), (w, h))
+        w, h = 54 * defaults.scaleFactorH, 54 * defaults.scaleFactorH
+        self.image = pygame.transform.smoothscale(pygame.image.load('bubbleimg.PNG'), (w, h))
         self.rect = self.image.get_rect()
+        self.shouldRemoveCounter = 8
 
         if isCleaninSupplyBubble == False: # random bubble position for a bubble unrelated to cleaning supply
             self.setRandomPosDefault()
+
+    def getShouldRemove(self): # updates and gets should the bubble be removed
+
+        self.shouldRemoveCounter -= 1
+        if self.shouldRemoveCounter < 0:
+            return True
+        else:
+            return False
 
     def setRandomPosCleaningSupply(self):
         pass
@@ -22,19 +31,21 @@ class Bubble(pygame.sprite.Sprite):
     def setRandomPosDefault(self):
         choices = ['left', 'top', 'right', 'bottom']
 
+        defaults.setMargins()
+
         dir = random.choice(choices)
         if dir == 'left':
-            y = random.randint(0, defaults.windowHeight)
+            y = random.randint(defaults.YMARGIN, defaults.windowHeight-defaults.YMARGIN)
             self.rect.midright = (defaults.XMARGIN, y)
 
         if dir == 'right':
-            y = random.randint(0, defaults.windowHeight)
+            y = random.randint(defaults.YMARGIN, defaults.windowHeight-defaults.YMARGIN)
             self.rect.midleft = (defaults.windowWidth - defaults.XMARGIN, y)
 
         if dir == 'top':
-            x = random.randint(0, defaults.windowWidth)
+            x = random.randint(defaults.XMARGIN, defaults.windowWidth-defaults.XMARGIN)
             self.rect.midbottom = (x, defaults.YMARGIN)
 
         if dir == 'bottom':
-            x = random.randint(0, defaults.windowWidth)
+            x = random.randint(defaults.XMARGIN, defaults.windowWidth-defaults.XMARGIN)
             self.rect.midtop = (x, defaults.windowHeight - defaults.YMARGIN)
