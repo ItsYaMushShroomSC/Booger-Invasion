@@ -86,6 +86,16 @@ bubbleCoinGroup = pygame.sprite.Group()
 # Non-Class Methods:
 
 # the dictionary will be read and the appropriate img will be
+
+def updateSoapDispenserBubbles():# should be called every second
+
+    for cleaningSupply in cleaningSupplyGroup:
+        if cleaningSupply.name == 'soapdispenser':
+            shouldSpawn, rect = cleaningSupply.getShouldSpawnBubble()
+
+            if shouldSpawn == True:
+                bubbleCoinGroup.add_internal(Bubble(True, rect))
+
 def removeClickedBubbles(mouseX, mouseY):
     global bubbleCoins
 
@@ -106,7 +116,7 @@ def removeExpiredBubbles():
 def addBubbleCoin(isCleaningSupplyBubble):
     global bubbleCoinGroup
 
-    bubbleCoinGroup.add_internal(Bubble(isCleaningSupplyBubble))
+    bubbleCoinGroup.add_internal(Bubble(isCleaningSupplyBubble, None))
 
 def drawSeedLoadingBars(timeElapsed):
     for supplySeed in cleaningSupplySeedsGroup:
@@ -477,7 +487,9 @@ def mainGame():
                     curr_time1000 = pygame.time.get_ticks()
                     timeSinceStart += 1000
                     getBugsEntering(timeSinceStart)
+
                     removeExpiredBubbles()
+                    updateSoapDispenserBubbles()
 
 
                 if curr_time250 + 250 <= pygame.time.get_ticks():
