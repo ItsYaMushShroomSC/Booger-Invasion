@@ -50,9 +50,20 @@ class SoapDispenser(CleaningSupply):
         super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("soapdispenser.png"), (tileW, tileH)), XMARG, YMARG, tileW, tileH)
         self.name = 'soapdispenser'
 
-        self.cooldown = 2400 #15 seconds
+        self.cooldown = 8000 #8 seconds
         self.health = 10
+        self.timeElapsed = 0
         self.startcooldownframes = self.cooldown
+
+
+    # should be called every 1 second that elapses
+    def getShouldSpawnBubble(self): # returns boolean of whether shouldspawn bubble, and also the rect of the Soapdispenser
+        if self.timeElapsed >= self.cooldown:
+            self.timeElapsed = 0
+            return True, self.rect
+        else:
+            self.timeElapsed += 1000
+            return False, None
 
 
 class BowlCleaner(CleaningSupply):
