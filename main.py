@@ -12,7 +12,7 @@ from pygame.locals import *
 from defaults import *
 from cleaningSupplies import *
 from cleaningSupplySeed import *
-
+from projectile import *
 pygame.init()
 
 # This is a test to see if I can do a pull request
@@ -226,6 +226,9 @@ def addCleaningSupply(posX, posY, name):
         cs = SprayBottle(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
         cleaningSupplyGroup.add_internal(cs)
         setTile(posX, posY, cs)
+        bullet = Bullet(500,500)
+        print (posX)
+        projectileGroup.add(bullet)
     if name == "sponge":
         cs = Sponge(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
         cleaningSupplyGroup.add_internal(cs)
@@ -381,11 +384,24 @@ def resetVariables():
     formFloorGridRectsArray()
     drawTiles(False)
 
+# detects collision between bug and supply DOES NOT WORK
 def collision():
-    for supply in cleaningSupplyGroup:
+    for bug in enemy_sprites:
+        for supply in cleaningSupplyGroup:
 
-        if pygame.sprite.spritecollide(supply,enemy_sprites, True):
-            print("89")
+            if pygame.sprite.collide_rect(supply,bug):
+                supply.kill()
+                print(cleaningSupplyGroup)
+                # exit()
+
+# projectile and bug collision WORKS
+def collision2():
+    for bug in enemy_sprites:
+        for bullet in projectileGroup:
+
+            if pygame.sprite.collide_rect(bug,bullet):
+                bullet.kill()
+
 
 def terminate():  # terminates game
     pygame.quit()
@@ -456,17 +472,18 @@ def mainGame():
 
                 if event.type == my_eventTime:
                     drawBackground()
-
+                    collision2()
                     cleaningSupplyBackGrounds.draw(DISPLAYSURF)
                     cleaningSupplySeedsGroup.draw(DISPLAYSURF)
 
                     cleaningSupplyGroup.draw(DISPLAYSURF)
-                    cleaningSupplyGroup.draw(DISPLAYSURF)
+                    projectileGroup.draw(DISPLAYSURF)
+                    projectileGroup.update()
 
                     enemy_sprites.draw(DISPLAYSURF)
                     enemy_sprites.update()
                     cleaningSupplyGroup.update()
-                    collision()
+
 
                     #print(str(windowWidth))
                     #print(str(windowHeight))
