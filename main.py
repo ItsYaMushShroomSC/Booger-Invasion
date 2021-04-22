@@ -104,9 +104,10 @@ def addSelectedCleaningSupply(dictKey, seedSelected, posX, posY):
                     if floorGridRects[col][row].collidepoint((posX, posY)) and floorGrid[col][row] == None and supplySeed.inStock:
                         #print(str(col))
                         #print(str(row))
+
                         supplySeed.resetRestockTime()
                         bubbleCoins -= supplySeed.price
-                        addCleaningSupply(col, row, seedSelected)
+                        addCleaningSupply(col, row, seedSelected, posX,posY)
                         return None
 
     return seedSelected
@@ -155,9 +156,7 @@ def readFile(): # opens txt note and adds letters to gameAry which is '2D'
             bugEnterAry.append(line.rstrip().split(' '))
 
 def getBugRandomPos(bugName):
-    choices = [DISPLAYSURF.get_height() / 2, DISPLAYSURF.get_height() / 2 - 121, DISPLAYSURF.get_height() / 2 - 242,
-               DISPLAYSURF.get_height() / 2 + 121, DISPLAYSURF.get_height() / 2 + 242]
-
+    # dict is imported from another file
     x = 3 * DISPLAYSURF.get_width() / 4
     y = random.choice(choices)
 
@@ -219,16 +218,17 @@ def getImg(name):
         return pygame.image.load('soapdispenser.PNG')
     if name == "flypaper":
         return pygame.image.load('flypaper.PNG')
-
+def createProjectile(mx,my):
+    bullet = Bullet(mx, my)
+    projectileGroup.add(bullet)
 #adds cleaning supplies to the 2Darray field
-def addCleaningSupply(posX, posY, name):
+def addCleaningSupply(posX, posY, name, mx,my):
+
     if name == "spraybottle":
         cs = SprayBottle(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
         cleaningSupplyGroup.add_internal(cs)
         setTile(posX, posY, cs)
-        bullet = Bullet(500,500)
-        print (posX)
-        projectileGroup.add(bullet)
+        createProjectile(mx,my)
     if name == "sponge":
         cs = Sponge(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
         cleaningSupplyGroup.add_internal(cs)
@@ -398,8 +398,7 @@ def collision():
 def collision2():
     for bug in enemy_sprites:
         for bullet in projectileGroup:
-
-            if pygame.sprite.collide_rect(bug,bullet):
+            if pygame.sprite.collide_rect(bug, bullet):
                 bullet.kill()
 
 
@@ -461,6 +460,8 @@ def mainGame():
 
                     seedSelected = addSelectedCleaningSupply(dictIndex, seedSelected, posX, posY)
 
+                if timeSinceStart % 5 ==0:
+                    createProjectile(posX,posY)
                 if curr_time1000 + 1000 <= pygame.time.get_ticks(): # every 1 second that passes this will happen
                     curr_time1000 = pygame.time.get_ticks()
                     timeSinceStart += 1000
