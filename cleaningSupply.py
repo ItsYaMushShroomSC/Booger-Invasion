@@ -23,11 +23,15 @@ class CleaningSupply(pygame.sprite.Sprite):
         tileHeight = tH
         self.rect = self.image.get_rect() # how long between the supply being able to use its abilities.
         self.rect.center = self.getCleaningSupplyPos(self.x, self.y)
+        self.mask = pygame.mask.from_surface(self.image) # setMask must be called every time the position of the sprite changes
+
+    def setMask(self):
+        self.mask = pygame.mask.from_surface(self.image)
 
     def getCleaningSupplyPos(self, x, y):  # the pixel position of the top left corner of the box is returned
         xHalf = tileWidth/2
         yHalf = tileHeight/2
-        return XMARGIN + (x * tileWidth) + xHalf, YMARGIN + (y * tileHeight) + yHalf
+        return XMARGIN + (x * tileWidth) + xHalf + 1, YMARGIN + (y * tileHeight) + yHalf + 1
 
     # this will be used to activate the cleaning supply's ability, whether it is attacking bugs, healing other plants, producing money, etc.
     def activate(self):
