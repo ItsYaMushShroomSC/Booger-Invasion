@@ -1,6 +1,6 @@
 bugs_are_coming 1
-spider 4
-ladybug 12
+wasp 2
+ant 4
 ant 16
 wasp 20
 spider 22

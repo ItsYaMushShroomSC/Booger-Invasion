@@ -87,6 +87,18 @@ bubbleCoinGroup = pygame.sprite.Group()
 
 # the dictionary will be read and the appropriate img will be
 
+def removeDeadCleaningSuppliesAndBugs():
+    pass
+
+def checkBugCleaaningSupplyCollision():
+
+    for cleaningSupply in cleaningSupplyGroup:
+        for bug in enemy_sprites:
+            if cleaningSupply.rect.collide_rect(bug):
+                bug.freeze = True
+                cleaningSupply.hurt(bug.damage)
+
+
 def updateSoapDispenserBubbles():# should be called every second
 
     for cleaningSupply in cleaningSupplyGroup:
@@ -174,7 +186,7 @@ def getBugsEntering(timeElapsed): # adds the bugs entering the screen
             buggy = getBugRandomPos(bug)
 
             if not buggy == None:
-                enemy_sprites.add(buggy)
+                enemy_sprites.add_internal(buggy)
 
         index += 1
 
