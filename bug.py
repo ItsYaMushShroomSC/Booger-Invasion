@@ -2,15 +2,16 @@ import pygame, time
 import sys
 from pygame.locals import *
 from supremeBug import *
-from defaults import *
+import defaults
 import random
 
+
+defaults.setMargins()
+XMARG = defaults.XMARGIN
+YMARG = defaults.YMARGIN
+
+
 # spider should take 5 hits before its death
-choices = [DISPLAYSURF.get_height() / 2, DISPLAYSURF.get_height() / 2 - 121, DISPLAYSURF.get_height() / 2 - 242,
-           DISPLAYSURF.get_height() / 2 + 121, DISPLAYSURF.get_height() / 2 + 242]
-
-enemy_sprites = pygame.sprite.Group()
-
 
 class Spider(Bug):
 
@@ -19,15 +20,11 @@ class Spider(Bug):
         super().__init__(x, y, img, False) # check out supremeBug.py to see what this initializes
 
         self.health = 5
-
+        self.speed = 10
+        self.damage = 1
 
     def update(self):
-        self.rect.x -= 10
-        if (self.rect.x <= (DISPLAYSURF.get_width()) / 4):
-            self.rect.x += 10
-            self.health = 0
-        super().die(enemy_sprites)
-
+        super().update(self.speed)
 
 class Cockroach(Bug):
 
@@ -37,14 +34,11 @@ class Cockroach(Bug):
         super().__init__(x, y, img, False)  # check out supremeBug.py to see what this initializes
 
         self.health = 7
+        self.speed = 10
+        self.damage = 1
 
     def update(self):
-        self.rect.x -= 10
-        if (self.rect.x <= (DISPLAYSURF.get_width()) / 4):
-            self.rect.x += 10
-            self.health = 0
-        super().die(enemy_sprites)
-
+        super().update(self.speed)
 
 class LadyBug(Bug):
 
@@ -54,13 +48,11 @@ class LadyBug(Bug):
         super().__init__(x, y, img, False)  # check out supremeBug.py to see what this initializes
 
         self.health = 7
+        self.speed = 10
+        self.damage = 1
 
-    def update(self): # hasObstacle is a boolean that represents whether the bug has a plant colliding in front of it
-        self.rect.x -= 10
-        if (self.rect.x <= (DISPLAYSURF.get_width()) / 4):
-            self.rect.x += 10
-            self.health = 0
-        super().die(enemy_sprites)
+    def update(self):
+        super().update(self.speed)
 
 class Wasp(Bug):
 
@@ -70,14 +62,11 @@ class Wasp(Bug):
         super().__init__(x, y, img, True)  # check out supremeBug.py to see what this initializes
 
         self.health = 7
-
+        self.speed = 10
+        self.damage = 1
 
     def update(self):
-        self.rect.x -= 30
-        if (self.rect.x <= (DISPLAYSURF.get_width()) / 4):
-            self.rect.x += 10
-            self.health = 0
-        super().die(enemy_sprites)
+        super().update(self.speed)
 
 class Ant(Bug):
 
@@ -87,11 +76,9 @@ class Ant(Bug):
         super().__init__(x, y, img, False)  # check out supremeBug.py to see what this initializes
 
         self.health = 7
+        self.speed = 10
+        self.damage = 1
 
     def update(self):
-        self.rect.x -= 10
-        if (self.rect.x <= (DISPLAYSURF.get_width()) / 4):
-            self.rect.x += 10
-            self.health = 0
-        super().die(enemy_sprites)
+        super().update(self.speed)
 
