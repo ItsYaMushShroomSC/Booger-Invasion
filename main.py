@@ -69,7 +69,7 @@ bugEnterIndex = 0
 
 # dictionary where (key: <name of cleaningsupply>, value: tuple(<order>, <price>))
 # @see https://www.w3schools.com/python/python_dictionaries.asp
-seedDict = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000), 3: ("soapdispenser", 50, 5000), 4: ("flypaper", 25, 10000), 5: ("flypaper", 25, 10000)}
+seedDict = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000), 3: ("soapdispenser", 50, 5000), 4: ("flypaper", 25, 10000), 5: ("bowlcleaner", 200, 7000)}
 seedInventoryRects = [] # seed rects for mouse collision
 
 # Sprite Groups:
@@ -95,10 +95,14 @@ def sendDamage(): # every 1 second senddamage should be caleld and damages the c
     for cleaningSupply in cleaningSupplyGroup:
         for bug in enemy_sprites:
             if pygame.sprite.collide_mask(cleaningSupply, bug) and bug.frozen == True:
-                cleaningSupply.updateHealth(bug.damage)
+                cleaningSupply.updateHealth(bug.damage, DISPLAYSURF)
 
-        if cleaningSupply.health <= 0:
-                cleaningSupplyGroup.remove_internal(cleaningSupply)
+        if cleaningSupply.health <= 0 and not cleaningSupply.name == 'flypaper':
+            cleaningSupplyGroup.remove_internal(cleaningSupply)
+
+        if cleaningSupply.name == 'flypaper' and cleaningSupply.shouldRemove:
+            cleaningSupplyGroup.remove_internal(cleaningSupply)
+
 
 def checkBugCleaningSupplyCollision():
 
@@ -279,6 +283,8 @@ def getImg(name):
         return pygame.image.load('soapdispenser.PNG')
     if name == "flypaper":
         return pygame.image.load('flypaper.PNG')
+    if name == "bowlcleaner":
+        return pygame.image.load('bowlcleaner.png')
 
 #adds cleaning supplies to the 2Darray field
 def addCleaningSupply(posX, posY, name):
@@ -296,6 +302,10 @@ def addCleaningSupply(posX, posY, name):
         setTile(posX, posY, cs)
     if name == "flypaper":
         cs = Flypaper(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
+        cleaningSupplyGroup.add_internal(cs)
+        setTile(posX, posY, cs)
+    if name == "bowlcleaner":
+        cs = BowlCleaner(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
         cleaningSupplyGroup.add_internal(cs)
         setTile(posX, posY, cs)
 
