@@ -89,7 +89,7 @@ def drawSeedLoadingBars(timeElapsed):
     for supplySeed in cleaningSupplySeedsGroup:
             supplySeed.updateLoadingBar(timeElapsed, DISPLAYSURF)
 
-def addSelectedCleaningSupply(dictKey, seedSelected, posX, posY):
+def addSelectedCleaningSupply(dictKey, seedSelected, posX, posY,timeSinceStart):
     global bubbleCoins
     counter = 0
 
@@ -102,12 +102,14 @@ def addSelectedCleaningSupply(dictKey, seedSelected, posX, posY):
                 for col in range(9):
 
                     if floorGridRects[col][row].collidepoint((posX, posY)) and floorGrid[col][row] == None and supplySeed.inStock:
-                        #print(str(col))
-                        #print(str(row))
 
                         supplySeed.resetRestockTime()
                         bubbleCoins -= supplySeed.price
-                        addCleaningSupply(col, row, seedSelected, posX,posY)
+                        addCleaningSupply(col, row, seedSelected, posX, posY)
+                        if timeSinceStart > 5000:
+                            projectileGroup.add(createProjectile(posX,posY))
+                            print("Hi")
+
                         return None
 
     return seedSelected
@@ -220,7 +222,7 @@ def getImg(name):
         return pygame.image.load('flypaper.PNG')
 def createProjectile(mx,my):
     bullet = Bullet(mx, my)
-    projectileGroup.add(bullet)
+    return bullet
 #adds cleaning supplies to the 2Darray field
 def addCleaningSupply(posX, posY, name, mx,my):
 
@@ -228,7 +230,8 @@ def addCleaningSupply(posX, posY, name, mx,my):
         cs = SprayBottle(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
         cleaningSupplyGroup.add_internal(cs)
         setTile(posX, posY, cs)
-        createProjectile(mx,my)
+
+
     if name == "sponge":
         cs = Sponge(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
         cleaningSupplyGroup.add_internal(cs)
@@ -414,7 +417,7 @@ def mainGame():
     clicked = False
 
     resetVariables()
-
+    seedSel = False
     my_eventTime = USEREVENT + 1
     pygame.time.set_timer(my_eventTime, 150)
 
@@ -457,11 +460,11 @@ def mainGame():
                 if clicked == True:
                     dictIndex, seedSelected = getSeedSelected(posX, posY, seedSelected, dictIndex)
                     #print(seedSelected)
+                    # seedSel = True
+                    seedSelected = addSelectedCleaningSupply(dictIndex, seedSelected, posX, posY,timeSinceStart)
 
-                    seedSelected = addSelectedCleaningSupply(dictIndex, seedSelected, posX, posY)
-
-                if timeSinceStart % 5 ==0:
-                    createProjectile(posX,posY)
+                # if (timeSinceStart /1000)  % 5 ==0 :
+                #     projectileGroup.add(createProjectile(posX,posY))
                 if curr_time1000 + 1000 <= pygame.time.get_ticks(): # every 1 second that passes this will happen
                     curr_time1000 = pygame.time.get_ticks()
                     timeSinceStart += 1000
