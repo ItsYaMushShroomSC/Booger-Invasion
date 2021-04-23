@@ -65,7 +65,8 @@ class Flypaper(CleaningSupply):
         self.health = 1 # when flypaper is stepped on, it will explode
         self.explode = False
         self.shouldRemove = False
-        self.explodeDuration = 3
+        self.explodeDuration = 1
+        self.tileW, self.tileH = tileW, tileH
 
     def updateHealth(self, bugDamage, DISPLAYSURF):
         self.health -= bugDamage
@@ -86,6 +87,7 @@ class Flypaper(CleaningSupply):
 
         if self.health <= 0:
             self.explode = True
+            self.image = pygame.transform.smoothscale(pygame.image.load('explosionimg.PNG'), (self.tileW-2, self.tileH-2))
 
 
 #flypaperGroup.add(Flypaper(0, 0))
