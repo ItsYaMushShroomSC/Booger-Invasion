@@ -65,7 +65,6 @@ class Flypaper(CleaningSupply):
         self.health = 1 # when flypaper is stepped on, it will explode
         self.explode = False
         self.shouldRemove = False
-        self.explodeDuration = 1
         self.tileW, self.tileH = tileW, tileH
 
     def updateHealth(self, bugDamage, DISPLAYSURF):
@@ -79,11 +78,8 @@ class Flypaper(CleaningSupply):
         DISPLAYSURF.blit(textSurface, (left, top))
         pygame.display.update()
 
-        if self.explode == True and self.explodeDuration <= 0:
-            self.shouldRemove = True
-
         if self.explode == True:
-            self.explodeDuration -= 1
+            self.shouldRemove = True
 
         if self.health <= 0:
             self.explode = True
