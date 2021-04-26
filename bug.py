@@ -1,84 +1,31 @@
-import pygame, time
+import pygame
 import sys
 from pygame.locals import *
-from supremeBug import *
-import defaults
-import random
+from main import *
+all_sprites = pygame.sprite.Group()
 
 
-defaults.setMargins()
-XMARG = defaults.XMARGIN
-YMARG = defaults.YMARGIN
+class Bug(pygame.sprite.Sprite):
 
 
-# spider should take 5 hits before its death
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
 
-class Spider(Bug):
+        self.image = pygame.Surface((50, 50))
+        self.image = pygame.transform.scale(pygame.image.load("spider.png"), (100,100))
+        self.rect = self.image.get_rect()
+        self.rect.center = (DISPLAYSURF.get_width() / 2, DISPLAYSURF.get_height() / 2)
 
-    def __init__(self, x, y):
-        img = pygame.image.load('spider.png')
-        super().__init__(x, y, img, False) # check out supremeBug.py to see what this initializes
 
-        self.health = 5
-        self.speed = 10
-        self.damage = 1
+
 
     def update(self):
-        super().update(self.speed)
+        self.rect.x += 5
+        if self.rect.left > DISPLAYSURF.get_width():
+            self.rect.right = 0
 
-class Cockroach(Bug):
 
-    def __init__(self, x, y):
 
-        img = pygame.image.load('cockroach.png')
-        super().__init__(x, y, img, False)  # check out supremeBug.py to see what this initializes
 
-        self.health = 7
-        self.speed = 10
-        self.damage = 1
-
-    def update(self):
-        super().update(self.speed)
-
-class LadyBug(Bug):
-
-    def __init__(self, x, y):
-
-        img = pygame.image.load('ladybug.png')
-        super().__init__(x, y, img, False)  # check out supremeBug.py to see what this initializes
-
-        self.health = 7
-        self.speed = 10
-        self.damage = 1
-
-    def update(self):
-        super().update(self.speed)
-
-class Wasp(Bug):
-
-    def __init__(self, x, y):
-
-        img = pygame.image.load('wasp.png')
-        super().__init__(x, y, img, True)  # check out supremeBug.py to see what this initializes
-
-        self.health = 7
-        self.speed = 10
-        self.damage = 1
-
-    def update(self):
-        super().update(self.speed)
-
-class Ant(Bug):
-
-    def __init__(self, x, y):
-
-        img = pygame.image.load('ant.png')
-        super().__init__(x, y, img, False)  # check out supremeBug.py to see what this initializes
-
-        self.health = 7
-        self.speed = 10
-        self.damage = 1
-
-    def update(self):
-        super().update(self.speed)
-
+bug1 = Bug()
+all_sprites.add(bug1)
