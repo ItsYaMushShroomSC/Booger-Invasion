@@ -14,6 +14,7 @@ from defaults import *
 from cleaningSupplies import *
 from cleaningSupplySeed import *
 from bubbleMoney import *
+from projectile import *
 
 pygame.init()
 
@@ -371,6 +372,18 @@ def drawTiles(shouldDraw):
 
             floorGridRects[col][row] = imgRect
 
+#generates projectile every 5 seconds
+def proj(time):
+    print(f'{time} o')
+    for supply in cleaningSupplyGroup:
+        if (time / 1000 ) % 5 == 0 and supply.name == "spraybottle" :
+            projectileGroup.add(createProjectile(supply.rect.centerx, supply.rect.centery))
+
+
+def createProjectile(mx,my):
+    bullet = Bullet(mx, my)
+    return bullet
+
 
 def drawBackground():
     img = pygame.transform.smoothscale(pygame.image.load('bugsWorldBackground.jpg').convert_alpha(),
@@ -459,7 +472,13 @@ def resetVariables():
 def terminate():  # terminates game
     pygame.quit()
     sys.exit()
-
+# projectile and bug collision WORKS
+def collision2():
+    for bug in enemy_sprites:
+        for bullet in projectileGroup:
+            if pygame.sprite.collide_rect(bug, bullet):
+                bullet.kill()
+                bug.health -= 1
 
 
 def mainGame():
@@ -494,7 +513,7 @@ def mainGame():
     while True:
 
         for event in pygame.event.get():
-
+            collision2()
             if event.type == MOUSEBUTTONDOWN:
                 posX, posY = pygame.mouse.get_pos()
                 clicked = True
@@ -515,6 +534,7 @@ def mainGame():
                 readFile()
 
 
+
                 if clicked == True:
                     dictIndex, seedSelected = getSeedSelected(posX, posY, seedSelected, dictIndex)
                     seedSelected = addSelectedCleaningSupply(dictIndex, seedSelected, posX, posY)
@@ -530,7 +550,7 @@ def mainGame():
                     timeSinceStart += 1000
 
                     getBugsEntering(timeSinceStart)
-
+                    proj(timeSinceStart)
                     removeExpiredBubbles()
                     updateSoapDispenserBubbles()
 
@@ -551,12 +571,16 @@ def mainGame():
 
                     cleaningSupplyGroup.draw(DISPLAYSURF)
                     cleaningSupplyGroup.draw(DISPLAYSURF)
+                    projectileGroup.draw(DISPLAYSURF)
+                    projectileGroup.update()
 
                     enemy_sprites.draw(DISPLAYSURF)
                     enemy_sprites.update()
 
                     bubbleCoinGroup.draw(DISPLAYSURF)
                     bubbleCoinGroup.update()
+
+
 
                     #print(str(windowWidth))
                     #print(str(windowHeight))
