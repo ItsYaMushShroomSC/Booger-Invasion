@@ -97,8 +97,13 @@ def sendDamage(): # every 1 second senddamage should be caleld and damages the c
             if pygame.sprite.collide_mask(cleaningSupply, bug) and bug.frozen == True:
                 cleaningSupply.updateHealth(bug.damage, DISPLAYSURF)
 
+            if cleaningSupply.name == 'flypaper' and cleaningSupply.shouldRemove == True and pygame.sprite.collide_mask(cleaningSupply, bug):
+                enemy_sprites.remove_internal(bug)
+
         if cleaningSupply.health <= 0 and not cleaningSupply.name == 'flypaper':
             cleaningSupplyGroup.remove_internal(cleaningSupply)
+
+
 
         if cleaningSupply.name == 'flypaper' and cleaningSupply.shouldRemove:
             cleaningSupplyGroup.remove_internal(cleaningSupply)
