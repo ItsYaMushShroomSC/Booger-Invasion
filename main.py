@@ -69,7 +69,7 @@ bugEnterIndex = 0
 
 # dictionary where (key: <name of cleaningsupply>, value: tuple(<order>, <price>))
 # @see https://www.w3schools.com/python/python_dictionaries.asp
-seedDict = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000), 3: ("soapdispenser", 50, 5000), 4: ("flypaper", 25, 10000), 5: ("bowlcleaner", 200, 7000)}
+seedDict = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000), 3: ("soapdispenser", 50, 5000), 4: ("flypaper", 25, 10000), 5: ("bowlcleaner", 200, 7000), 6: ('toiletplunger', 150, 8000)}
 seedInventoryRects = [] # seed rects for mouse collision
 
 # Sprite Groups:
@@ -87,7 +87,10 @@ bubbleCoinGroup = pygame.sprite.Group()
 
 # the dictionary will be read and the appropriate img will be
 
-def removeDeadCleaningSuppliesAndBugs():
+def activatePlungers():
+    pass
+
+def checkPlungersHaveTarget():
     pass
 
 def sendDamage(): # every 1 second senddamage should be caleld and damages the cs by the bugs, and removes dead ones
@@ -290,6 +293,8 @@ def getImg(name):
         return pygame.image.load('flypaper.PNG')
     if name == "bowlcleaner":
         return pygame.image.load('bowlcleaner.png')
+    if name == "toiletplunger":
+        return pygame.image.load('PlungerUpright.png.png')
 
 #adds cleaning supplies to the 2Darray field
 def addCleaningSupply(posX, posY, name):
@@ -311,6 +316,10 @@ def addCleaningSupply(posX, posY, name):
         setTile(posX, posY, cs)
     if name == "bowlcleaner":
         cs = BowlCleaner(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
+        cleaningSupplyGroup.add_internal(cs)
+        setTile(posX, posY, cs)
+    if name == "toiletplunger":
+        cs = ToiletPlunger(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
         cleaningSupplyGroup.add_internal(cs)
         setTile(posX, posY, cs)
 
@@ -487,6 +496,7 @@ def mainGame():
 
     curr_time5000 = pygame.time.get_ticks()
     curr_time1000 = pygame.time.get_ticks()
+    curr_time500 = pygame.time.get_ticks()
     curr_time250 = pygame.time.get_ticks()
 
     posX, posY = None, None
@@ -502,6 +512,7 @@ def mainGame():
                     timeSinceStart = 0
                     curr_time5000 = pygame.time.get_ticks()
                     curr_time1000 = pygame.time.get_ticks()
+                    curr_time500 = pygame.time.get_ticks()
                     curr_time250 = pygame.time.get_ticks()
             else:
                 clicked = False
@@ -513,7 +524,6 @@ def mainGame():
 
             if gameLevel == 1:
                 readFile()
-
 
                 if clicked == True:
                     dictIndex, seedSelected = getSeedSelected(posX, posY, seedSelected, dictIndex)
@@ -535,6 +545,11 @@ def mainGame():
                     updateSoapDispenserBubbles()
 
                     sendDamage()
+
+                if curr_time500 + 500 <= pygame.time.get_ticks():
+                    curr_time500 = pygame.time.get_ticks()
+                    #checkPlungersHaveTarget()
+                    #activatePlungers()
 
 
                 if curr_time250 + 250 <= pygame.time.get_ticks():
