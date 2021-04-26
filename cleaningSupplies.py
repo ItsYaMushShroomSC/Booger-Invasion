@@ -20,8 +20,7 @@ class SprayBottle(CleaningSupply):
 class Sponge(CleaningSupply):
 
     def __init__(self, row, column, XMARG, YMARG, tileW, tileH):
-        pygame.sprite.Sprite.__init__(self)
-        pygame.sprite.Sprite.__init__(self)
+
         super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("sponge.png"), (tileW, tileH)), XMARG, YMARG, tileW, tileH)
         self.name = 'sponge'
         self.health = 50
@@ -35,7 +34,7 @@ class Sponge(CleaningSupply):
 class Flypaper(CleaningSupply):
 
     def __init__(self, row, column, XMARG, YMARG, tileW, tileH):
-        pygame.sprite.Sprite.__init__(self)
+
         super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("flypaper.png"), (tileW, tileH)), XMARG, YMARG, tileW, tileH)
         self.name = 'flypaper'
         self.health = 10 # when flypaper is stepped on, it will explode
@@ -48,7 +47,6 @@ class Flypaper(CleaningSupply):
 class SoapDispenser(CleaningSupply):
 
     def __init__(self, row, column, XMARG, YMARG, tileW, tileH):
-        pygame.sprite.Sprite.__init__(self)
         super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("soapdispenser.png"), (tileW, tileH)), XMARG, YMARG, tileW, tileH)
         self.name = 'soapdispenser'
 

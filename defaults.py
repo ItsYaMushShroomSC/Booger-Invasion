@@ -44,3 +44,13 @@ openScreenRects = []  # stores rectangles/buttons of the opening screen
 floorGrid = []  # floor grid 2D array
 tileWidth = None
 tileHeight = None
+
+def setMargins():
+    global scaleFactorH, scaleFactorW, XMARGIN, YMARGIN
+
+    scaleFactor = scaleFactorH
+    if scaleFactorW < scaleFactorH:
+        scaleFactor = scaleFactorW
+
+    XMARGIN, YMARGIN = int((windowWidth - (100 * scaleFactor * 9)) / 2), int(
+        (windowHeight - (121 * scaleFactor * 5)) / 2)
