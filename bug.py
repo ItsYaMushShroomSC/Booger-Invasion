@@ -23,6 +23,8 @@ class Bug(pygame.sprite.Sprite):
         self.rect.x += 5
         if self.rect.left > DISPLAYSURF.get_width():
             self.rect.right = 0
+            #qqq
+
 
 
 
