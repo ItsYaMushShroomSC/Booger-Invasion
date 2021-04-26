@@ -52,6 +52,25 @@ class Sponge(CleaningSupply):
         DISPLAYSURF.blit(textSurface, (left, top))
         pygame.display.update()
 
+class ThiccSponge(CleaningSupply):
+
+    def __init__(self, row, column, XMARG, YMARG, tileW, tileH):
+
+        super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("sponge.png"), (tileW-2, tileH-2)), XMARG, YMARG, tileW, tileH)
+        self.name = 'thiccsponge'
+        self.health = 60
+
+    def updateHealth(self, bugDamage, DISPLAYSURF):
+        self.health -= bugDamage
+
+        font = pygame.font.Font('cloudBubbleFont.ttf', 32 * defaults.scaleFactorH)
+        textSurface = font.render('-' + str(bugDamage), True, defaults.RED)
+        textRect = textSurface.get_rect()
+        textRect.midright = self.rect.midright
+        left, top = textRect.topleft
+        DISPLAYSURF.blit(textSurface, (left, top))
+        pygame.display.update()
+
 #spongeGroup.add(Sponge(0, 0))
 
 #flypaper is a trap, equivalent to a potato mine. It will kill one bug instantly when it touches it but will then dissapear.
@@ -143,6 +162,26 @@ class BowlCleaner(CleaningSupply):
         DISPLAYSURF.blit(textSurface, (left, top))
         pygame.display.update()
 
+
+class ToiletPlunger(CleaningSupply):
+
+    def __init__(self, row, column, XMARG, YMARG, tileW, tileH):
+        self.uprightImg = pygame.transform.smoothscale(pygame.image.load('PlungerUpright.png.png'), (tileW - 2, tileH - 2))
+        self.hittingImg = pygame.transform.smoothscale(pygame.image.load('PlungerHitting.png.png'), (tileW * 3 - 2, tileH - 2))
+
+        super().__init__(row, column, self.uprightImg, XMARG, YMARG, tileW, tileH)
+
+        self.name = 'toiletplunger'
+        self.cooldown = 500  # half a second
+        self.health = 10
+        self.startcooldownframes = self.cooldown
+        self.hasTarget = False # if hasTarget is True then the plunger has a zombie in front of it
+
+        self.imgNum = 1
+
+    def updateHealth(self, bugDamage, DISPLAYSURF):
+        self.health -= bugDamage
+
         font = pygame.font.Font('cloudBubbleFont.ttf', 32 * defaults.scaleFactorH)
         textSurface = font.render('-' + str(bugDamage), True, defaults.RED)
         textRect = textSurface.get_rect()
@@ -150,3 +189,24 @@ class BowlCleaner(CleaningSupply):
         left, top = textRect.topleft
         DISPLAYSURF.blit(textSurface, (left, top))
         pygame.display.update()
+
+        if self.hasTarget == True and self.imgNum == 1:
+            self.imgNum = 2
+            self.image = self.hittingImg
+            self.rect = self.image.get_rect()
+            self.mask = pygame.mask.from_surface(self.image)  # setMask must be called every time the position of the sprite changes
+
+        elif self.hasTarget == True and self.imgNum == 2:
+            self.imgNum = 1
+            self.image = self.uprightImg
+            self.rect = self.image.get_rect()
+            self.mask = pygame.mask.from_surface(self.image)  # setMask must be called every time the position of the sprite changes
+
+
+
+
+
+
+
+
+
