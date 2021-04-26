@@ -30,53 +30,6 @@ class SprayBottle(CleaningSupply):
         DISPLAYSURF.blit(textSurface, (left, top))
         pygame.display.update()
 
-class SprayBottlex2(CleaningSupply):
-
-    def __init__(self, row, column, XMARG, YMARG, tileW, tileH):
-
-        super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("doublespraybottle.png"), (tileW-2, tileH-2)), XMARG, YMARG, tileW, tileH)
-
-        self.name = 'doublespraybottle'
-        self.cooldown = 480
-        self.health = 7
-        self.damage = 1
-        self.startcooldownframes = self.cooldown
-
-    def updateHealth(self, bugDamage, DISPLAYSURF):
-        self.health -= bugDamage
-
-        font = pygame.font.Font('cloudBubbleFont.ttf', 32 * defaults.scaleFactorH)
-        textSurface = font.render('-' + str(bugDamage), True, defaults.RED)
-        textRect = textSurface.get_rect()
-        textRect.midright = self.rect.midright
-        left, top = textRect.topleft
-        DISPLAYSURF.blit(textSurface, (left, top))
-        pygame.display.update()
-
-class IceBottle(CleaningSupply):
-
-    def __init__(self, row, column, XMARG, YMARG, tileW, tileH):
-
-        super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("spraybottle.png"), (tileW-2,
-                                                                                                     tileH-2)), XMARG, YMARG, tileW, tileH)
-
-        self.name = 'icebottle'
-        self.cooldown = 480
-        self.health = 7
-        self.damage = 1
-        self.startcooldownframes = self.cooldown
-
-    def updateHealth(self, bugDamage, DISPLAYSURF):
-        self.health -= bugDamage
-
-        font = pygame.font.Font('cloudBubbleFont.ttf', 32 * defaults.scaleFactorH)
-        textSurface = font.render('-' + str(bugDamage), True, defaults.RED)
-        textRect = textSurface.get_rect()
-        textRect.midright = self.rect.midright
-        left, top = textRect.topleft
-        DISPLAYSURF.blit(textSurface, (left, top))
-        pygame.display.update()
-
 
 #The sponge can absorb a lot of hits. It is equivalent to a Wall-nut. It has no abilities but has way more health than most plants.
 
@@ -209,68 +162,25 @@ class BowlCleaner(CleaningSupply):
         DISPLAYSURF.blit(textSurface, (left, top))
         pygame.display.update()
 
+
 class ToiletPlunger(CleaningSupply):
 
     def __init__(self, row, column, XMARG, YMARG, tileW, tileH):
         self.uprightImg = pygame.transform.smoothscale(pygame.image.load('PlungerUpright.png.png'), (tileW - 2, tileH - 2))
-        self.hittingImg = pygame.transform.smoothscale(pygame.image.load('PlungerHitting.png.png'), (tileW * 3 - 2, tileH))
+        self.hittingImg = pygame.transform.smoothscale(pygame.image.load('PlungerHitting.png.png'), (tileW * 3 - 2, tileH - 2))
 
         super().__init__(row, column, self.uprightImg, XMARG, YMARG, tileW, tileH)
 
         self.name = 'toiletplunger'
         self.cooldown = 500  # half a second
-        self.health = 50
+        self.health = 10
         self.startcooldownframes = self.cooldown
-        self.hasTarget = True # if hasTarget is True then the plunger has a zombie in front of it
-
-        self.left, self.top = self.rect.topleft
-
-        self.targetRect = Rect(self.left, self.top, tileW*3+2, tileH-2)
-
-        print(str(self.rect))
-
-        print(str(self.targetRect))
-
-        self.uprightRect = self.rect
+        self.hasTarget = False # if hasTarget is True then the plunger has a zombie in front of it
 
         self.imgNum = 1
 
-    def updateHealth(self, bug):
-
-        if self.hasTarget == False:
-            self.image = self.uprightImg
-            self.rect.center = self.getCleaningSupplyPos(self.x, self.y)
-            self.mask = pygame.mask.from_surface(self.image)
-
-        if self.hasTarget == True:
-
-        #print(str(self.hasTarget))
-
-            if self.image == self.uprightImg:
-
-                self.rect.topleft = self.left, self.top
-                self.mask = pygame.mask.from_surface(self.image)  # setMask must be called every time the position of the sprite changes
-                pygame.display.update()
-
-            elif self.image == self.hittingImg:
-
-                self.rect.topleft = self.left, self.top
-                self.mask = pygame.mask.from_surface(self.image)  # setMask must be called every time the position of the sprite changes
-                bug.health -= 1
-                pygame.display.update()
-                #self.health -= bugDamage
-
-            if self.image == self.uprightImg:
-                self.image = self.hittingImg
-            else:
-                self.image = self.uprightImg
-
-    def becomeUpright(self):
-        self.image = self.uprightImg
-        self.rect.center = self.getCleaningSupplyPos(self.x, self.y)
-        self.mask = pygame.mask.from_surface(self.image)
-
-    def drawAttack(self, bugDamage, DISPLAYSURF):
+    def updateHealth(self, bugDamage, DISPLAYSURF):
+        self.health -= bugDamage
 
         font = pygame.font.Font('cloudBubbleFont.ttf', 32 * defaults.scaleFactorH)
         textSurface = font.render('-' + str(bugDamage), True, defaults.RED)
@@ -279,4 +189,24 @@ class ToiletPlunger(CleaningSupply):
         left, top = textRect.topleft
         DISPLAYSURF.blit(textSurface, (left, top))
         pygame.display.update()
+
+        if self.hasTarget == True and self.imgNum == 1:
+            self.imgNum = 2
+            self.image = self.hittingImg
+            self.rect = self.image.get_rect()
+            self.mask = pygame.mask.from_surface(self.image)  # setMask must be called every time the position of the sprite changes
+
+        elif self.hasTarget == True and self.imgNum == 2:
+            self.imgNum = 1
+            self.image = self.uprightImg
+            self.rect = self.image.get_rect()
+            self.mask = pygame.mask.from_surface(self.image)  # setMask must be called every time the position of the sprite changes
+
+
+
+
+
+
+
+
 
