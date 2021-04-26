@@ -21,12 +21,7 @@ class Bullet(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(pygame.image.load("bullet.png"), (50,50))
 
         self.rect = self.image.get_rect()
-        self.rect.center = (x, y)
+        self.rect.center = (self.x, self.y)
 
     def update(self):
         self.rect.x += 10
-        # if (self.rect.x <= (DISPLAYSURF.get_width()) / 4):
-        #     self.rect.x += 10
-        #     self.health = 0
-        # if self.health == 0:
-        #     self.kill()

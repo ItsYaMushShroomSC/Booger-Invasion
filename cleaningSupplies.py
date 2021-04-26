@@ -6,7 +6,7 @@ from cleaningSupply import *
 class SprayBottle(CleaningSupply):
 
     def __init__(self, row, column, XMARG, YMARG, tileW, tileH):
-
+        pygame.sprite.Sprite.__init__(self)
         super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("spraybottle.png"), (tileW, tileH)), XMARG, YMARG, tileW, tileH)
         pygame.sprite.Sprite.__init__(self)
         self.name = 'spraybottle'
@@ -21,7 +21,7 @@ class Sponge(CleaningSupply):
 
     def __init__(self, row, column, XMARG, YMARG, tileW, tileH):
         pygame.sprite.Sprite.__init__(self)
-
+        pygame.sprite.Sprite.__init__(self)
         super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("sponge.png"), (tileW, tileH)), XMARG, YMARG, tileW, tileH)
         self.name = 'sponge'
         self.health = 50

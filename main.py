@@ -106,9 +106,7 @@ def addSelectedCleaningSupply(dictKey, seedSelected, posX, posY,timeSinceStart):
                         supplySeed.resetRestockTime()
                         bubbleCoins -= supplySeed.price
                         addCleaningSupply(col, row, seedSelected, posX, posY)
-                        if timeSinceStart > 5000:
-                            projectileGroup.add(createProjectile(posX,posY))
-                            print("Hi")
+
 
                         return None
 
@@ -231,7 +229,6 @@ def addCleaningSupply(posX, posY, name, mx,my):
         cleaningSupplyGroup.add_internal(cs)
         setTile(posX, posY, cs)
 
-
     if name == "sponge":
         cs = Sponge(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
         cleaningSupplyGroup.add_internal(cs)
@@ -244,6 +241,15 @@ def addCleaningSupply(posX, posY, name, mx,my):
         cs = Flypaper(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
         cleaningSupplyGroup.add_internal(cs)
         setTile(posX, posY, cs)
+
+#generates projectile every 5 seconds
+def proj(time):
+    print(f'{time} o')
+    for supply in cleaningSupplyGroup:
+        if (time / 1000 ) % 5 == 0 :
+            projectileGroup.add(createProjectile(supply.rect.centerx, supply.rect.centery))
+
+
 
 def getTileRect(col, row):
     return floorGridRects[col][row]
@@ -387,15 +393,7 @@ def resetVariables():
     formFloorGridRectsArray()
     drawTiles(False)
 
-# detects collision between bug and supply DOES NOT WORK
-def collision():
-    for bug in enemy_sprites:
-        for supply in cleaningSupplyGroup:
 
-            if pygame.sprite.collide_rect(supply,bug):
-                supply.kill()
-                print(cleaningSupplyGroup)
-                # exit()
 
 # projectile and bug collision WORKS
 def collision2():
@@ -453,22 +451,21 @@ def mainGame():
                 if clicked:
                     gameLevel = determineLevel(posX, posY)
 
+
             if gameLevel == 1:
                 readFile()
 
 
                 if clicked == True:
                     dictIndex, seedSelected = getSeedSelected(posX, posY, seedSelected, dictIndex)
-                    #print(seedSelected)
-                    # seedSel = True
+
                     seedSelected = addSelectedCleaningSupply(dictIndex, seedSelected, posX, posY,timeSinceStart)
 
-                # if (timeSinceStart /1000)  % 5 ==0 :
-                #     projectileGroup.add(createProjectile(posX,posY))
                 if curr_time1000 + 1000 <= pygame.time.get_ticks(): # every 1 second that passes this will happen
                     curr_time1000 = pygame.time.get_ticks()
                     timeSinceStart += 1000
                     getBugsEntering(timeSinceStart)
+                    proj(timeSinceStart)
 
                 if curr_time250 + 250 <= pygame.time.get_ticks():
                     curr_time250 = pygame.time.get_ticks()
