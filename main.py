@@ -91,21 +91,32 @@ def activatePlungers():
     pass
 
 def checkPlungersHaveTarget():
-    pass
+    for cleaningSupply in cleaningSupplyGroup:
+        if cleaningSupply.name == 'toiletplunger':
+            if cleaningSupply.targetRect:
+                pass
+
+
+
 
 def sendDamage(): # every 1 second senddamage should be caleld and damages the cs by the bugs, and removes dead ones
 
     for cleaningSupply in cleaningSupplyGroup:
         for bug in enemy_sprites:
             if pygame.sprite.collide_mask(cleaningSupply, bug) and bug.frozen == True:
-                cleaningSupply.updateHealth(bug.damage, DISPLAYSURF)
+                if not cleaningSupply.name == 'toiletplunger':
+                    cleaningSupply.updateHealth(bug.damage, DISPLAYSURF)
 
             if cleaningSupply.name == 'flypaper' and cleaningSupply.shouldRemove == True and pygame.sprite.collide_mask(cleaningSupply, bug):
                 enemy_sprites.remove_internal(bug)
 
+            if cleaningSupply.name == 'toiletplunger':
+                if bug.rect.colliderect(cleaningSupply.targetRect):
+                    cleaningSupply.updateHealth(bug.damage, DISPLAYSURF)
+                    cleaningSupply.hasTarget = True
+
         if cleaningSupply.health <= 0 and not cleaningSupply.name == 'flypaper':
             cleaningSupplyGroup.remove_internal(cleaningSupply)
-
 
 
         if cleaningSupply.name == 'flypaper' and cleaningSupply.shouldRemove:
@@ -118,6 +129,12 @@ def checkBugCleaningSupplyCollision():
         for bug in enemy_sprites:
             if pygame.sprite.collide_mask(cleaningSupply, bug):
                 bug.frozen = True
+                if cleaningSupply.name == 'toiletplunger':
+                    if cleaningSupply.uprightRect.colliderect(bug.rect):
+                        bug.frozen = True
+                    else:
+                        bug.frozen = False
+
             if not pygame.sprite.spritecollideany(bug, cleaningSupplyGroup):
                 bug.frozen = False
 
