@@ -6,7 +6,7 @@ from pygame.locals import *
 
 class Bubble(pygame.sprite.Sprite):
 
-    def __init__(self, isCleaninSupplyBubble):
+    def __init__(self, isCleaningSupplyBubble, cleaningSupplyRect):
 
         self.image = pygame.image.load('bubbleimg.PNG')
         w, h = 54 * defaults.scaleFactorH, 54 * defaults.scaleFactorH
@@ -14,8 +14,11 @@ class Bubble(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.shouldRemoveCounter = 8
 
-        if isCleaninSupplyBubble == False: # random bubble position for a bubble unrelated to cleaning supply
+        if isCleaningSupplyBubble == False:  # random bubble position for a bubble unrelated to cleaning supply
             self.setRandomPosDefault()
+
+        if isCleaningSupplyBubble == True:
+            self.setRandomPosCleaningSupply(cleaningSupplyRect)
 
     def getShouldRemove(self): # updates and gets should the bubble be removed
 
@@ -25,8 +28,8 @@ class Bubble(pygame.sprite.Sprite):
         else:
             return False
 
-    def setRandomPosCleaningSupply(self):
-        pass
+    def setRandomPosCleaningSupply(self, cleaningSupplyRect):
+        self.rect.center = cleaningSupplyRect.center
 
     def setRandomPosDefault(self):
         choices = ['left', 'top', 'right', 'bottom']

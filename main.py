@@ -77,8 +77,12 @@ cleaningSupplyBackGrounds = pygame.sprite.Group()
 cleaningSupplySeedsGroup = pygame.sprite.Group()
 
 # Money currency
-bubbleCoins = 0
+bubbleCoins = 100
 bubbleCoinGroup = pygame.sprite.Group()
+
+#projectiles
+droplets = 0
+DropletGroup = pygame.sprite.Group()
 
 # Classes Are in other .py files
 
@@ -86,6 +90,35 @@ bubbleCoinGroup = pygame.sprite.Group()
 # Non-Class Methods:
 
 # the dictionary will be read and the appropriate img will be
+
+def updateSoapDispenserBubbles():# should be called every second
+
+    for cleaningSupply in cleaningSupplyGroup:
+        if cleaningSupply.name == 'soapdispenser':
+            shouldSpawn, rect = cleaningSupply.getShouldSpawnBubble()
+
+            if shouldSpawn == True:
+                bubbleCoinGroup.add_internal(Bubble(True, rect))
+
+def updateDroplets():# should be called every second
+    global DropletGroup, droplets, spawnDroplet
+
+    for cleaningSupply in cleaningSupplyGroup:
+        if cleaningSupply.name == 'spraybottle':
+            shouldSpawn, rect = cleaningSupply.getShouldSpawnDroplet()
+
+
+            if shouldSpawn == True:
+                DropletGroup.add_internal(Droplet(True, rect))
+                #droplets = droplets + 1
+                #Droplet.spawnDroplet(cleaningSupply)
+               # print("updateDroplets working")
+
+def addDroplet():
+    global DropletGroup
+
+    DropletGroup.add_internal(Droplet(None))
+
 def removeClickedBubbles(mouseX, mouseY):
     global bubbleCoins
 
@@ -106,7 +139,7 @@ def removeExpiredBubbles():
 def addBubbleCoin(isCleaningSupplyBubble):
     global bubbleCoinGroup
 
-    bubbleCoinGroup.add_internal(Bubble(isCleaningSupplyBubble))
+    bubbleCoinGroup.add_internal(Bubble(isCleaningSupplyBubble, None))
 
 def drawSeedLoadingBars(timeElapsed):
     for supplySeed in cleaningSupplySeedsGroup:
@@ -477,7 +510,10 @@ def mainGame():
                     curr_time1000 = pygame.time.get_ticks()
                     timeSinceStart += 1000
                     getBugsEntering(timeSinceStart)
+
                     removeExpiredBubbles()
+                    updateSoapDispenserBubbles()
+                    updateDroplets()
 
 
                 if curr_time250 + 250 <= pygame.time.get_ticks():
@@ -498,6 +534,9 @@ def mainGame():
 
                     bubbleCoinGroup.draw(DISPLAYSURF)
                     bubbleCoinGroup.update()
+
+                    DropletGroup.draw(DISPLAYSURF)
+                    DropletGroup.update()
 
                     #print(str(windowWidth))
                     #print(str(windowHeight))
