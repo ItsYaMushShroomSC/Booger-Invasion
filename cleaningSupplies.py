@@ -167,40 +167,49 @@ class ToiletPlunger(CleaningSupply):
 
     def __init__(self, row, column, XMARG, YMARG, tileW, tileH):
         self.uprightImg = pygame.transform.smoothscale(pygame.image.load('PlungerUpright.png.png'), (tileW - 2, tileH - 2))
-        self.hittingImg = pygame.transform.smoothscale(pygame.image.load('PlungerHitting.png.png'), (tileW * 3 - 2, tileH - 2))
+        self.hittingImg = pygame.transform.smoothscale(pygame.image.load('PlungerHitting.png.png'), (tileW * 2 - 2, tileH - 2))
 
         super().__init__(row, column, self.uprightImg, XMARG, YMARG, tileW, tileH)
 
         self.name = 'toiletplunger'
         self.cooldown = 500  # half a second
-        self.health = 10
+        self.health = 50
         self.startcooldownframes = self.cooldown
         self.hasTarget = False # if hasTarget is True then the plunger has a zombie in front of it
+
+        left, top = self.rect.topleft
+
+        self.targetRect = Rect(left, top, tileW*2-2, tileH-2)
+        self.uprightRect = self.rect
 
         self.imgNum = 1
 
     def updateHealth(self, bugDamage, DISPLAYSURF):
-        self.health -= bugDamage
+        if self.hasTarget == True:
+            self.health -= bugDamage
 
-        font = pygame.font.Font('cloudBubbleFont.ttf', 32 * defaults.scaleFactorH)
-        textSurface = font.render('-' + str(bugDamage), True, defaults.RED)
-        textRect = textSurface.get_rect()
-        textRect.midright = self.rect.midright
-        left, top = textRect.topleft
-        DISPLAYSURF.blit(textSurface, (left, top))
-        pygame.display.update()
+            font = pygame.font.Font('cloudBubbleFont.ttf', 32 * defaults.scaleFactorH)
+            textSurface = font.render('-' + str(bugDamage), True, defaults.RED)
+            textRect = textSurface.get_rect()
+            textRect.midright = self.rect.midright
+            left, top = textRect.topleft
+            DISPLAYSURF.blit(textSurface, (left, top))
+            pygame.display.update()
+
+        #print(str(self.hasTarget))
 
         if self.hasTarget == True and self.imgNum == 1:
             self.imgNum = 2
             self.image = self.hittingImg
-            self.rect = self.image.get_rect()
+            self.rect.center = self.getCleaningSupplyPos(self.x, self.y)
             self.mask = pygame.mask.from_surface(self.image)  # setMask must be called every time the position of the sprite changes
 
         elif self.hasTarget == True and self.imgNum == 2:
             self.imgNum = 1
             self.image = self.uprightImg
-            self.rect = self.image.get_rect()
+            self.rect.center = self.getCleaningSupplyPos(self.x, self.y)
             self.mask = pygame.mask.from_surface(self.image)  # setMask must be called every time the position of the sprite changes
+            self.health -= bugDamage
 
 
 
