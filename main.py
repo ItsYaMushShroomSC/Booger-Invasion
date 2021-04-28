@@ -69,7 +69,7 @@ bugEnterIndex = 0
 
 # dictionary where (key: <name of cleaningsupply>, value: tuple(<order>, <price>))
 # @see https://www.w3schools.com/python/python_dictionaries.asp
-seedDict = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000), 3: ("soapdispenser", 50, 5000), 4: ("flypaper", 25, 10000), 5: ("bowlcleaner", 200, 7000), 6: ('toiletplunger', 150, 8000)}
+seedDict = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000), 3: ("soapdispenser", 50, 5000), 4: ("flypaper", 25, 10000), 5: ("bowlcleaner", 200, 7000), 6: ('toiletplunger', 150, 1000)}
 seedInventoryRects = [] # seed rects for mouse collision
 
 # Sprite Groups:
@@ -112,8 +112,9 @@ def sendDamage(): # every 1 second senddamage should be caleld and damages the c
 
             if cleaningSupply.name == 'toiletplunger':
                 if bug.rect.colliderect(cleaningSupply.targetRect):
-                    cleaningSupply.updateHealth(bug.damage, DISPLAYSURF)
                     cleaningSupply.hasTarget = True
+                    cleaningSupply.updateHealth(bug)
+
 
         if cleaningSupply.health <= 0 and not cleaningSupply.name == 'flypaper':
             cleaningSupplyGroup.remove_internal(cleaningSupply)
@@ -121,6 +122,9 @@ def sendDamage(): # every 1 second senddamage should be caleld and damages the c
 
         if cleaningSupply.name == 'flypaper' and cleaningSupply.shouldRemove:
             cleaningSupplyGroup.remove_internal(cleaningSupply)
+
+        if cleaningSupply.name == 'toiletplunger' and not pygame.sprite.spritecollideany(cleaningSupply, enemy_sprites):
+            cleaningSupply.becomeUpright()
 
 
 def checkBugCleaningSupplyCollision():
@@ -132,6 +136,8 @@ def checkBugCleaningSupplyCollision():
                 if cleaningSupply.name == 'toiletplunger':
                     if cleaningSupply.uprightRect.colliderect(bug.rect):
                         bug.frozen = True
+                        bug.damageCS(cleaningSupply)
+                        cleaningSupply.drawAttack(bug.damage, DISPLAYSURF)
                     else:
                         bug.frozen = False
 

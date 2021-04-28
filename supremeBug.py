@@ -51,3 +51,4 @@ class Bug(pygame.sprite.Sprite):
             enemy_sprites.remove_internal(self)
 
 
+
