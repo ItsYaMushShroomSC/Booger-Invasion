@@ -26,6 +26,9 @@ class Spider(Bug):
     def update(self):
         super().update(self.speed)
 
+    def damageCS(self, cleaningSupply):
+        cleaningSupply.health -= self.damage
+
 class Cockroach(Bug):
 
     def __init__(self, x, y):
@@ -39,6 +42,9 @@ class Cockroach(Bug):
 
     def update(self):
         super().update(self.speed)
+
+    def damageCS(self, cleaningSupply):
+        cleaningSupply.health -= self.damage
 
 class LadyBug(Bug):
 
@@ -54,6 +60,9 @@ class LadyBug(Bug):
     def update(self):
         super().update(self.speed)
 
+    def damageCS(self, cleaningSupply):
+        cleaningSupply.health -= self.damage
+
 class Wasp(Bug):
 
     def __init__(self, x, y):
@@ -68,6 +77,9 @@ class Wasp(Bug):
     def update(self):
         super().update(self.speed)
 
+    def damageCS(self, cleaningSupply):
+        cleaningSupply.health -= self.damage
+
 class Ant(Bug):
 
     def __init__(self, x, y):
@@ -81,3 +93,7 @@ class Ant(Bug):
 
     def update(self):
         super().update(self.speed)
+
+    def damageCS(self, cleaningSupply):
+        cleaningSupply.health -= self.damage
+
