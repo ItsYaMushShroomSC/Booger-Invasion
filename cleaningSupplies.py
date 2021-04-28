@@ -184,32 +184,49 @@ class ToiletPlunger(CleaningSupply):
 
         self.imgNum = 1
 
-    def updateHealth(self, bugDamage, DISPLAYSURF):
-        if self.hasTarget == True:
-            self.health -= bugDamage
+    def updateHealth(self, bug):
 
-            font = pygame.font.Font('cloudBubbleFont.ttf', 32 * defaults.scaleFactorH)
-            textSurface = font.render('-' + str(bugDamage), True, defaults.RED)
-            textRect = textSurface.get_rect()
-            textRect.midright = self.rect.midright
-            left, top = textRect.topleft
-            DISPLAYSURF.blit(textSurface, (left, top))
-            pygame.display.update()
+        if self.hasTarget == False:
+            self.image = self.uprightImg
+            self.rect.center = self.getCleaningSupplyPos(self.x, self.y)
+            self.mask = pygame.mask.from_surface(self.image)
+
+        if self.hasTarget == True:
 
         #print(str(self.hasTarget))
 
-        if self.hasTarget == True and self.imgNum == 1:
-            self.imgNum = 2
-            self.image = self.hittingImg
-            self.rect.center = self.getCleaningSupplyPos(self.x, self.y)
-            self.mask = pygame.mask.from_surface(self.image)  # setMask must be called every time the position of the sprite changes
+            if self.image == self.uprightImg:
 
-        elif self.hasTarget == True and self.imgNum == 2:
-            self.imgNum = 1
-            self.image = self.uprightImg
-            self.rect.center = self.getCleaningSupplyPos(self.x, self.y)
-            self.mask = pygame.mask.from_surface(self.image)  # setMask must be called every time the position of the sprite changes
-            self.health -= bugDamage
+                print('hi')
+                self.imgNum = 2
+                self.image = self.hittingImg
+                self.rect.center = self.getCleaningSupplyPos(self.x, self.y)
+                self.mask = pygame.mask.from_surface(self.image)  # setMask must be called every time the position of the sprite changes
+                bug.health -= 2
+
+            elif self.image == self.hittingImg:
+
+                print("no")
+                self.imgNum = 1
+                self.image = self.uprightImg
+                self.rect.center = self.getCleaningSupplyPos(self.x, self.y)
+                self.mask = pygame.mask.from_surface(self.image)  # setMask must be called every time the position of the sprite changes
+                #self.health -= bugDamage
+
+    def becomeUpright(self):
+        self.image = self.uprightImg
+        self.rect.center = self.getCleaningSupplyPos(self.x, self.y)
+        self.mask = pygame.mask.from_surface(self.image)
+
+    def drawAttack(self, bugDamage, DISPLAYSURF):
+        font = pygame.font.Font('cloudBubbleFont.ttf', 32 * defaults.scaleFactorH)
+        textSurface = font.render('-' + str(bugDamage), True, defaults.RED)
+        textRect = textSurface.get_rect()
+        textRect.midright = self.rect.midright
+        left, top = textRect.topleft
+        DISPLAYSURF.blit(textSurface, (left, top))
+        pygame.display.update()
+
 
 
 
