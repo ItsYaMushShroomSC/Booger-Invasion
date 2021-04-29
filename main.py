@@ -376,12 +376,16 @@ def drawTiles(shouldDraw):
 def proj(time):
     print(f'{time} o')
     for supply in cleaningSupplyGroup:
+
         if (time / 1000 ) % 3 == 0 and supply.name == "spraybottle" :
+
             projectileGroup.add(createProjectile(supply.rect.centerx, supply.rect.centery))
 
 
 def createProjectile(mx,my):
+
     bullet = Bullet(mx + 18, my - 33)
+
     return bullet
 
 
@@ -589,7 +593,6 @@ def mainGame():
 
                     bubbleCoinGroup.draw(DISPLAYSURF)
                     bubbleCoinGroup.update()
-
 
 
 
