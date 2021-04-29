@@ -88,13 +88,31 @@ bubbleCoinGroup = pygame.sprite.Group()
 # the dictionary will be read and the appropriate img will be
 
 def activatePlungers():
-    pass
-
-def checkPlungersHaveTarget():
     for cleaningSupply in cleaningSupplyGroup:
-        if cleaningSupply.name == 'toiletplunger':
-            if cleaningSupply.targetRect:
-                pass
+        for bug in enemy_sprites:
+
+            if cleaningSupply.name == 'toiletplunger':
+                if cleaningSupply.targetRect.colliderect(bug.rect) or bug.rect.colliderect(cleaningSupply.rect):
+
+                    print('hi')
+
+                    cleaningSupply.hasTarget = True
+                    cleaningSupply.updateHealth(bug)
+
+            if cleaningSupply.name == 'toiletplunger' and not pygame.sprite.spritecollideany(cleaningSupply,
+                                                                                             enemy_sprites):
+                cleaningSupply.becomeUpright()
+                cleaningSupply.hasTarget = False
+
+
+def removeDeadSprites():
+    for cleaningSupply in cleaningSupplyGroup:
+        if cleaningSupply.health <= 0:
+            cleaningSupply.remove_internal(cleaningSupplyGroup)
+
+    for bug in enemy_sprites:
+        if bug.health <= 0:
+            cleaningSupply.remove_internal(cleaningSupply)
 
 
 
@@ -110,21 +128,12 @@ def sendDamage(): # every 1 second senddamage should be caleld and damages the c
             if cleaningSupply.name == 'flypaper' and cleaningSupply.shouldRemove == True and pygame.sprite.collide_mask(cleaningSupply, bug):
                 enemy_sprites.remove_internal(bug)
 
-            if cleaningSupply.name == 'toiletplunger':
-                if bug.rect.colliderect(cleaningSupply.targetRect):
-                    cleaningSupply.hasTarget = True
-                    cleaningSupply.updateHealth(bug)
-
-
         if cleaningSupply.health <= 0 and not cleaningSupply.name == 'flypaper':
             cleaningSupplyGroup.remove_internal(cleaningSupply)
 
 
         if cleaningSupply.name == 'flypaper' and cleaningSupply.shouldRemove:
             cleaningSupplyGroup.remove_internal(cleaningSupply)
-
-        if cleaningSupply.name == 'toiletplunger' and not pygame.sprite.spritecollideany(cleaningSupply, enemy_sprites):
-            cleaningSupply.becomeUpright()
 
 
 def checkBugCleaningSupplyCollision():
@@ -302,7 +311,7 @@ def addCleaningSupplySeeds():
         img = pygame.transform.smoothscale(getImg(name), (w, h))
         supplySeed = CleaningSupplySeed(img, name, price, order, restockTime, XMARGIN, windowWidth, windowHeight, False)
         cleaningSupplySeedsGroup.add_internal(supplySeed)
-        seedInventoryRects.append(supplySeed.rect)
+        seedInventoryRects.append(supplySeed.flashRect)
 
 def getImg(name):
 
@@ -572,7 +581,7 @@ def mainGame():
                 if curr_time500 + 500 <= pygame.time.get_ticks():
                     curr_time500 = pygame.time.get_ticks()
                     #checkPlungersHaveTarget()
-                    #activatePlungers()
+                    activatePlungers()
 
 
                 if curr_time250 + 250 <= pygame.time.get_ticks():
@@ -581,6 +590,7 @@ def mainGame():
 
                 if event.type == my_eventTime:
                     checkBugCleaningSupplyCollision()
+                    #removeDeadSprites()
 
                     drawBackground()
 
