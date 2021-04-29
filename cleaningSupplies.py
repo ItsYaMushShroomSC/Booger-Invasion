@@ -175,11 +175,16 @@ class ToiletPlunger(CleaningSupply):
         self.cooldown = 500  # half a second
         self.health = 50
         self.startcooldownframes = self.cooldown
-        self.hasTarget = False # if hasTarget is True then the plunger has a zombie in front of it
+        self.hasTarget = True # if hasTarget is True then the plunger has a zombie in front of it
 
-        left, top = self.rect.topleft
+        self.left, self.top = self.rect.topleft
 
-        self.targetRect = Rect(left, top, tileW*2-2, tileH-2)
+        self.targetRect = Rect(self.left, self.top, tileW*2+2, tileH-2)
+
+        print(str(self.rect))
+
+        print(str(self.targetRect))
+
         self.uprightRect = self.rect
 
         self.imgNum = 1
@@ -197,20 +202,22 @@ class ToiletPlunger(CleaningSupply):
 
             if self.image == self.uprightImg:
 
-                print('hi')
                 self.imgNum = 2
                 self.image = self.hittingImg
-                self.rect.center = self.getCleaningSupplyPos(self.x, self.y)
+                self.rect.topleft = self.left, self.top
                 self.mask = pygame.mask.from_surface(self.image)  # setMask must be called every time the position of the sprite changes
-                bug.health -= 2
+                pygame.display.update()
 
             elif self.image == self.hittingImg:
 
-                print("no")
                 self.imgNum = 1
+                print(str(self.image))
                 self.image = self.uprightImg
-                self.rect.center = self.getCleaningSupplyPos(self.x, self.y)
+                print(str(self.image))
+                self.rect.topleft = self.left, self.top
                 self.mask = pygame.mask.from_surface(self.image)  # setMask must be called every time the position of the sprite changes
+                bug.health -= 1
+                pygame.display.update()
                 #self.health -= bugDamage
 
     def becomeUpright(self):
