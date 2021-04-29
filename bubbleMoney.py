@@ -14,7 +14,7 @@ class Bubble(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.shouldRemoveCounter = 8
 
-        if isCleaningSupplyBubble == False:  # random bubble position for a bubble unrelated to cleaning supply
+        if isCleaningSupplyBubble == False: # random bubble position for a bubble unrelated to cleaning supply
             self.setRandomPosDefault()
 
         if isCleaningSupplyBubble == True:

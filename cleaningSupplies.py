@@ -142,3 +142,5 @@ class BowlCleaner(CleaningSupply):
         left, top = textRect.topleft
         DISPLAYSURF.blit(textSurface, (left, top))
         pygame.display.update()
+
+
