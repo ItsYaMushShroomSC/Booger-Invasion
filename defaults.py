@@ -45,6 +45,8 @@ floorGrid = []  # floor grid 2D array
 tileWidth = None
 tileHeight = None
 
+lives = 3
+
 def setMargins():
     global scaleFactorH, scaleFactorW, XMARGIN, YMARGIN
 
