@@ -143,4 +143,10 @@ class BowlCleaner(CleaningSupply):
         DISPLAYSURF.blit(textSurface, (left, top))
         pygame.display.update()
 
-
+        font = pygame.font.Font('cloudBubbleFont.ttf', 32 * defaults.scaleFactorH)
+        textSurface = font.render('-' + str(bugDamage), True, defaults.RED)
+        textRect = textSurface.get_rect()
+        textRect.midright = self.rect.midright
+        left, top = textRect.topleft
+        DISPLAYSURF.blit(textSurface, (left, top))
+        pygame.display.update()

@@ -376,12 +376,16 @@ def drawTiles(shouldDraw):
 def proj(time):
     print(f'{time} o')
     for supply in cleaningSupplyGroup:
-        if (time / 1000 ) % 5 == 0 and supply.name == "spraybottle" :
+
+        if (time / 1000 ) % 3 == 0 and supply.name == "spraybottle" :
+
             projectileGroup.add(createProjectile(supply.rect.centerx, supply.rect.centery))
 
 
 def createProjectile(mx,my):
-    bullet = Bullet(mx, my)
+
+    bullet = Bullet(mx + 18, my - 33)
+
     return bullet
 
 
@@ -410,6 +414,15 @@ def drawBubbleMoneyAmount():
     textRect.topright = (windowWidth, 0)
     left, top = textRect.topleft
     DISPLAYSURF.blit(textSurface, (left, top))
+
+def drawLives():
+    global lives
+    textSurface = bubbleFont.render('Lives = ' + str(defaults.lives), True, WHITE)
+    textRect = textSurface.get_rect()
+    textRect.bottomleft = (0, windowHeight)
+    left, top = textRect.topleft
+    DISPLAYSURF.blit(textSurface, (left, top))
+
 
 def determineLevel(mousePosX, mousePosY):
     global openScreenRects
@@ -479,7 +492,6 @@ def collision2():
             if pygame.sprite.collide_rect(bug, bullet):
                 bullet.kill()
                 bug.health -= 1
-
 
 def mainGame():
     global DISPLAYSURF, gameLevel, frames, curr_time, bugEnterAry
@@ -565,6 +577,8 @@ def mainGame():
                     checkBugCleaningSupplyCollision()
 
                     drawBackground()
+
+                    drawLives()
 
                     cleaningSupplyBackGrounds.draw(DISPLAYSURF)
                     cleaningSupplySeedsGroup.draw(DISPLAYSURF)
