@@ -36,13 +36,18 @@ class Bug(pygame.sprite.Sprite):
         self.frozen = False # WHETHER OR NOt the bug is frozen because there's a cleaning supply obstructing its path
 
     def update(self, speed):
-        global XMARG
+        global XMARG, lives
 
         if self.frozen == False:
             self.rect.x -= speed
 
         if (self.rect.x <= XMARG):
-            self.rect.x += speed
+            if defaults.lives > 1:
+                defaults.lives -= 1
+            else:
+                time.sleep(3)
+                pygame.quit()
+                sys.exit()
             self.health = 0
         self.die()
 
