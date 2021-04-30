@@ -91,28 +91,33 @@ def activatePlungers():
     for cleaningSupply in cleaningSupplyGroup:
         for bug in enemy_sprites:
 
-            if cleaningSupply.name == 'toiletplunger':
-                if cleaningSupply.targetRect.colliderect(bug.rect) or bug.rect.colliderect(cleaningSupply.rect):
+            tempRect = cleaningSupply.rect
 
-                    print('hi')
+            if cleaningSupply.name == 'toiletplunger':
+
+                if cleaningSupply.targetRect.colliderect(bug.rect) or pygame.sprite.collide_mask(cleaningSupply, bug):
 
                     cleaningSupply.hasTarget = True
                     cleaningSupply.updateHealth(bug)
 
-            if cleaningSupply.name == 'toiletplunger' and not pygame.sprite.spritecollideany(cleaningSupply,
-                                                                                             enemy_sprites):
+                cleaningSupply.rect = cleaningSupply.targetRect
+
+
+            if cleaningSupply.name == 'toiletplunger' and not pygame.sprite.spritecollideany(cleaningSupply, enemy_sprites):
                 cleaningSupply.becomeUpright()
                 cleaningSupply.hasTarget = False
+
+            cleaningSupply.rect = tempRect
 
 
 def removeDeadSprites():
     for cleaningSupply in cleaningSupplyGroup:
         if cleaningSupply.health <= 0:
-            cleaningSupply.remove_internal(cleaningSupplyGroup)
+            cleaningSupplyGroup.remove_internal(cleaningSupply)
 
     for bug in enemy_sprites:
         if bug.health <= 0:
-            cleaningSupply.remove_internal(cleaningSupply)
+            enemy_sprites.remove_internal(bug)
 
 
 
@@ -590,7 +595,7 @@ def mainGame():
 
                 if event.type == my_eventTime:
                     checkBugCleaningSupplyCollision()
-                    #removeDeadSprites()
+                    removeDeadSprites()
 
                     drawBackground()
 
