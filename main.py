@@ -14,6 +14,7 @@ from defaults import *
 from cleaningSupplies import *
 from cleaningSupplySeed import *
 from bubbleMoney import *
+from projectile import *
 
 pygame.init()
 
@@ -69,7 +70,9 @@ bugEnterIndex = 0
 
 # dictionary where (key: <name of cleaningsupply>, value: tuple(<order>, <price>))
 # @see https://www.w3schools.com/python/python_dictionaries.asp
-seedDict = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000), 3: ("soapdispenser", 50, 5000), 4: ("flypaper", 25, 10000), 5: ("bowlcleaner", 200, 7000), 6: ('toiletplunger', 150, 1000)}
+
+seedDict = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000), 3: ("soapdispenser", 50, 5000), 4: ("flypaper", 25, 10000), 5: ("bowlcleaner", 200, 7000), 6: ('toiletplunger', 150, 1000), 7: ("icebottle", 200, 8000)}
+
 seedInventoryRects = [] # seed rects for mouse collision
 
 # Sprite Groups:
@@ -330,8 +333,13 @@ def getImg(name):
         return pygame.image.load('flypaper.PNG')
     if name == "bowlcleaner":
         return pygame.image.load('bowlcleaner.png')
+
     if name == "toiletplunger":
         return pygame.image.load('PlungerUpright.png.png')
+
+    if name == "icebottle":
+        return pygame.image.load('icebottle.png')
+
 
 #adds cleaning supplies to the 2Darray field
 def addCleaningSupply(posX, posY, name):
@@ -355,8 +363,13 @@ def addCleaningSupply(posX, posY, name):
         cs = BowlCleaner(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
         cleaningSupplyGroup.add_internal(cs)
         setTile(posX, posY, cs)
+
     if name == "toiletplunger":
         cs = ToiletPlunger(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
+
+    if name == "icebottle":
+        cs = IceBottle(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
+
         cleaningSupplyGroup.add_internal(cs)
         setTile(posX, posY, cs)
 
@@ -417,6 +430,28 @@ def drawTiles(shouldDraw):
 
             floorGridRects[col][row] = imgRect
 
+#generates projectile every 5 seconds
+def proj(time):
+    print(f'{time} o')
+    for supply in cleaningSupplyGroup:
+
+        if (time / 1000 ) % 3 == 0 and supply.name == "spraybottle" :
+
+            projectileGroup.add(createProjectile(supply.rect.centerx, supply.rect.centery, 'spraydroplet'))
+
+        if (time / 1000 ) % 3 == 0 and supply.name == "icebottle" :
+
+            projectileGroup.add(createProjectile(supply.rect.centerx, supply.rect.centery, 'icedroplet'))
+
+
+def createProjectile(mx,my,type):
+    if(type=="spraydroplet"):
+        bullet = Bullet(mx + 18, my - 33, "spraydroplet")
+    if (type == "icedroplet"):
+            bullet = Bullet(mx + 18, my - 33, "icedroplet")
+
+    return bullet
+
 
 def drawBackground():
     img = pygame.transform.smoothscale(pygame.image.load('bugsWorldBackground.jpg').convert_alpha(),
@@ -443,6 +478,15 @@ def drawBubbleMoneyAmount():
     textRect.topright = (windowWidth, 0)
     left, top = textRect.topleft
     DISPLAYSURF.blit(textSurface, (left, top))
+
+def drawLives():
+    global lives
+    textSurface = bubbleFont.render('Lives = ' + str(defaults.lives), True, WHITE)
+    textRect = textSurface.get_rect()
+    textRect.bottomleft = (0, windowHeight)
+    left, top = textRect.topleft
+    DISPLAYSURF.blit(textSurface, (left, top))
+
 
 def determineLevel(mousePosX, mousePosY):
     global openScreenRects
@@ -505,7 +549,15 @@ def resetVariables():
 def terminate():  # terminates game
     pygame.quit()
     sys.exit()
-
+# projectile and bug collision WORKS
+def collision2():
+    for bug in enemy_sprites:
+        for bullet in projectileGroup:
+            if pygame.sprite.collide_rect(bug, bullet):
+                if(bullet.type == "icedroplet" and bug.speed > 5):
+                    bug.speed -= 5
+                bullet.kill()
+                bug.health -= 1
 
 
 def mainGame():
@@ -541,7 +593,7 @@ def mainGame():
     while True:
 
         for event in pygame.event.get():
-
+            collision2()
             if event.type == MOUSEBUTTONDOWN:
                 posX, posY = pygame.mouse.get_pos()
                 clicked = True
@@ -577,7 +629,7 @@ def mainGame():
                     timeSinceStart += 1000
 
                     getBugsEntering(timeSinceStart)
-
+                    proj(timeSinceStart)
                     removeExpiredBubbles()
                     updateSoapDispenserBubbles()
 
@@ -599,17 +651,23 @@ def mainGame():
 
                     drawBackground()
 
+                    drawLives()
+
                     cleaningSupplyBackGrounds.draw(DISPLAYSURF)
                     cleaningSupplySeedsGroup.draw(DISPLAYSURF)
 
                     cleaningSupplyGroup.draw(DISPLAYSURF)
                     cleaningSupplyGroup.draw(DISPLAYSURF)
+                    projectileGroup.draw(DISPLAYSURF)
+                    projectileGroup.update()
 
                     enemy_sprites.draw(DISPLAYSURF)
                     enemy_sprites.update()
 
                     bubbleCoinGroup.draw(DISPLAYSURF)
                     bubbleCoinGroup.update()
+
+
 
                     #print(str(windowWidth))
                     #print(str(windowHeight))

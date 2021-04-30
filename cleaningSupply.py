@@ -12,6 +12,7 @@ tileHeight = None
 class CleaningSupply(pygame.sprite.Sprite):
 
     def __init__(self, row, column, img, XMARG, YMARG, tW, tH):
+        pygame.sprite.Sprite.__init__(self)
         global XMARGIN, YMARGIN, tileWidth, tileHeight
         self.x = row  # the row Reand column are in the game board grid, not the pixel x coordinate
         self.y = column
@@ -41,5 +42,6 @@ class CleaningSupply(pygame.sprite.Sprite):
             startcooldownframes = frames
     # this will be used to keep track of the cleaningsupply's health when it is attacked by bugs.
     def attacked(self):
-        global health
-        health -= 1
+        # global health
+        # health -= 1
+        self.kill()

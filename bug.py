@@ -96,4 +96,3 @@ class Ant(Bug):
 
     def damageCS(self, cleaningSupply):
         cleaningSupply.health -= self.damage
-
