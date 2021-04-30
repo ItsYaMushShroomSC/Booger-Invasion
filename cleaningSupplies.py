@@ -167,7 +167,7 @@ class ToiletPlunger(CleaningSupply):
 
     def __init__(self, row, column, XMARG, YMARG, tileW, tileH):
         self.uprightImg = pygame.transform.smoothscale(pygame.image.load('PlungerUpright.png.png'), (tileW - 2, tileH - 2))
-        self.hittingImg = pygame.transform.smoothscale(pygame.image.load('PlungerHitting.png.png'), (tileW * 2 - 2, tileH - 2))
+        self.hittingImg = pygame.transform.smoothscale(pygame.image.load('PlungerHitting.png.png'), (tileW * 3 - 2, tileH))
 
         super().__init__(row, column, self.uprightImg, XMARG, YMARG, tileW, tileH)
 
@@ -179,7 +179,7 @@ class ToiletPlunger(CleaningSupply):
 
         self.left, self.top = self.rect.topleft
 
-        self.targetRect = Rect(self.left, self.top, tileW*2+2, tileH-2)
+        self.targetRect = Rect(self.left, self.top, tileW*3+2, tileH-2)
 
         print(str(self.rect))
 
@@ -202,23 +202,22 @@ class ToiletPlunger(CleaningSupply):
 
             if self.image == self.uprightImg:
 
-                self.imgNum = 2
-                self.image = self.hittingImg
                 self.rect.topleft = self.left, self.top
                 self.mask = pygame.mask.from_surface(self.image)  # setMask must be called every time the position of the sprite changes
                 pygame.display.update()
 
             elif self.image == self.hittingImg:
 
-                self.imgNum = 1
-                print(str(self.image))
-                self.image = self.uprightImg
-                print(str(self.image))
                 self.rect.topleft = self.left, self.top
                 self.mask = pygame.mask.from_surface(self.image)  # setMask must be called every time the position of the sprite changes
                 bug.health -= 1
                 pygame.display.update()
                 #self.health -= bugDamage
+
+            if self.image == self.uprightImg:
+                self.image = self.hittingImg
+            else:
+                self.image = self.uprightImg
 
     def becomeUpright(self):
         self.image = self.uprightImg
