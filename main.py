@@ -70,7 +70,7 @@ bugEnterIndex = 0
 
 # dictionary where (key: <name of cleaningsupply>, value: tuple(<order>, <price>))
 # @see https://www.w3schools.com/python/python_dictionaries.asp
-seedDict = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000), 3: ("soapdispenser", 50, 5000), 4: ("flypaper", 25, 10000), 5: ("bowlcleaner", 200, 7000)}
+seedDict = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000), 3: ("soapdispenser", 50, 5000), 4: ("flypaper", 25, 10000), 5: ("bowlcleaner", 200, 7000), 6: ("icebottle", 200, 8000) }
 seedInventoryRects = [] # seed rects for mouse collision
 
 # Sprite Groups:
@@ -291,6 +291,8 @@ def getImg(name):
         return pygame.image.load('flypaper.PNG')
     if name == "bowlcleaner":
         return pygame.image.load('bowlcleaner.png')
+    if name == "icebottle":
+        return pygame.image.load('icebottle.png')
 
 #adds cleaning supplies to the 2Darray field
 def addCleaningSupply(posX, posY, name):
@@ -312,6 +314,10 @@ def addCleaningSupply(posX, posY, name):
         setTile(posX, posY, cs)
     if name == "bowlcleaner":
         cs = BowlCleaner(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
+        cleaningSupplyGroup.add_internal(cs)
+        setTile(posX, posY, cs)
+    if name == "icebottle":
+        cs = IceBottle(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
         cleaningSupplyGroup.add_internal(cs)
         setTile(posX, posY, cs)
 
@@ -379,12 +385,18 @@ def proj(time):
 
         if (time / 1000 ) % 3 == 0 and supply.name == "spraybottle" :
 
-            projectileGroup.add(createProjectile(supply.rect.centerx, supply.rect.centery))
+            projectileGroup.add(createProjectile(supply.rect.centerx, supply.rect.centery, 'spraydroplet'))
+
+        if (time / 1000 ) % 3 == 0 and supply.name == "icebottle" :
+
+            projectileGroup.add(createProjectile(supply.rect.centerx, supply.rect.centery, 'icedroplet'))
 
 
-def createProjectile(mx,my):
-
-    bullet = Bullet(mx + 18, my - 33)
+def createProjectile(mx,my,type):
+    if(type=="spraydroplet"):
+        bullet = Bullet(mx + 18, my - 33, "spraydroplet")
+    if (type == "icedroplet"):
+            bullet = Bullet(mx + 18, my - 33, "icedroplet")
 
     return bullet
 
@@ -490,8 +502,11 @@ def collision2():
     for bug in enemy_sprites:
         for bullet in projectileGroup:
             if pygame.sprite.collide_rect(bug, bullet):
+                if(bullet.type == "icedroplet" and bug.speed > 5):
+                    bug.speed -= 5
                 bullet.kill()
                 bug.health -= 1
+
 
 def mainGame():
     global DISPLAYSURF, gameLevel, frames, curr_time, bugEnterAry
