@@ -70,7 +70,9 @@ bugEnterIndex = 0
 
 # dictionary where (key: <name of cleaningsupply>, value: tuple(<order>, <price>))
 # @see https://www.w3schools.com/python/python_dictionaries.asp
-seedDict = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000), 3: ("soapdispenser", 50, 5000), 4: ("flypaper", 25, 10000), 5: ("bowlcleaner", 200, 7000), 6: ("icebottle", 200, 8000) }
+
+seedDict = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000), 3: ("soapdispenser", 50, 5000), 4: ("flypaper", 25, 10000), 5: ("bowlcleaner", 200, 7000), 6: ('toiletplunger', 150, 1000), 7: ("icebottle", 200, 8000)}
+
 seedInventoryRects = [] # seed rects for mouse collision
 
 # Sprite Groups:
@@ -88,22 +90,54 @@ bubbleCoinGroup = pygame.sprite.Group()
 
 # the dictionary will be read and the appropriate img will be
 
-def removeDeadCleaningSuppliesAndBugs():
-    pass
+def activatePlungers():
+    for cleaningSupply in cleaningSupplyGroup:
+        for bug in enemy_sprites:
+
+            tempRect = cleaningSupply.rect
+
+            if cleaningSupply.name == 'toiletplunger':
+
+                if cleaningSupply.targetRect.colliderect(bug.rect) or pygame.sprite.collide_mask(cleaningSupply, bug):
+
+                    cleaningSupply.hasTarget = True
+                    cleaningSupply.updateHealth(bug)
+
+                cleaningSupply.rect = cleaningSupply.targetRect
+
+
+            if cleaningSupply.name == 'toiletplunger' and not pygame.sprite.spritecollideany(cleaningSupply, enemy_sprites):
+                cleaningSupply.becomeUpright()
+                cleaningSupply.hasTarget = False
+
+            cleaningSupply.rect = tempRect
+
+
+def removeDeadSprites():
+    for cleaningSupply in cleaningSupplyGroup:
+        if cleaningSupply.health <= 0:
+            cleaningSupplyGroup.remove_internal(cleaningSupply)
+
+    for bug in enemy_sprites:
+        if bug.health <= 0:
+            enemy_sprites.remove_internal(bug)
+
+
+
 
 def sendDamage(): # every 1 second senddamage should be caleld and damages the cs by the bugs, and removes dead ones
 
     for cleaningSupply in cleaningSupplyGroup:
         for bug in enemy_sprites:
             if pygame.sprite.collide_mask(cleaningSupply, bug) and bug.frozen == True:
-                cleaningSupply.updateHealth(bug.damage, DISPLAYSURF)
+                if not cleaningSupply.name == 'toiletplunger':
+                    cleaningSupply.updateHealth(bug.damage, DISPLAYSURF)
 
             if cleaningSupply.name == 'flypaper' and cleaningSupply.shouldRemove == True and pygame.sprite.collide_mask(cleaningSupply, bug):
                 enemy_sprites.remove_internal(bug)
 
         if cleaningSupply.health <= 0 and not cleaningSupply.name == 'flypaper':
             cleaningSupplyGroup.remove_internal(cleaningSupply)
-
 
 
         if cleaningSupply.name == 'flypaper' and cleaningSupply.shouldRemove:
@@ -116,6 +150,14 @@ def checkBugCleaningSupplyCollision():
         for bug in enemy_sprites:
             if pygame.sprite.collide_mask(cleaningSupply, bug):
                 bug.frozen = True
+                if cleaningSupply.name == 'toiletplunger':
+                    if cleaningSupply.uprightRect.colliderect(bug.rect):
+                        bug.frozen = True
+                        bug.damageCS(cleaningSupply)
+                        cleaningSupply.drawAttack(bug.damage, DISPLAYSURF)
+                    else:
+                        bug.frozen = False
+
             if not pygame.sprite.spritecollideany(bug, cleaningSupplyGroup):
                 bug.frozen = False
 
@@ -277,7 +319,7 @@ def addCleaningSupplySeeds():
         img = pygame.transform.smoothscale(getImg(name), (w, h))
         supplySeed = CleaningSupplySeed(img, name, price, order, restockTime, XMARGIN, windowWidth, windowHeight, False)
         cleaningSupplySeedsGroup.add_internal(supplySeed)
-        seedInventoryRects.append(supplySeed.rect)
+        seedInventoryRects.append(supplySeed.flashRect)
 
 def getImg(name):
 
@@ -291,8 +333,13 @@ def getImg(name):
         return pygame.image.load('flypaper.PNG')
     if name == "bowlcleaner":
         return pygame.image.load('bowlcleaner.png')
+
+    if name == "toiletplunger":
+        return pygame.image.load('PlungerUpright.png.png')
+
     if name == "icebottle":
         return pygame.image.load('icebottle.png')
+
 
 #adds cleaning supplies to the 2Darray field
 def addCleaningSupply(posX, posY, name):
@@ -316,8 +363,13 @@ def addCleaningSupply(posX, posY, name):
         cs = BowlCleaner(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
         cleaningSupplyGroup.add_internal(cs)
         setTile(posX, posY, cs)
+
+    if name == "toiletplunger":
+        cs = ToiletPlunger(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
+
     if name == "icebottle":
         cs = IceBottle(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
+
         cleaningSupplyGroup.add_internal(cs)
         setTile(posX, posY, cs)
 
@@ -533,6 +585,7 @@ def mainGame():
 
     curr_time5000 = pygame.time.get_ticks()
     curr_time1000 = pygame.time.get_ticks()
+    curr_time500 = pygame.time.get_ticks()
     curr_time250 = pygame.time.get_ticks()
 
     posX, posY = None, None
@@ -548,6 +601,7 @@ def mainGame():
                     timeSinceStart = 0
                     curr_time5000 = pygame.time.get_ticks()
                     curr_time1000 = pygame.time.get_ticks()
+                    curr_time500 = pygame.time.get_ticks()
                     curr_time250 = pygame.time.get_ticks()
             else:
                 clicked = False
@@ -559,8 +613,6 @@ def mainGame():
 
             if gameLevel == 1:
                 readFile()
-
-
 
                 if clicked == True:
                     dictIndex, seedSelected = getSeedSelected(posX, posY, seedSelected, dictIndex)
@@ -583,6 +635,11 @@ def mainGame():
 
                     sendDamage()
 
+                if curr_time500 + 500 <= pygame.time.get_ticks():
+                    curr_time500 = pygame.time.get_ticks()
+                    #checkPlungersHaveTarget()
+                    activatePlungers()
+
 
                 if curr_time250 + 250 <= pygame.time.get_ticks():
                     curr_time250 = pygame.time.get_ticks()
@@ -590,6 +647,7 @@ def mainGame():
 
                 if event.type == my_eventTime:
                     checkBugCleaningSupplyCollision()
+                    removeDeadSprites()
 
                     drawBackground()
 
