@@ -53,11 +53,12 @@ class SprayBottlex2(CleaningSupply):
         DISPLAYSURF.blit(textSurface, (left, top))
         pygame.display.update()
 
+
 class IceBottle(CleaningSupply):
 
     def __init__(self, row, column, XMARG, YMARG, tileW, tileH):
 
-        super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("spraybottle.png"), (tileW-2,
+        super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("icespraybottle.PNG"), (tileW-2,
                                                                                                      tileH-2)), XMARG, YMARG, tileW, tileH)
 
         self.name = 'icebottle'
@@ -209,6 +210,7 @@ class BowlCleaner(CleaningSupply):
         DISPLAYSURF.blit(textSurface, (left, top))
         pygame.display.update()
 
+
 class ToiletPlunger(CleaningSupply):
 
     def __init__(self, row, column, XMARG, YMARG, tileW, tileH):
@@ -271,7 +273,6 @@ class ToiletPlunger(CleaningSupply):
         self.mask = pygame.mask.from_surface(self.image)
 
     def drawAttack(self, bugDamage, DISPLAYSURF):
-
         font = pygame.font.Font('cloudBubbleFont.ttf', 32 * defaults.scaleFactorH)
         textSurface = font.render('-' + str(bugDamage), True, defaults.RED)
         textRect = textSurface.get_rect()
@@ -279,4 +280,13 @@ class ToiletPlunger(CleaningSupply):
         left, top = textRect.topleft
         DISPLAYSURF.blit(textSurface, (left, top))
         pygame.display.update()
+
+
+
+
+
+
+
+
+
 

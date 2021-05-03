@@ -19,7 +19,7 @@ class Bullet(pygame.sprite.Sprite):
             scaleFactor = scaleFactorW
         self.health = 5
         if(type == 'spraydroplet'):
-            self.image = pygame.transform.scale(pygame.image.load("water.png"), (50,50))
+            self.image = pygame.transform.scale(pygame.image.load("water.png"), (25,25))
             self.type = "spraydroplet"
         #self.image = pygame.transform.rotate(self.image, 90)
         if(type == 'icedroplet'):
