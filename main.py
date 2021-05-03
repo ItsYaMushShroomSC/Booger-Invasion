@@ -71,7 +71,10 @@ bugEnterIndex = 0
 # dictionary where (key: <name of cleaningsupply>, value: tuple(<order>, <price>))
 # @see https://www.w3schools.com/python/python_dictionaries.asp
 
-seedDict = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000), 3: ("soapdispenser", 50, 5000), 4: ("flypaper", 25, 10000), 5: ("bowlcleaner", 200, 7000), 6: ('toiletplunger', 150, 1000)}
+seedDict = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000),
+            3: ("soapdispenser", 50, 5000), 4: ("flypaper", 25, 10000),
+            5: ("bowlcleaner", 200, 7000), 6: ('toiletplunger', 150, 1000),
+            7: ("icebottle", 200, 8000), 8:("doublespraybottle", 200, 5000)}
 
 seedInventoryRects = [] # seed rects for mouse collision
 
@@ -329,6 +332,8 @@ def getImg(name):
 
     if name == "spraybottle":
         return pygame.image.load('spraybottle.PNG')
+    if name == 'doublespraybottle':
+        return pygame.image.load('doublespraybottle.PNG')
     if name == "sponge":
         return pygame.image.load('sponge.PNG')
     if name == "soapdispenser":
@@ -342,13 +347,17 @@ def getImg(name):
         return pygame.image.load('PlungerUpright.png.png')
 
     if name == "icebottle":
-        return pygame.image.load('icebottle.png')
+        return pygame.image.load('icespraybottle.PNG')
 
 
 #adds cleaning supplies to the 2Darray field
 def addCleaningSupply(posX, posY, name):
     if name == "spraybottle":
         cs = SprayBottle(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
+        cleaningSupplyGroup.add_internal(cs)
+        setTile(posX, posY, cs)
+    if name == "doublespraybottle":
+        cs = SprayBottlex2(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
         cleaningSupplyGroup.add_internal(cs)
         setTile(posX, posY, cs)
     if name == "sponge":
@@ -443,6 +452,10 @@ def proj(time):
         if (time / 1000 ) % 3 == 0 and supply.name == "spraybottle" :
 
             projectileGroup.add(createProjectile(supply.rect.centerx, supply.rect.centery, 'spraydroplet'))
+
+        if (time / 1000) % 3 == 0 and supply.name == "doublespraybottle":
+            projectileGroup.add(createProjectile(supply.rect.centerx, supply.rect.centery, 'spraydroplet'))
+            projectileGroup.add(createProjectile(supply.rect.centerx + 50, supply.rect.centery, 'spraydroplet'))
 
         if (time / 1000 ) % 3 == 0 and supply.name == "icebottle" :
 
