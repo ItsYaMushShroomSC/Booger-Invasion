@@ -71,7 +71,7 @@ bugEnterIndex = 0
 # dictionary where (key: <name of cleaningsupply>, value: tuple(<order>, <price>))
 # @see https://www.w3schools.com/python/python_dictionaries.asp
 
-seedDict = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000), 3: ("soapdispenser", 50, 5000), 4: ("flypaper", 25, 10000), 5: ("bowlcleaner", 200, 7000), 6: ('toiletplunger', 150, 1000), 7: ("icebottle", 200, 8000)}
+seedDict = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000), 3: ("soapdispenser", 50, 5000), 4: ("flypaper", 25, 10000), 5: ("bowlcleaner", 200, 7000), 6: ('toiletplunger', 150, 1000)}
 
 seedInventoryRects = [] # seed rects for mouse collision
 
@@ -116,6 +116,7 @@ def activatePlungers():
 def removeDeadSprites():
     for cleaningSupply in cleaningSupplyGroup:
         if cleaningSupply.health <= 0:
+            setTile(cleaningSupply.x, cleaningSupply.y, None)
             cleaningSupplyGroup.remove_internal(cleaningSupply)
 
     for bug in enemy_sprites:
@@ -137,10 +138,13 @@ def sendDamage(): # every 1 second senddamage should be caleld and damages the c
                 enemy_sprites.remove_internal(bug)
 
         if cleaningSupply.health <= 0 and not cleaningSupply.name == 'flypaper':
+            setTile(cleaningSupply.x, cleaningSupply.y, None)
             cleaningSupplyGroup.remove_internal(cleaningSupply)
 
 
+
         if cleaningSupply.name == 'flypaper' and cleaningSupply.shouldRemove:
+            setTile(cleaningSupply.x, cleaningSupply.y, None)
             cleaningSupplyGroup.remove_internal(cleaningSupply)
 
 
@@ -366,10 +370,11 @@ def addCleaningSupply(posX, posY, name):
 
     if name == "toiletplunger":
         cs = ToiletPlunger(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
+        cleaningSupplyGroup.add_internal(cs)
+        setTile(posX, posY, cs)
 
     if name == "icebottle":
         cs = IceBottle(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
-
         cleaningSupplyGroup.add_internal(cs)
         setTile(posX, posY, cs)
 
@@ -549,6 +554,7 @@ def resetVariables():
 def terminate():  # terminates game
     pygame.quit()
     sys.exit()
+
 # projectile and bug collision WORKS
 def collision2():
     for bug in enemy_sprites:
