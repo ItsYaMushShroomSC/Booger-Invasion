@@ -71,10 +71,7 @@ bugEnterIndex = 0
 # dictionary where (key: <name of cleaningsupply>, value: tuple(<order>, <price>))
 # @see https://www.w3schools.com/python/python_dictionaries.asp
 
-seedDict = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000),
-            3: ("soapdispenser", 50, 5000), 4: ("flypaper", 25, 10000),
-            5: ("bowlcleaner", 200, 7000), 6: ('toiletplunger', 150, 1000),
-            7: ("icebottle", 200, 8000), 8:("doublespraybottle", 200, 5000) }
+seedDict = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000), 3: ("soapdispenser", 50, 5000), 4: ("flypaper", 25, 10000), 5: ("bowlcleaner", 200, 7000), 6: ('toiletplunger', 150, 1000)}
 
 seedInventoryRects = [] # seed rects for mouse collision
 
@@ -119,6 +116,7 @@ def activatePlungers():
 def removeDeadSprites():
     for cleaningSupply in cleaningSupplyGroup:
         if cleaningSupply.health <= 0:
+            setTile(cleaningSupply.x, cleaningSupply.y, None)
             cleaningSupplyGroup.remove_internal(cleaningSupply)
 
     for bug in enemy_sprites:
@@ -140,10 +138,13 @@ def sendDamage(): # every 1 second senddamage should be caleld and damages the c
                 enemy_sprites.remove_internal(bug)
 
         if cleaningSupply.health <= 0 and not cleaningSupply.name == 'flypaper':
+            setTile(cleaningSupply.x, cleaningSupply.y, None)
             cleaningSupplyGroup.remove_internal(cleaningSupply)
 
 
+
         if cleaningSupply.name == 'flypaper' and cleaningSupply.shouldRemove:
+            setTile(cleaningSupply.x, cleaningSupply.y, None)
             cleaningSupplyGroup.remove_internal(cleaningSupply)
 
 
@@ -328,8 +329,6 @@ def getImg(name):
 
     if name == "spraybottle":
         return pygame.image.load('spraybottle.PNG')
-    if name == "doublespraybottle":
-        return pygame.image.load('doublespraybottle.PNG')
     if name == "sponge":
         return pygame.image.load('sponge.PNG')
     if name == "soapdispenser":
@@ -343,17 +342,13 @@ def getImg(name):
         return pygame.image.load('PlungerUpright.png.png')
 
     if name == "icebottle":
-        return pygame.image.load('spraybottle.PNG')
+        return pygame.image.load('icebottle.png')
 
 
 #adds cleaning supplies to the 2Darray field
 def addCleaningSupply(posX, posY, name):
     if name == "spraybottle":
         cs = SprayBottle(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
-        cleaningSupplyGroup.add_internal(cs)
-        setTile(posX, posY, cs)
-    if name == "doublespraybottle":
-        cs = SprayBottlex2(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
         cleaningSupplyGroup.add_internal(cs)
         setTile(posX, posY, cs)
     if name == "sponge":
@@ -375,10 +370,11 @@ def addCleaningSupply(posX, posY, name):
 
     if name == "toiletplunger":
         cs = ToiletPlunger(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
+        cleaningSupplyGroup.add_internal(cs)
+        setTile(posX, posY, cs)
 
     if name == "icebottle":
         cs = IceBottle(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
-
         cleaningSupplyGroup.add_internal(cs)
         setTile(posX, posY, cs)
 
@@ -441,16 +437,15 @@ def drawTiles(shouldDraw):
 
 #generates projectile every 5 seconds
 def proj(time):
-
+    print(f'{time} o')
     for supply in cleaningSupplyGroup:
-        if (time / 1000 ) % 3 == 0 and supply.name == "spraybottle" :
-            projectileGroup.add(createProjectile(supply.rect.centerx, supply.rect.centery, 'spraydroplet'))
 
-        if (time / 1000 ) % 3 == 0 and supply.name == "doublespraybottle" :
+        if (time / 1000 ) % 3 == 0 and supply.name == "spraybottle" :
+
             projectileGroup.add(createProjectile(supply.rect.centerx, supply.rect.centery, 'spraydroplet'))
-            projectileGroup.add(createProjectile(supply.rect.centerx + 50, supply.rect.centery, 'spraydroplet'))
 
         if (time / 1000 ) % 3 == 0 and supply.name == "icebottle" :
+
             projectileGroup.add(createProjectile(supply.rect.centerx, supply.rect.centery, 'icedroplet'))
 
 
@@ -559,6 +554,7 @@ def resetVariables():
 def terminate():  # terminates game
     pygame.quit()
     sys.exit()
+
 # projectile and bug collision WORKS
 def collision2():
     for bug in enemy_sprites:
