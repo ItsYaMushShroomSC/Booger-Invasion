@@ -104,9 +104,9 @@ class ThiccSponge(CleaningSupply):
 
     def __init__(self, row, column, XMARG, YMARG, tileW, tileH):
 
-        super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("sponge.png"), (tileW-2, tileH-2)), XMARG, YMARG, tileW, tileH)
+        super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("doublesponge.PNG"), (tileW-2, tileH-2)), XMARG, YMARG, tileW, tileH)
         self.name = 'thiccsponge'
-        self.health = 60
+        self.health = 100
 
     def updateHealth(self, bugDamage, DISPLAYSURF):
         self.health -= bugDamage
@@ -273,6 +273,26 @@ class ToiletPlunger(CleaningSupply):
         self.mask = pygame.mask.from_surface(self.image)
 
     def drawAttack(self, bugDamage, DISPLAYSURF):
+        font = pygame.font.Font('cloudBubbleFont.ttf', 32 * defaults.scaleFactorH)
+        textSurface = font.render('-' + str(bugDamage), True, defaults.RED)
+        textRect = textSurface.get_rect()
+        textRect.midright = self.rect.midright
+        left, top = textRect.topleft
+        DISPLAYSURF.blit(textSurface, (left, top))
+        pygame.display.update()
+
+
+class AcidPool(CleaningSupply):
+
+    def __init__(self, row, column, XMARG, YMARG, tileW, tileH):
+
+        super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("sponge.png"), (tileW-2, tileH-2)), XMARG, YMARG, tileW, tileH)
+        self.name = 'sponge'
+        self.health = 30
+
+    def updateHealth(self, bugDamage, DISPLAYSURF):
+        self.health -= bugDamage
+
         font = pygame.font.Font('cloudBubbleFont.ttf', 32 * defaults.scaleFactorH)
         textSurface = font.render('-' + str(bugDamage), True, defaults.RED)
         textRect = textSurface.get_rect()

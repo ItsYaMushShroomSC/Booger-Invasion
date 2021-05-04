@@ -71,10 +71,15 @@ bugEnterIndex = 0
 # dictionary where (key: <name of cleaningsupply>, value: tuple(<order>, <price>))
 # @see https://www.w3schools.com/python/python_dictionaries.asp
 
-seedDict = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000),
+seedDictGroup1 = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000),
             3: ("soapdispenser", 50, 5000), 4: ("flypaper", 25, 10000),
-            5: ("bowlcleaner", 200, 7000), 6: ('toiletplunger', 150, 1000),
-            7: ("icebottle", 200, 8000), 8:("doublespraybottle", 200, 5000)}
+            5: ("bowlcleaner", 200, 7000), 6: ('toiletplunger', 150, 9000),
+            7: ("icebottle", 200, 8000), 8:("doublespraybottle", 200, 5000), 9: ("thiccsponge", 300, 12000)}
+
+seedDictGroup2 = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000),
+            3: ("soapdispenser", 50, 5000), 4: ("flypaper", 25, 10000),
+            5: ("bowlcleaner", 200, 7000), 6: ('toiletplunger', 150, 9000),
+            7: ("icebottle", 200, 8000), 8:("doublespraybottle", 200, 5000), 9: ("thiccsponge", 300, 12000)}
 
 seedInventoryRects = [] # seed rects for mouse collision
 
@@ -118,7 +123,7 @@ def activatePlungers():
 
 def removeDeadSprites():
     for cleaningSupply in cleaningSupplyGroup:
-        if cleaningSupply.health <= 0:
+        if cleaningSupply.health <= 0 and not cleaningSupply.name == 'flypaper':
             setTile(cleaningSupply.x, cleaningSupply.y, None)
             cleaningSupplyGroup.remove_internal(cleaningSupply)
 
@@ -143,7 +148,6 @@ def sendDamage(): # every 1 second senddamage should be caleld and damages the c
         if cleaningSupply.health <= 0 and not cleaningSupply.name == 'flypaper':
             setTile(cleaningSupply.x, cleaningSupply.y, None)
             cleaningSupplyGroup.remove_internal(cleaningSupply)
-
 
 
         if cleaningSupply.name == 'flypaper' and cleaningSupply.shouldRemove:
@@ -238,7 +242,7 @@ def getSeedSelected(mouseX, mouseY, seedSelected, dictIndex): # seedSelected is 
     for seedInventoryRect in seedInventoryRects:
 
         if seedInventoryRect.collidepoint((mouseX, mouseY)):
-            values = seedDict.get(index)
+            values = seedDictGroup1.get(index)
             seedSelected, price, noOneCares = values
             dictIndex = index
 
@@ -303,7 +307,7 @@ def getCleaningSupplySeed(index):
     return None
 
 def addCleaningSupplySeeds():
-    global cleaningSupplySeedsGroup, seedDict
+    global cleaningSupplySeedsGroup, seedDictGroup1
 
     img = pygame.image.load('SeedPacketBackground.png')
     w, h = img.get_width()*scaleFactorH, img.get_height()*scaleFactorH
@@ -313,15 +317,15 @@ def addCleaningSupplySeeds():
 
     for i in range(1, 10):
 
-        if len(seedDict) >= i:
-            name, price, reloadTime = seedDict.get(i)
+        if len(seedDictGroup1) >= i:
+            name, price, reloadTime = seedDictGroup1.get(i)
             img = pygame.image.load('SeedPacketBackground' + str(price) + '.png')
             w, h = img.get_width() * scaleFactorH, img.get_height() * scaleFactorH
             img = pygame.transform.smoothscale(img, (w, h))
 
         cleaningSupplyBackGrounds.add_internal(CleaningSupplySeed(img, 'bg', 1, i, 1, XMARGIN, windowWidth, windowHeight, True))
 
-    for order, values in seedDict.items():
+    for order, values in seedDictGroup1.items():
         name, price, restockTime = values
         img = pygame.transform.smoothscale(getImg(name), (w, h))
         supplySeed = CleaningSupplySeed(img, name, price, order, restockTime, XMARGIN, windowWidth, windowHeight, False)
@@ -336,6 +340,8 @@ def getImg(name):
         return pygame.image.load('doublespraybottle.PNG')
     if name == "sponge":
         return pygame.image.load('sponge.PNG')
+    if name == "thiccsponge":
+        return pygame.image.load('doublesponge.PNG')
     if name == "soapdispenser":
         return pygame.image.load('soapdispenser.PNG')
     if name == "flypaper":
@@ -362,6 +368,10 @@ def addCleaningSupply(posX, posY, name):
         setTile(posX, posY, cs)
     if name == "sponge":
         cs = Sponge(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
+        cleaningSupplyGroup.add_internal(cs)
+        setTile(posX, posY, cs)
+    if name == "thiccsponge":
+        cs = ThiccSponge(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
         cleaningSupplyGroup.add_internal(cs)
         setTile(posX, posY, cs)
     if name == "soapdispenser":
@@ -589,10 +599,6 @@ def mainGame():
     my_eventTime = USEREVENT + 1
     pygame.time.set_timer(my_eventTime, 150)
 
-    # addCleaningSupply(0, 0, "spraybottle")
-    # addCleaningSupply(0, 1, "sponge")
-    # addCleaningSupply(0, 2, "soapdispenser")
-    #addCleaningSupply(0, 3, "flypaper")
     addCleaningSupplySeeds()
 
 
