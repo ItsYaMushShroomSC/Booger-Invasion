@@ -444,7 +444,7 @@ def drawTiles(shouldDraw):
 
             floorGridRects[col][row] = imgRect
 
-#generates projectile every 5 seconds
+#generates projectile every 3 seconds
 def proj(time):
     print(f'{time} o')
     for supply in cleaningSupplyGroup:
@@ -568,6 +568,11 @@ def terminate():  # terminates game
     pygame.quit()
     sys.exit()
 
+def replay():
+    if defaults.lives == 0:
+        # time.sleep(3)
+        drawOpeningScreen()
+
 # projectile and bug collision WORKS
 def collision2():
     for bug in enemy_sprites:
@@ -589,10 +594,6 @@ def mainGame():
     my_eventTime = USEREVENT + 1
     pygame.time.set_timer(my_eventTime, 150)
 
-    # addCleaningSupply(0, 0, "spraybottle")
-    # addCleaningSupply(0, 1, "sponge")
-    # addCleaningSupply(0, 2, "soapdispenser")
-    #addCleaningSupply(0, 3, "flypaper")
     addCleaningSupplySeeds()
 
 
@@ -613,7 +614,9 @@ def mainGame():
 
         for event in pygame.event.get():
             collision2()
+
             if event.type == MOUSEBUTTONDOWN:
+
                 posX, posY = pygame.mouse.get_pos()
                 clicked = True
                 if gameLevel == 0:

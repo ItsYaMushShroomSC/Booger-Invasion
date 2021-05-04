@@ -53,7 +53,7 @@ class LadyBug(Bug):
         img = pygame.image.load('ladybug.png')
         super().__init__(x, y, img, False)  # check out supremeBug.py to see what this initializes
 
-        self.health = 7
+        self.health = 9
         self.speed = 10
         self.damage = 1
 
@@ -70,7 +70,7 @@ class Wasp(Bug):
         img = pygame.image.load('wasp.png')
         super().__init__(x, y, img, True)  # check out supremeBug.py to see what this initializes
 
-        self.health = 7
+        self.health = 11
         self.speed = 10
         self.damage = 1
 
@@ -87,7 +87,7 @@ class Ant(Bug):
         img = pygame.image.load('ant.png')
         super().__init__(x, y, img, False)  # check out supremeBug.py to see what this initializes
 
-        self.health = 7
+        self.health = 13
         self.speed = 10
         self.damage = 1
 
