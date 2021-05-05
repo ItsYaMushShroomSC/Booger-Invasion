@@ -74,7 +74,7 @@ bugEnterIndex = 0
 seedDictGroup1 = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000),
             3: ("soapdispenser", 50, 5000), 4: ("flypaper", 25, 10000),
             5: ("bowlcleaner", 200, 7000), 6: ('toiletplunger', 150, 9000),
-            7: ("icebottle", 200, 8000), 8:("doublespraybottle", 200, 5000), 9: ("thiccsponge", 300, 12000)}
+            7: ("icebottle", 200, 8000), 8:("doublespraybottle", 200, 5000), 9: ("acidpool", 150, 12000)}
 
 seedDictGroup2 = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000),
             3: ("soapdispenser", 50, 5000), 4: ("flypaper", 25, 10000),
@@ -126,6 +126,7 @@ def removeDeadSprites():
         if cleaningSupply.health <= 0 and not cleaningSupply.name == 'flypaper':
             setTile(cleaningSupply.x, cleaningSupply.y, None)
             cleaningSupplyGroup.remove_internal(cleaningSupply)
+            notAcidPoolGroup.remove_internal(cleaningSupply)
 
     for bug in enemy_sprites:
         if bug.health <= 0:
@@ -139,29 +140,37 @@ def sendDamage(): # every 1 second senddamage should be caleld and damages the c
     for cleaningSupply in cleaningSupplyGroup:
         for bug in enemy_sprites:
             if pygame.sprite.collide_mask(cleaningSupply, bug) and bug.frozen == True:
-                if not cleaningSupply.name == 'toiletplunger':
+                if not cleaningSupply.name == 'toiletplunger' and not cleaningSupply.name == 'acidpool':
                     cleaningSupply.updateHealth(bug.damage, DISPLAYSURF)
 
             if cleaningSupply.name == 'flypaper' and cleaningSupply.shouldRemove == True and pygame.sprite.collide_mask(cleaningSupply, bug):
                 enemy_sprites.remove_internal(bug)
 
+            if cleaningSupply.name == 'acidpool' and pygame.sprite.collide_mask(cleaningSupply, bug):
+                cleaningSupply.damageBugOnAcid(DISPLAYSURF, bug)
+
         if cleaningSupply.health <= 0 and not cleaningSupply.name == 'flypaper':
             setTile(cleaningSupply.x, cleaningSupply.y, None)
             cleaningSupplyGroup.remove_internal(cleaningSupply)
+            notAcidPoolGroup.remove_internal(cleaningSupply)
 
 
         if cleaningSupply.name == 'flypaper' and cleaningSupply.shouldRemove:
             setTile(cleaningSupply.x, cleaningSupply.y, None)
             cleaningSupplyGroup.remove_internal(cleaningSupply)
+            notAcidPoolGroup.remove_internal(cleaningSupply)
 
 
 def checkBugCleaningSupplyCollision():
 
     for cleaningSupply in cleaningSupplyGroup:
         for bug in enemy_sprites:
+
             if pygame.sprite.collide_mask(cleaningSupply, bug):
                 bug.frozen = True
+
                 if cleaningSupply.name == 'toiletplunger':
+
                     if cleaningSupply.uprightRect.colliderect(bug.rect):
                         bug.frozen = True
                         bug.damageCS(cleaningSupply)
@@ -170,6 +179,9 @@ def checkBugCleaningSupplyCollision():
                         bug.frozen = False
 
             if not pygame.sprite.spritecollideany(bug, cleaningSupplyGroup):
+                bug.frozen = False
+
+            if not pygame.sprite.spritecollideany(bug, notAcidPoolGroup) and pygame.sprite.spritecollideany(bug, acidPoolGroup):
                 bug.frozen = False
 
     if len(cleaningSupplyGroup) == 0:
@@ -348,12 +360,12 @@ def getImg(name):
         return pygame.image.load('flypaper.PNG')
     if name == "bowlcleaner":
         return pygame.image.load('bowlcleaner.png')
-
     if name == "toiletplunger":
         return pygame.image.load('PlungerUpright.png.png')
-
     if name == "icebottle":
         return pygame.image.load('icespraybottle.PNG')
+    if name == "acidpool":
+        return pygame.image.load('acidpool.PNG')
 
 
 #adds cleaning supplies to the 2Darray field
@@ -361,40 +373,52 @@ def addCleaningSupply(posX, posY, name):
     if name == "spraybottle":
         cs = SprayBottle(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
         cleaningSupplyGroup.add_internal(cs)
+        notAcidPoolGroup.add_internal(cs)
         setTile(posX, posY, cs)
     if name == "doublespraybottle":
         cs = SprayBottlex2(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
         cleaningSupplyGroup.add_internal(cs)
+        notAcidPoolGroup.add_internal(cs)
         setTile(posX, posY, cs)
     if name == "sponge":
         cs = Sponge(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
         cleaningSupplyGroup.add_internal(cs)
+        notAcidPoolGroup.add_internal(cs)
         setTile(posX, posY, cs)
     if name == "thiccsponge":
         cs = ThiccSponge(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
         cleaningSupplyGroup.add_internal(cs)
+        notAcidPoolGroup.add_internal(cs)
         setTile(posX, posY, cs)
     if name == "soapdispenser":
         cs = SoapDispenser(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
         cleaningSupplyGroup.add_internal(cs)
+        notAcidPoolGroup.add_internal(cs)
         setTile(posX, posY, cs)
     if name == "flypaper":
         cs = Flypaper(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
         cleaningSupplyGroup.add_internal(cs)
+        notAcidPoolGroup.add_internal(cs)
         setTile(posX, posY, cs)
     if name == "bowlcleaner":
         cs = BowlCleaner(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
         cleaningSupplyGroup.add_internal(cs)
+        notAcidPoolGroup.add_internal(cs)
         setTile(posX, posY, cs)
-
     if name == "toiletplunger":
         cs = ToiletPlunger(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
         cleaningSupplyGroup.add_internal(cs)
+        notAcidPoolGroup.add_internal(cs)
         setTile(posX, posY, cs)
-
     if name == "icebottle":
         cs = IceBottle(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
         cleaningSupplyGroup.add_internal(cs)
+        notAcidPoolGroup.add_internal(cs)
+        setTile(posX, posY, cs)
+    if name == "acidpool":
+        cs = AcidPool(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
+        cleaningSupplyGroup.add_internal(cs)
+        acidPoolGroup.add_internal(cs)
         setTile(posX, posY, cs)
 
 def getTileRect(col, row):
