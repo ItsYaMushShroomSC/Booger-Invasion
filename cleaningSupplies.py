@@ -5,6 +5,8 @@ import defaults
 from cleaningSupply import *
 
 cleaningSupplyGroup = pygame.sprite.Group()
+acidPoolGroup = pygame.sprite.Group()
+notAcidPoolGroup = pygame.sprite.Group()
 
 
 class SprayBottle(CleaningSupply):
@@ -104,9 +106,9 @@ class ThiccSponge(CleaningSupply):
 
     def __init__(self, row, column, XMARG, YMARG, tileW, tileH):
 
-        super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("sponge.png"), (tileW-2, tileH-2)), XMARG, YMARG, tileW, tileH)
+        super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("doublesponge.PNG"), (tileW-2, tileH-2)), XMARG, YMARG, tileW, tileH)
         self.name = 'thiccsponge'
-        self.health = 60
+        self.health = 100
 
     def updateHealth(self, bugDamage, DISPLAYSURF):
         self.health -= bugDamage
@@ -258,7 +260,7 @@ class ToiletPlunger(CleaningSupply):
 
                 self.rect.topleft = self.left, self.top
                 self.mask = pygame.mask.from_surface(self.image)  # setMask must be called every time the position of the sprite changes
-                bug.health -= 1
+                bug.health -= 1.25
                 pygame.display.update()
                 #self.health -= bugDamage
 
@@ -280,6 +282,28 @@ class ToiletPlunger(CleaningSupply):
         left, top = textRect.topleft
         DISPLAYSURF.blit(textSurface, (left, top))
         pygame.display.update()
+
+# acidpool can't be killed, except by boss bugs
+class AcidPool(CleaningSupply):
+
+    def __init__(self, row, column, XMARG, YMARG, tileW, tileH):
+
+        super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("acidpool.PNG"), (tileW-2, tileH-2)), XMARG, YMARG, tileW, tileH)
+        self.name = 'acidpool'
+        self.health = 10
+
+    def damageBugOnAcid(self, DISPLAYSURF, bug):
+
+        bug.health -= .75
+
+        poisonCloudImg = pygame.transform.smoothscale(pygame.image.load('poison cloud.png'), (self.rect.h, self.rect.w))
+        poisonCloudRect = poisonCloudImg.get_rect()
+        poisonCloudRect.midright = self.rect.midright
+        left, top = poisonCloudRect.topleft
+        DISPLAYSURF.blit(poisonCloudImg, (left, top))
+        pygame.display.update()
+
+
 
 
 
