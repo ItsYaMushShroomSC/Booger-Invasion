@@ -20,6 +20,7 @@ class Spider(Bug):
         super().__init__(x, y, img, False) # check out supremeBug.py to see what this initializes
 
         self.health = 5
+        self.defaultSpeed = 10
         self.speed = 10
         self.damage = 1
 
@@ -28,6 +29,34 @@ class Spider(Bug):
 
     def damageCS(self, cleaningSupply):
         cleaningSupply.health -= self.damage
+
+    def moveBack(self):
+        super().moveBack(self.defaultSpeed)
+
+class BigWave(pygame.sprite.Sprite):
+
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.x = x
+        self.y = y
+        scaleFactor = defaults.scaleFactorH
+        if defaults.scaleFactorW < defaults.scaleFactorH:
+            scaleFactor = defaults.scaleFactorW
+        self.health = 5
+        self.image = pygame.transform.scale(pygame.image.load("BIG-WAVE.png"), (400,300))
+
+        self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
+
+    def update(self):
+        self.rect.x -= 20
+        if (self.rect.x == (DISPLAYSURF.get_width()) / 4):
+            self.rect.x += 20
+            self.kill()
+        # if self.health == 0:
+        #     self.kill()
+
+
 
 class Cockroach(Bug):
 
@@ -38,6 +67,7 @@ class Cockroach(Bug):
 
         self.health = 7
         self.speed = 10
+        self.defaultSpeed = 10
         self.damage = 1
 
     def update(self):
@@ -45,6 +75,9 @@ class Cockroach(Bug):
 
     def damageCS(self, cleaningSupply):
         cleaningSupply.health -= self.damage
+
+    def moveBack(self):
+        super().moveBack(self.defaultSpeed)
 
 class LadyBug(Bug):
 
@@ -55,6 +88,7 @@ class LadyBug(Bug):
 
         self.health = 9
         self.speed = 10
+        self.defaultSpeed = 10
         self.damage = 1
 
     def update(self):
@@ -62,6 +96,9 @@ class LadyBug(Bug):
 
     def damageCS(self, cleaningSupply):
         cleaningSupply.health -= self.damage
+
+    def moveBack(self):
+        super().moveBack(self.defaultSpeed)
 
 class Wasp(Bug):
 
@@ -72,6 +109,7 @@ class Wasp(Bug):
 
         self.health = 11
         self.speed = 10
+        self.defaultSpeed = 10
         self.damage = 1
 
     def update(self):
@@ -79,6 +117,9 @@ class Wasp(Bug):
 
     def damageCS(self, cleaningSupply):
         cleaningSupply.health -= self.damage
+
+    def moveBack(self):
+        super().moveBack(self.defaultSpeed)
 
 class Ant(Bug):
 
@@ -89,6 +130,7 @@ class Ant(Bug):
 
         self.health = 13
         self.speed = 10
+        self.defaultSpeed = 10
         self.damage = 1
 
     def update(self):
@@ -96,3 +138,6 @@ class Ant(Bug):
 
     def damageCS(self, cleaningSupply):
         cleaningSupply.health -= self.damage
+
+    def moveBack(self):
+        super().moveBack(self.defaultSpeed)

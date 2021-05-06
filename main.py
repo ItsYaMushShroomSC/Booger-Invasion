@@ -71,16 +71,22 @@ bugEnterIndex = 0
 # dictionary where (key: <name of cleaningsupply>, value: tuple(<order>, <price>))
 # @see https://www.w3schools.com/python/python_dictionaries.asp
 
-seedDict = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000),
+seedDictGroup1 = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000),
             3: ("soapdispenser", 50, 5000), 4: ("flypaper", 25, 10000),
-            5: ("bowlcleaner", 200, 7000), 6: ('toiletplunger', 150, 1000),
-            7: ("icebottle", 200, 8000), 8:("doublespraybottle", 200, 5000)}
+            5: ("bowlcleaner", 200, 7000), 6: ('toiletplunger', 150, 9000),
+            7: ("icebottle", 200, 8000), 8:("broom", 50, 9000), 9: ("acidpool", 150, 12000)}
+
+seedDictGroup2 = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000),
+            3: ("soapdispenser", 50, 5000), 4: ("flypaper", 25, 10000),
+            5: ("bowlcleaner", 200, 7000), 6: ('toiletplunger', 150, 9000),
+            7: ("icebottle", 200, 8000), 8:("doublespraybottle", 200, 5000), 9: ("thiccsponge", 300, 12000)}
 
 seedInventoryRects = [] # seed rects for mouse collision
 
 # Sprite Groups:
 cleaningSupplyBackGrounds = pygame.sprite.Group()
 cleaningSupplySeedsGroup = pygame.sprite.Group()
+text_sprites = pygame.sprite.Group()
 
 # Money currency
 bubbleCoins = 1000
@@ -118,9 +124,10 @@ def activatePlungers():
 
 def removeDeadSprites():
     for cleaningSupply in cleaningSupplyGroup:
-        if cleaningSupply.health <= 0:
+        if cleaningSupply.health <= 0 and not cleaningSupply.name == 'flypaper':
             setTile(cleaningSupply.x, cleaningSupply.y, None)
             cleaningSupplyGroup.remove_internal(cleaningSupply)
+            notAcidPoolGroup.remove_internal(cleaningSupply)
 
     for bug in enemy_sprites:
         if bug.health <= 0:
@@ -134,30 +141,40 @@ def sendDamage(): # every 1 second senddamage should be caleld and damages the c
     for cleaningSupply in cleaningSupplyGroup:
         for bug in enemy_sprites:
             if pygame.sprite.collide_mask(cleaningSupply, bug) and bug.frozen == True:
-                if not cleaningSupply.name == 'toiletplunger':
+                if not cleaningSupply.name == 'toiletplunger' and not cleaningSupply.name == 'acidpool' and not cleaningSupply.name == 'broom':
                     cleaningSupply.updateHealth(bug.damage, DISPLAYSURF)
 
             if cleaningSupply.name == 'flypaper' and cleaningSupply.shouldRemove == True and pygame.sprite.collide_mask(cleaningSupply, bug):
                 enemy_sprites.remove_internal(bug)
 
+            if cleaningSupply.name == 'acidpool' and pygame.sprite.collide_mask(cleaningSupply, bug):
+                cleaningSupply.damageBugOnAcid(DISPLAYSURF, bug)
+
+            if cleaningSupply.name == 'broom' and pygame.sprite.collide_mask(cleaningSupply, bug):
+                cleaningSupply.updateHealth(DISPLAYSURF, bug)
+
         if cleaningSupply.health <= 0 and not cleaningSupply.name == 'flypaper':
             setTile(cleaningSupply.x, cleaningSupply.y, None)
             cleaningSupplyGroup.remove_internal(cleaningSupply)
-
+            notAcidPoolGroup.remove_internal(cleaningSupply)
 
 
         if cleaningSupply.name == 'flypaper' and cleaningSupply.shouldRemove:
             setTile(cleaningSupply.x, cleaningSupply.y, None)
             cleaningSupplyGroup.remove_internal(cleaningSupply)
+            notAcidPoolGroup.remove_internal(cleaningSupply)
 
 
 def checkBugCleaningSupplyCollision():
 
     for cleaningSupply in cleaningSupplyGroup:
         for bug in enemy_sprites:
+
             if pygame.sprite.collide_mask(cleaningSupply, bug):
                 bug.frozen = True
+
                 if cleaningSupply.name == 'toiletplunger':
+
                     if cleaningSupply.uprightRect.colliderect(bug.rect):
                         bug.frozen = True
                         bug.damageCS(cleaningSupply)
@@ -166,6 +183,9 @@ def checkBugCleaningSupplyCollision():
                         bug.frozen = False
 
             if not pygame.sprite.spritecollideany(bug, cleaningSupplyGroup):
+                bug.frozen = False
+
+            if not pygame.sprite.spritecollideany(bug, notAcidPoolGroup) and pygame.sprite.spritecollideany(bug, acidPoolGroup):
                 bug.frozen = False
 
     if len(cleaningSupplyGroup) == 0:
@@ -238,7 +258,7 @@ def getSeedSelected(mouseX, mouseY, seedSelected, dictIndex): # seedSelected is 
     for seedInventoryRect in seedInventoryRects:
 
         if seedInventoryRect.collidepoint((mouseX, mouseY)):
-            values = seedDict.get(index)
+            values = seedDictGroup1.get(index)
             seedSelected, price, noOneCares = values
             dictIndex = index
 
@@ -259,8 +279,10 @@ def getBugsEntering(timeElapsed): # adds the bugs entering the screen
             bugEnterIndex += 1
             buggy = getBugRandomPos(bug)
 
-            if not buggy == None:
+            if not buggy == None and bug != "big_wave":
                 enemy_sprites.add_internal(buggy)
+            if bug == "big_wave":
+                text_sprites.add(buggy)
 
         index += 1
 
@@ -290,6 +312,8 @@ def getBugRandomPos(bugName):
         return Ant(x, y)
     if bugName == 'ladybug':
         return LadyBug(x, y)
+    if bugName == 'big_wave':
+        return BigWave(x,DISPLAYSURF.get_height() / 2)
 
 
 
@@ -303,7 +327,7 @@ def getCleaningSupplySeed(index):
     return None
 
 def addCleaningSupplySeeds():
-    global cleaningSupplySeedsGroup, seedDict
+    global cleaningSupplySeedsGroup, seedDictGroup1
 
     img = pygame.image.load('SeedPacketBackground.png')
     w, h = img.get_width()*scaleFactorH, img.get_height()*scaleFactorH
@@ -313,15 +337,15 @@ def addCleaningSupplySeeds():
 
     for i in range(1, 10):
 
-        if len(seedDict) >= i:
-            name, price, reloadTime = seedDict.get(i)
+        if len(seedDictGroup1) >= i:
+            name, price, reloadTime = seedDictGroup1.get(i)
             img = pygame.image.load('SeedPacketBackground' + str(price) + '.png')
             w, h = img.get_width() * scaleFactorH, img.get_height() * scaleFactorH
             img = pygame.transform.smoothscale(img, (w, h))
 
         cleaningSupplyBackGrounds.add_internal(CleaningSupplySeed(img, 'bg', 1, i, 1, XMARGIN, windowWidth, windowHeight, True))
 
-    for order, values in seedDict.items():
+    for order, values in seedDictGroup1.items():
         name, price, restockTime = values
         img = pygame.transform.smoothscale(getImg(name), (w, h))
         supplySeed = CleaningSupplySeed(img, name, price, order, restockTime, XMARGIN, windowWidth, windowHeight, False)
@@ -336,18 +360,22 @@ def getImg(name):
         return pygame.image.load('doublespraybottle.PNG')
     if name == "sponge":
         return pygame.image.load('sponge.PNG')
+    if name == "thiccsponge":
+        return pygame.image.load('doublesponge.PNG')
     if name == "soapdispenser":
         return pygame.image.load('soapdispenser.PNG')
     if name == "flypaper":
         return pygame.image.load('flypaper.PNG')
     if name == "bowlcleaner":
         return pygame.image.load('bowlcleaner.png')
-
     if name == "toiletplunger":
         return pygame.image.load('PlungerUpright.png.png')
-
     if name == "icebottle":
         return pygame.image.load('icespraybottle.PNG')
+    if name == "acidpool":
+        return pygame.image.load('acidpool.PNG')
+    if name == "broom":
+        return pygame.image.load('Broom.png')
 
 
 #adds cleaning supplies to the 2Darray field
@@ -355,36 +383,57 @@ def addCleaningSupply(posX, posY, name):
     if name == "spraybottle":
         cs = SprayBottle(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
         cleaningSupplyGroup.add_internal(cs)
+        notAcidPoolGroup.add_internal(cs)
         setTile(posX, posY, cs)
     if name == "doublespraybottle":
         cs = SprayBottlex2(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
         cleaningSupplyGroup.add_internal(cs)
+        notAcidPoolGroup.add_internal(cs)
         setTile(posX, posY, cs)
     if name == "sponge":
         cs = Sponge(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
         cleaningSupplyGroup.add_internal(cs)
+        notAcidPoolGroup.add_internal(cs)
+        setTile(posX, posY, cs)
+    if name == "thiccsponge":
+        cs = ThiccSponge(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
+        cleaningSupplyGroup.add_internal(cs)
+        notAcidPoolGroup.add_internal(cs)
         setTile(posX, posY, cs)
     if name == "soapdispenser":
         cs = SoapDispenser(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
         cleaningSupplyGroup.add_internal(cs)
+        notAcidPoolGroup.add_internal(cs)
         setTile(posX, posY, cs)
     if name == "flypaper":
         cs = Flypaper(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
         cleaningSupplyGroup.add_internal(cs)
+        notAcidPoolGroup.add_internal(cs)
         setTile(posX, posY, cs)
     if name == "bowlcleaner":
         cs = BowlCleaner(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
         cleaningSupplyGroup.add_internal(cs)
+        notAcidPoolGroup.add_internal(cs)
         setTile(posX, posY, cs)
-
     if name == "toiletplunger":
         cs = ToiletPlunger(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
         cleaningSupplyGroup.add_internal(cs)
+        notAcidPoolGroup.add_internal(cs)
         setTile(posX, posY, cs)
-
     if name == "icebottle":
         cs = IceBottle(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
         cleaningSupplyGroup.add_internal(cs)
+        notAcidPoolGroup.add_internal(cs)
+        setTile(posX, posY, cs)
+    if name == "acidpool":
+        cs = AcidPool(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
+        cleaningSupplyGroup.add_internal(cs)
+        acidPoolGroup.add_internal(cs)
+        setTile(posX, posY, cs)
+    if name == "broom":
+        cs = Broom(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
+        cleaningSupplyGroup.add_internal(cs)
+        notAcidPoolGroup.add_internal(cs)
         setTile(posX, posY, cs)
 
 def getTileRect(col, row):
@@ -496,6 +545,15 @@ def drawBubbleMoneyAmount():
     textRect.topright = (windowWidth, 0)
     left, top = textRect.topleft
     DISPLAYSURF.blit(textSurface, (left, top))
+
+def drawBigWave():
+    global bubbleCoins, bubbleFont
+
+    textSurface = bubbleFont.render('BIG WAVE', True, WHITE)
+    textRect = textSurface.get_rect()
+    # textRect.topright = (windowWidth, 0)
+    # left, top = textRect.topleft
+    DISPLAYSURF.blit(textSurface, (600,600))
 
 def drawLives():
     global lives
@@ -688,6 +746,8 @@ def mainGame():
 
                     bubbleCoinGroup.draw(DISPLAYSURF)
                     bubbleCoinGroup.update()
+                    text_sprites.draw(DISPLAYSURF)
+                    text_sprites.update()
 
 
 
