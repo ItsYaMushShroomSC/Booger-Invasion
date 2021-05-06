@@ -74,7 +74,7 @@ bugEnterIndex = 0
 seedDictGroup1 = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000),
             3: ("soapdispenser", 50, 5000), 4: ("flypaper", 25, 10000),
             5: ("bowlcleaner", 200, 7000), 6: ('toiletplunger', 150, 9000),
-            7: ("icebottle", 200, 8000), 8:("doublespraybottle", 200, 5000), 9: ("acidpool", 150, 12000)}
+            7: ("icebottle", 200, 8000), 8:("broom", 50, 9000), 9: ("acidpool", 150, 12000)}
 
 seedDictGroup2 = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000),
             3: ("soapdispenser", 50, 5000), 4: ("flypaper", 25, 10000),
@@ -140,7 +140,7 @@ def sendDamage(): # every 1 second senddamage should be caleld and damages the c
     for cleaningSupply in cleaningSupplyGroup:
         for bug in enemy_sprites:
             if pygame.sprite.collide_mask(cleaningSupply, bug) and bug.frozen == True:
-                if not cleaningSupply.name == 'toiletplunger' and not cleaningSupply.name == 'acidpool':
+                if not cleaningSupply.name == 'toiletplunger' and not cleaningSupply.name == 'acidpool' and not cleaningSupply.name == 'broom':
                     cleaningSupply.updateHealth(bug.damage, DISPLAYSURF)
 
             if cleaningSupply.name == 'flypaper' and cleaningSupply.shouldRemove == True and pygame.sprite.collide_mask(cleaningSupply, bug):
@@ -148,6 +148,9 @@ def sendDamage(): # every 1 second senddamage should be caleld and damages the c
 
             if cleaningSupply.name == 'acidpool' and pygame.sprite.collide_mask(cleaningSupply, bug):
                 cleaningSupply.damageBugOnAcid(DISPLAYSURF, bug)
+
+            if cleaningSupply.name == 'broom' and pygame.sprite.collide_mask(cleaningSupply, bug):
+                cleaningSupply.updateHealth(DISPLAYSURF, bug)
 
         if cleaningSupply.health <= 0 and not cleaningSupply.name == 'flypaper':
             setTile(cleaningSupply.x, cleaningSupply.y, None)
@@ -366,6 +369,8 @@ def getImg(name):
         return pygame.image.load('icespraybottle.PNG')
     if name == "acidpool":
         return pygame.image.load('acidpool.PNG')
+    if name == "broom":
+        return pygame.image.load('Broom.png')
 
 
 #adds cleaning supplies to the 2Darray field
@@ -419,6 +424,11 @@ def addCleaningSupply(posX, posY, name):
         cs = AcidPool(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
         cleaningSupplyGroup.add_internal(cs)
         acidPoolGroup.add_internal(cs)
+        setTile(posX, posY, cs)
+    if name == "broom":
+        cs = Broom(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
+        cleaningSupplyGroup.add_internal(cs)
+        notAcidPoolGroup.add_internal(cs)
         setTile(posX, posY, cs)
 
 def getTileRect(col, row):

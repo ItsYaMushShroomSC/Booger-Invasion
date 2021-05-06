@@ -20,6 +20,7 @@ class Spider(Bug):
         super().__init__(x, y, img, False) # check out supremeBug.py to see what this initializes
 
         self.health = 5
+        self.defaultSpeed = 10
         self.speed = 10
         self.damage = 1
 
@@ -28,6 +29,9 @@ class Spider(Bug):
 
     def damageCS(self, cleaningSupply):
         cleaningSupply.health -= self.damage
+
+    def moveBack(self):
+        super().moveBack(self.defaultSpeed)
 
 class Cockroach(Bug):
 
@@ -38,6 +42,7 @@ class Cockroach(Bug):
 
         self.health = 7
         self.speed = 10
+        self.defaultSpeed = 10
         self.damage = 1
 
     def update(self):
@@ -45,6 +50,9 @@ class Cockroach(Bug):
 
     def damageCS(self, cleaningSupply):
         cleaningSupply.health -= self.damage
+
+    def moveBack(self):
+        super().moveBack(self.defaultSpeed)
 
 class LadyBug(Bug):
 
@@ -55,6 +63,7 @@ class LadyBug(Bug):
 
         self.health = 7
         self.speed = 10
+        self.defaultSpeed = 10
         self.damage = 1
 
     def update(self):
@@ -62,6 +71,9 @@ class LadyBug(Bug):
 
     def damageCS(self, cleaningSupply):
         cleaningSupply.health -= self.damage
+
+    def moveBack(self):
+        super().moveBack(self.defaultSpeed)
 
 class Wasp(Bug):
 
@@ -72,6 +84,7 @@ class Wasp(Bug):
 
         self.health = 7
         self.speed = 10
+        self.defaultSpeed = 10
         self.damage = 1
 
     def update(self):
@@ -79,6 +92,9 @@ class Wasp(Bug):
 
     def damageCS(self, cleaningSupply):
         cleaningSupply.health -= self.damage
+
+    def moveBack(self):
+        super().moveBack(self.defaultSpeed)
 
 class Ant(Bug):
 
@@ -89,6 +105,7 @@ class Ant(Bug):
 
         self.health = 7
         self.speed = 10
+        self.defaultSpeed = 10
         self.damage = 1
 
     def update(self):
@@ -96,3 +113,6 @@ class Ant(Bug):
 
     def damageCS(self, cleaningSupply):
         cleaningSupply.health -= self.damage
+
+    def moveBack(self):
+        super().moveBack(self.defaultSpeed)
