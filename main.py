@@ -359,6 +359,8 @@ def getImg(name):
         return pygame.image.load('doublesponge.PNG')
     if name == "soapdispenser":
         return pygame.image.load('soapdispenser.PNG')
+    if name == "doublesoapdispenser":
+        return pygame.image.load('doublesoapdispenser.PNG')
     if name == "flypaper":
         return pygame.image.load('flypaper.PNG')
     if name == "bowlcleaner":
@@ -371,6 +373,7 @@ def getImg(name):
         return pygame.image.load('acidpool.PNG')
     if name == "broom":
         return pygame.image.load('Broom.png')
+
 
 
 #adds cleaning supplies to the 2Darray field
@@ -396,6 +399,11 @@ def addCleaningSupply(posX, posY, name):
         notAcidPoolGroup.add_internal(cs)
         setTile(posX, posY, cs)
     if name == "soapdispenser":
+        cs = SoapDispenser(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
+        cleaningSupplyGroup.add_internal(cs)
+        notAcidPoolGroup.add_internal(cs)
+        setTile(posX, posY, cs)
+    if name == "doublesoapdispenser":
         cs = SoapDispenser(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
         cleaningSupplyGroup.add_internal(cs)
         notAcidPoolGroup.add_internal(cs)

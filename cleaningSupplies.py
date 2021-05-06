@@ -191,6 +191,38 @@ class SoapDispenser(CleaningSupply):
             return False, None
 
 
+class SoapDispenser(CleaningSupply):
+
+    def __init__(self, row, column, XMARG, YMARG, tileW, tileH):
+        super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("doublesoapdispenser.PNG"), (tileW-2, tileH-2)), XMARG, YMARG, tileW, tileH)
+        self.name = 'doublesoapdispenser'
+
+        self.cooldown = 8000 #8 seconds
+        self.health = 7
+        self.timeElapsed = 0
+        self.startcooldownframes = self.cooldown
+
+    def updateHealth(self, bugDamage, DISPLAYSURF):
+        self.health -= bugDamage
+
+        font = pygame.font.Font('cloudBubbleFont.ttf', 32 * defaults.scaleFactorH)
+        textSurface = font.render('-' + str(bugDamage), True, defaults.RED)
+        textRect = textSurface.get_rect()
+        textRect.midright = self.rect.midright
+        left, top = textRect.topleft
+        DISPLAYSURF.blit(textSurface, (left, top))
+        pygame.display.update()
+
+    # should be called every 1 second that elapses
+    def getShouldSpawnBubble(self): # returns boolean of whether shouldspawn bubble, and also the rect of the Soapdispenser
+        if self.timeElapsed >= self.cooldown:
+            self.timeElapsed = 0
+            return True, self.rect
+        else:
+            self.timeElapsed += 1000
+            return False, None
+
+
 class BowlCleaner(CleaningSupply):
 
     def __init__(self, row, column, XMARG, YMARG, tileW, tileH):
