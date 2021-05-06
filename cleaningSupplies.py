@@ -304,6 +304,30 @@ class AcidPool(CleaningSupply):
         pygame.display.update()
 
 
+class Broom(CleaningSupply):
+
+    def __init__(self, row, column, XMARG, YMARG, tileW, tileH):
+        super().__init__(row, column,
+                         pygame.transform.smoothscale(pygame.image.load("Broom.png"), (tileW - 2, tileH - 2)), XMARG,
+                         YMARG, tileW, tileH)
+        self.name = 'broom'
+        self.health = 1000 # health doesn't matter because broom is only used once
+
+    def updateHealth(self, DISPLAYSURF, bug):
+
+        poisonCloudImg = pygame.transform.smoothscale(pygame.image.load('windSwirl.png'), (self.rect.h, self.rect.w))
+        poisonCloudRect = poisonCloudImg.get_rect()
+        poisonCloudRect.midright = self.rect.midright
+        left, top = poisonCloudRect.topleft
+        DISPLAYSURF.blit(poisonCloudImg, (left, top))
+        pygame.display.update()
+
+        self.health = 0
+
+        bug.moveBack()
+
+
+
 
 
 

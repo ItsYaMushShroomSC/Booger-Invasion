@@ -55,5 +55,9 @@ class Bug(pygame.sprite.Sprite):
         if self.health <= 0:
             enemy_sprites.remove_internal(self)
 
+    def moveBack(self, defSpeed):
+
+        self.rect.x = defaults.windowWidth - XMARG
+
 
 
