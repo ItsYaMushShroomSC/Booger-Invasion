@@ -86,6 +86,7 @@ seedInventoryRects = [] # seed rects for mouse collision
 # Sprite Groups:
 cleaningSupplyBackGrounds = pygame.sprite.Group()
 cleaningSupplySeedsGroup = pygame.sprite.Group()
+text_sprites = pygame.sprite.Group()
 
 # Money currency
 bubbleCoins = 1000
@@ -278,8 +279,10 @@ def getBugsEntering(timeElapsed): # adds the bugs entering the screen
             bugEnterIndex += 1
             buggy = getBugRandomPos(bug)
 
-            if not buggy == None:
+            if not buggy == None and bug != "big_wave":
                 enemy_sprites.add_internal(buggy)
+            if bug == "big_wave":
+                text_sprites.add(buggy)
 
         index += 1
 
@@ -309,6 +312,8 @@ def getBugRandomPos(bugName):
         return Ant(x, y)
     if bugName == 'ladybug':
         return LadyBug(x, y)
+    if bugName == 'big_wave':
+        return BigWave(x,DISPLAYSURF.get_height() / 2)
 
 
 
@@ -541,6 +546,15 @@ def drawBubbleMoneyAmount():
     left, top = textRect.topleft
     DISPLAYSURF.blit(textSurface, (left, top))
 
+def drawBigWave():
+    global bubbleCoins, bubbleFont
+
+    textSurface = bubbleFont.render('BIG WAVE', True, WHITE)
+    textRect = textSurface.get_rect()
+    # textRect.topright = (windowWidth, 0)
+    # left, top = textRect.topleft
+    DISPLAYSURF.blit(textSurface, (600,600))
+
 def drawLives():
     global lives
     textSurface = bubbleFont.render('Lives = ' + str(defaults.lives), True, WHITE)
@@ -725,6 +739,8 @@ def mainGame():
 
                     bubbleCoinGroup.draw(DISPLAYSURF)
                     bubbleCoinGroup.update()
+                    text_sprites.draw(DISPLAYSURF)
+                    text_sprites.update()
 
 
 

@@ -1,5 +1,6 @@
 bugs_are_coming 1
 spider 4
+big_wave 4
 ladybug 12
 ant 16
 wasp 20
@@ -13,7 +14,7 @@ spider 39
 spider 40
 cockroach 42
 cockroach 45
-big_wave 49
+big_wave 47
 spider 62
 spider 69
 cockroach 73

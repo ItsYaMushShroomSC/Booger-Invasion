@@ -33,6 +33,31 @@ class Spider(Bug):
     def moveBack(self):
         super().moveBack(self.defaultSpeed)
 
+class BigWave(pygame.sprite.Sprite):
+
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.x = x
+        self.y = y
+        scaleFactor = defaults.scaleFactorH
+        if defaults.scaleFactorW < defaults.scaleFactorH:
+            scaleFactor = defaults.scaleFactorW
+        self.health = 5
+        self.image = pygame.transform.scale(pygame.image.load("BIG-WAVE.png"), (400,300))
+
+        self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
+
+    def update(self):
+        self.rect.x -= 20
+        if (self.rect.x == (DISPLAYSURF.get_width()) / 4):
+            self.rect.x += 20
+            self.kill()
+        # if self.health == 0:
+        #     self.kill()
+
+
+
 class Cockroach(Bug):
 
     def __init__(self, x, y):
