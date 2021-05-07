@@ -1,6 +1,5 @@
 bugs_are_coming 1
 spider 4
-big_wave 4
 ladybug 12
 ant 16
 wasp 20

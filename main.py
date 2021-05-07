@@ -279,10 +279,14 @@ def getBugsEntering(timeElapsed): # adds the bugs entering the screen
             bugEnterIndex += 1
             buggy = getBugRandomPos(bug)
 
-            if not buggy == None and bug != "big_wave":
+            if not buggy == None and bug != "big_wave" and bug != "final_wave"\
+                    and bug != "bugs_are_coming":
                 enemy_sprites.add_internal(buggy)
-            if bug == "big_wave":
+            if bug == "big_wave" or bug == "bugs_are_coming" or bug == "final_wave":
                 text_sprites.add(buggy)
+                # text_sprites.add(buggy)
+                # text_sprites.add(buggy)
+
 
         index += 1
 
@@ -314,6 +318,10 @@ def getBugRandomPos(bugName):
         return LadyBug(x, y)
     if bugName == 'big_wave':
         return BigWave(x,DISPLAYSURF.get_height() / 2)
+    if bugName == 'bugs_are_coming':
+        return Entry(x,DISPLAYSURF.get_height() / 2)
+    if bugName == 'final_wave':
+        return Final(x,DISPLAYSURF.get_height() / 2)
 
 
 
