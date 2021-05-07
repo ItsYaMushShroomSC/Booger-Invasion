@@ -39,6 +39,7 @@ fontSize1 = 54 * scaleFactorH
 bugFont = pygame.font.Font('bugFont.ttf', fontSize1)
 cleaningFont = pygame.font.Font('CleaningSupplyFont.otf', fontSize1)
 bubbleFont = pygame.font.Font('cloudBubbleFont.ttf', fontSize1)
+enterFont = pygame.font.Font('EnterFont.ttf', fontSize1)
 
 # Time:
 frames = 0
@@ -67,6 +68,9 @@ tileHeight = None
 
 bugEnterAry = []
 bugEnterIndex = 0
+
+gameMessageOn = False
+currMessage = None
 
 # dictionary where (key: <name of cleaningsupply>, value: tuple(<order>, <price>))
 # @see https://www.w3schools.com/python/python_dictionaries.asp
@@ -97,6 +101,15 @@ bubbleCoinGroup = pygame.sprite.Group()
 # Non-Class Methods:
 
 # the dictionary will be read and the appropriate img will be
+
+def gameMessage(message):
+    global gameLevel, bubbleFont, gameMessageOn, currMessage
+
+    textSurface = enterFont.render(message, True, BLACK, GREEN)
+    textRect = textSurface.get_rect()
+    textRect.center = (windowWidth/2, windowHeight/2)
+    left, top = textRect.topleft
+    DISPLAYSURF.blit(textSurface, (left, top))
 
 def activatePlungers():
     for cleaningSupply in cleaningSupplyGroup:
@@ -274,7 +287,7 @@ def getSeedSelected(mouseX, mouseY, seedSelected, dictIndex): # seedSelected is 
 
 def getBugsEntering(timeElapsed): # adds the bugs entering the screen
     # timeElapsed is seconds from since the game started
-    global bugEnterIndex
+    global bugEnterIndex, gameMessageOn, currMessage
 
     index = 0
     for i in range(len(bugEnterAry)):
@@ -287,6 +300,9 @@ def getBugsEntering(timeElapsed): # adds the bugs entering the screen
 
             if not buggy == None:
                 enemy_sprites.add_internal(buggy)
+            else:
+                gameMessageOn = True
+                currMessage = bug
 
         index += 1
 
@@ -639,7 +655,7 @@ def collision2():
 
 
 def mainGame():
-    global DISPLAYSURF, gameLevel, frames, curr_time, bugEnterAry
+    global DISPLAYSURF, gameLevel, frames, curr_time, bugEnterAry, gameMessageOn, currMessage
 
     clicked = False
 
@@ -702,7 +718,9 @@ def mainGame():
                     curr_time1000 = pygame.time.get_ticks()
                     timeSinceStart += 1000
 
+                    gameMessageOn = False
                     getBugsEntering(timeSinceStart)
+
                     proj(timeSinceStart)
                     removeExpiredBubbles()
                     updateSoapDispenserBubbles()
@@ -741,7 +759,8 @@ def mainGame():
                     bubbleCoinGroup.draw(DISPLAYSURF)
                     bubbleCoinGroup.update()
 
-
+                    if gameMessageOn == True:
+                        gameMessage(currMessage)
 
                     #print(str(windowWidth))
                     #print(str(windowHeight))
