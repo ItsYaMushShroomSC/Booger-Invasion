@@ -74,7 +74,7 @@ bugEnterIndex = 0
 seedDictGroup1 = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000),
             3: ("soapdispenser", 50, 5000), 4: ("flypaper", 25, 10000),
             5: ("bowlcleaner", 200, 7000), 6: ('toiletplunger', 150, 9000),
-            7: ("icebottle", 200, 8000), 8:("broom", 50, 9000), 9: ("acidpool", 150, 12000)}
+            7: ("doublesoapdispenser", 150, 8000), 8:("broom", 50, 9000), 9: ("acidpool", 150, 12000)}
 
 seedDictGroup2 = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000),
             3: ("soapdispenser", 50, 5000), 4: ("flypaper", 25, 10000),
@@ -169,7 +169,7 @@ def checkBugCleaningSupplyCollision():
     for cleaningSupply in cleaningSupplyGroup:
         for bug in enemy_sprites:
 
-            if pygame.sprite.collide_mask(cleaningSupply, bug):
+            if pygame.sprite.collide_mask(cleaningSupply, bug) and not cleaningSupply.name == 'acidpool':
                 bug.frozen = True
 
                 if cleaningSupply.name == 'toiletplunger':
@@ -195,11 +195,18 @@ def checkBugCleaningSupplyCollision():
 def updateSoapDispenserBubbles():# should be called every second
 
     for cleaningSupply in cleaningSupplyGroup:
+
         if cleaningSupply.name == 'soapdispenser':
             shouldSpawn, rect = cleaningSupply.getShouldSpawnBubble()
 
             if shouldSpawn == True:
-                bubbleCoinGroup.add_internal(Bubble(True, rect))
+                bubbleCoinGroup.add_internal(Bubble(True, rect, False))
+
+        if cleaningSupply.name == 'doublesoapdispenser':
+            shouldSpawn, rect = cleaningSupply.getShouldSpawnBubble()
+
+            if shouldSpawn == True:
+                bubbleCoinGroup.add_internal(Bubble(True, rect, True))
 
 def removeClickedBubbles(mouseX, mouseY):
     global bubbleCoins
@@ -221,7 +228,7 @@ def removeExpiredBubbles():
 def addBubbleCoin(isCleaningSupplyBubble):
     global bubbleCoinGroup
 
-    bubbleCoinGroup.add_internal(Bubble(isCleaningSupplyBubble, None))
+    bubbleCoinGroup.add_internal(Bubble(isCleaningSupplyBubble, None, False))
 
 def drawSeedLoadingBars(timeElapsed):
     for supplySeed in cleaningSupplySeedsGroup:
@@ -359,6 +366,8 @@ def getImg(name):
         return pygame.image.load('doublesponge.PNG')
     if name == "soapdispenser":
         return pygame.image.load('soapdispenser.PNG')
+    if name == "doublesoapdispenser":
+        return pygame.image.load('douplesoapdispenser.PNG')
     if name == "flypaper":
         return pygame.image.load('flypaper.PNG')
     if name == "bowlcleaner":
@@ -371,6 +380,7 @@ def getImg(name):
         return pygame.image.load('acidpool.PNG')
     if name == "broom":
         return pygame.image.load('Broom.png')
+
 
 
 #adds cleaning supplies to the 2Darray field
@@ -397,6 +407,11 @@ def addCleaningSupply(posX, posY, name):
         setTile(posX, posY, cs)
     if name == "soapdispenser":
         cs = SoapDispenser(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
+        cleaningSupplyGroup.add_internal(cs)
+        notAcidPoolGroup.add_internal(cs)
+        setTile(posX, posY, cs)
+    if name == "doublesoapdispenser":
+        cs = DoubleSoapDispenser(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
         cleaningSupplyGroup.add_internal(cs)
         notAcidPoolGroup.add_internal(cs)
         setTile(posX, posY, cs)
