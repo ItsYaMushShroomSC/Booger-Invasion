@@ -191,10 +191,10 @@ class SoapDispenser(CleaningSupply):
             return False, None
 
 
-class SoapDispenser(CleaningSupply):
+class DoubleSoapDispenser(CleaningSupply):
 
     def __init__(self, row, column, XMARG, YMARG, tileW, tileH):
-        super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("doublesoapdispenser.PNG"), (tileW-2, tileH-2)), XMARG, YMARG, tileW, tileH)
+        super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("douplesoapdispenser.PNG"), (tileW-2, tileH-2)), XMARG, YMARG, tileW, tileH)
         self.name = 'doublesoapdispenser'
 
         self.cooldown = 8000 #8 seconds
