@@ -10,6 +10,8 @@ class Bubble(pygame.sprite.Sprite):
 
         self.image = pygame.image.load('bubbleimg.PNG')
 
+        self.isDouble = isDouble
+
         if isDouble == True: self.image = pygame.image.load('doublebubble.PNG')
 
         w, h = 54 * defaults.scaleFactorH, 54 * defaults.scaleFactorH

@@ -225,17 +225,27 @@ def removeClickedBubbles(mouseX, mouseY):
     global bubbleCoins
 
     for coin in bubbleCoinGroup:
-        if coin.rect.collidepoint((mouseX, mouseY)) == True:
+        if coin.rect.collidepoint((mouseX, mouseY)) == True and coin.isDouble == False:
             bubbleCoinGroup.remove_internal(coin)
             bubbleCoins += 50
+        if coin.rect.collidepoint((mouseX, mouseY)) == True and coin.isDouble == True:
+            bubbleCoinGroup.remove_internal(coin)
+            bubbleCoins += 100
+
 
 def removeExpiredBubbles():
     global bubbleCoins
 
     for coin in bubbleCoinGroup:
-        if coin.getShouldRemove() == True:
+        if coin.getShouldRemove() == True and coin.isDouble == False:
             bubbleCoinGroup.remove_internal(coin)
             bubbleCoins += 50
+        if coin.getShouldRemove() == True and coin.isDouble == True:
+            bubbleCoinGroup.remove_internal(coin)
+            bubbleCoins += 100
+
+
+
 
 
 def addBubbleCoin(isCleaningSupplyBubble):
