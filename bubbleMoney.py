@@ -6,11 +6,16 @@ from pygame.locals import *
 
 class Bubble(pygame.sprite.Sprite):
 
-    def __init__(self, isCleaningSupplyBubble, cleaningSupplyRect):
+    def __init__(self, isCleaningSupplyBubble, cleaningSupplyRect, isDouble):
 
         self.image = pygame.image.load('bubbleimg.PNG')
+
+        self.isDouble = isDouble
+
+        if isDouble == True: self.image = pygame.image.load('doublebubble.PNG')
+
         w, h = 54 * defaults.scaleFactorH, 54 * defaults.scaleFactorH
-        self.image = pygame.transform.smoothscale(pygame.image.load('bubbleimg.PNG'), (w, h))
+        self.image = pygame.transform.smoothscale(self.image, (w, h))
         self.rect = self.image.get_rect()
         self.shouldRemoveCounter = 8
 

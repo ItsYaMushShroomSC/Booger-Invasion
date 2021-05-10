@@ -39,6 +39,7 @@ fontSize1 = 54 * scaleFactorH
 bugFont = pygame.font.Font('bugFont.ttf', fontSize1)
 cleaningFont = pygame.font.Font('CleaningSupplyFont.otf', fontSize1)
 bubbleFont = pygame.font.Font('cloudBubbleFont.ttf', fontSize1)
+enterFont = pygame.font.Font('EnterFont.ttf', fontSize1)
 
 # Time:
 frames = 0
@@ -68,13 +69,16 @@ tileHeight = None
 bugEnterAry = []
 bugEnterIndex = 0
 
+gameMessageOn = False
+currMessage = None
+
 # dictionary where (key: <name of cleaningsupply>, value: tuple(<order>, <price>))
 # @see https://www.w3schools.com/python/python_dictionaries.asp
 
 seedDictGroup1 = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000),
             3: ("soapdispenser", 50, 5000), 4: ("flypaper", 25, 10000),
             5: ("bowlcleaner", 200, 7000), 6: ('toiletplunger', 150, 9000),
-            7: ("icebottle", 200, 8000), 8:("broom", 50, 9000), 9: ("acidpool", 150, 12000)}
+            7: ("doublesoapdispenser", 150, 8000), 8:("broom", 50, 9000), 9: ("acidpool", 150, 12000)}
 
 seedDictGroup2 = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000),
             3: ("soapdispenser", 50, 5000), 4: ("flypaper", 25, 10000),
@@ -86,7 +90,6 @@ seedInventoryRects = [] # seed rects for mouse collision
 # Sprite Groups:
 cleaningSupplyBackGrounds = pygame.sprite.Group()
 cleaningSupplySeedsGroup = pygame.sprite.Group()
-text_sprites = pygame.sprite.Group()
 
 # Money currency
 bubbleCoins = 1000
@@ -98,6 +101,15 @@ bubbleCoinGroup = pygame.sprite.Group()
 # Non-Class Methods:
 
 # the dictionary will be read and the appropriate img will be
+
+def gameMessage(message):
+    global gameLevel, bubbleFont, gameMessageOn, currMessage
+
+    textSurface = enterFont.render(message, True, BLACK, GREEN)
+    textRect = textSurface.get_rect()
+    textRect.center = (windowWidth/2, windowHeight/2)
+    left, top = textRect.topleft
+    DISPLAYSURF.blit(textSurface, (left, top))
 
 def activatePlungers():
     for cleaningSupply in cleaningSupplyGroup:
@@ -170,7 +182,7 @@ def checkBugCleaningSupplyCollision():
     for cleaningSupply in cleaningSupplyGroup:
         for bug in enemy_sprites:
 
-            if pygame.sprite.collide_mask(cleaningSupply, bug):
+            if pygame.sprite.collide_mask(cleaningSupply, bug) and not cleaningSupply.name == 'acidpool':
                 bug.frozen = True
 
                 if cleaningSupply.name == 'toiletplunger':
@@ -196,33 +208,50 @@ def checkBugCleaningSupplyCollision():
 def updateSoapDispenserBubbles():# should be called every second
 
     for cleaningSupply in cleaningSupplyGroup:
+
         if cleaningSupply.name == 'soapdispenser':
             shouldSpawn, rect = cleaningSupply.getShouldSpawnBubble()
 
             if shouldSpawn == True:
-                bubbleCoinGroup.add_internal(Bubble(True, rect))
+                bubbleCoinGroup.add_internal(Bubble(True, rect, False))
+
+        if cleaningSupply.name == 'doublesoapdispenser':
+            shouldSpawn, rect = cleaningSupply.getShouldSpawnBubble()
+
+            if shouldSpawn == True:
+                bubbleCoinGroup.add_internal(Bubble(True, rect, True))
 
 def removeClickedBubbles(mouseX, mouseY):
     global bubbleCoins
 
     for coin in bubbleCoinGroup:
-        if coin.rect.collidepoint((mouseX, mouseY)) == True:
+        if coin.rect.collidepoint((mouseX, mouseY)) == True and coin.isDouble == False:
             bubbleCoinGroup.remove_internal(coin)
             bubbleCoins += 50
+        if coin.rect.collidepoint((mouseX, mouseY)) == True and coin.isDouble == True:
+            bubbleCoinGroup.remove_internal(coin)
+            bubbleCoins += 100
+
 
 def removeExpiredBubbles():
     global bubbleCoins
 
     for coin in bubbleCoinGroup:
-        if coin.getShouldRemove() == True:
+        if coin.getShouldRemove() == True and coin.isDouble == False:
             bubbleCoinGroup.remove_internal(coin)
             bubbleCoins += 50
+        if coin.getShouldRemove() == True and coin.isDouble == True:
+            bubbleCoinGroup.remove_internal(coin)
+            bubbleCoins += 100
+
+
+
 
 
 def addBubbleCoin(isCleaningSupplyBubble):
     global bubbleCoinGroup
 
-    bubbleCoinGroup.add_internal(Bubble(isCleaningSupplyBubble, None))
+    bubbleCoinGroup.add_internal(Bubble(isCleaningSupplyBubble, None, False))
 
 def drawSeedLoadingBars(timeElapsed):
     for supplySeed in cleaningSupplySeedsGroup:
@@ -268,7 +297,7 @@ def getSeedSelected(mouseX, mouseY, seedSelected, dictIndex): # seedSelected is 
 
 def getBugsEntering(timeElapsed): # adds the bugs entering the screen
     # timeElapsed is seconds from since the game started
-    global bugEnterIndex
+    global bugEnterIndex, gameMessageOn, currMessage
 
     index = 0
     for i in range(len(bugEnterAry)):
@@ -279,14 +308,11 @@ def getBugsEntering(timeElapsed): # adds the bugs entering the screen
             bugEnterIndex += 1
             buggy = getBugRandomPos(bug)
 
-            if not buggy == None and bug != "big_wave" and bug != "final_wave"\
-                    and bug != "bugs_are_coming":
+            if not buggy == None:
                 enemy_sprites.add_internal(buggy)
-            if bug == "big_wave" or bug == "bugs_are_coming" or bug == "final_wave":
-                text_sprites.add(buggy)
-                # text_sprites.add(buggy)
-                # text_sprites.add(buggy)
-
+            else:
+                gameMessageOn = True
+                currMessage = bug
 
         index += 1
 
@@ -316,12 +342,6 @@ def getBugRandomPos(bugName):
         return Ant(x, y)
     if bugName == 'ladybug':
         return LadyBug(x, y)
-    if bugName == 'big_wave':
-        return BigWave(x,DISPLAYSURF.get_height() / 2)
-    if bugName == 'bugs_are_coming':
-        return Entry(x,DISPLAYSURF.get_height() / 2)
-    if bugName == 'final_wave':
-        return Final(x,DISPLAYSURF.get_height() / 2)
 
 
 
@@ -372,6 +392,8 @@ def getImg(name):
         return pygame.image.load('doublesponge.PNG')
     if name == "soapdispenser":
         return pygame.image.load('soapdispenser.PNG')
+    if name == "doublesoapdispenser":
+        return pygame.image.load('douplesoapdispenser.PNG')
     if name == "flypaper":
         return pygame.image.load('flypaper.PNG')
     if name == "bowlcleaner":
@@ -384,6 +406,7 @@ def getImg(name):
         return pygame.image.load('acidpool.PNG')
     if name == "broom":
         return pygame.image.load('Broom.png')
+
 
 
 #adds cleaning supplies to the 2Darray field
@@ -410,6 +433,11 @@ def addCleaningSupply(posX, posY, name):
         setTile(posX, posY, cs)
     if name == "soapdispenser":
         cs = SoapDispenser(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
+        cleaningSupplyGroup.add_internal(cs)
+        notAcidPoolGroup.add_internal(cs)
+        setTile(posX, posY, cs)
+    if name == "doublesoapdispenser":
+        cs = DoubleSoapDispenser(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
         cleaningSupplyGroup.add_internal(cs)
         notAcidPoolGroup.add_internal(cs)
         setTile(posX, posY, cs)
@@ -501,7 +529,7 @@ def drawTiles(shouldDraw):
 
             floorGridRects[col][row] = imgRect
 
-#generates projectile every 3 seconds
+#generates projectile every 5 seconds
 def proj(time):
     print(f'{time} o')
     for supply in cleaningSupplyGroup:
@@ -553,15 +581,6 @@ def drawBubbleMoneyAmount():
     textRect.topright = (windowWidth, 0)
     left, top = textRect.topleft
     DISPLAYSURF.blit(textSurface, (left, top))
-
-def drawBigWave():
-    global bubbleCoins, bubbleFont
-
-    textSurface = bubbleFont.render('BIG WAVE', True, WHITE)
-    textRect = textSurface.get_rect()
-    # textRect.topright = (windowWidth, 0)
-    # left, top = textRect.topleft
-    DISPLAYSURF.blit(textSurface, (600,600))
 
 def drawLives():
     global lives
@@ -634,11 +653,6 @@ def terminate():  # terminates game
     pygame.quit()
     sys.exit()
 
-def replay():
-    if defaults.lives == 0:
-        # time.sleep(3)
-        drawOpeningScreen()
-
 # projectile and bug collision WORKS
 def collision2():
     for bug in enemy_sprites:
@@ -651,7 +665,7 @@ def collision2():
 
 
 def mainGame():
-    global DISPLAYSURF, gameLevel, frames, curr_time, bugEnterAry
+    global DISPLAYSURF, gameLevel, frames, curr_time, bugEnterAry, gameMessageOn, currMessage
 
     clicked = False
 
@@ -680,9 +694,7 @@ def mainGame():
 
         for event in pygame.event.get():
             collision2()
-
             if event.type == MOUSEBUTTONDOWN:
-
                 posX, posY = pygame.mouse.get_pos()
                 clicked = True
                 if gameLevel == 0:
@@ -716,7 +728,9 @@ def mainGame():
                     curr_time1000 = pygame.time.get_ticks()
                     timeSinceStart += 1000
 
+                    gameMessageOn = False
                     getBugsEntering(timeSinceStart)
+
                     proj(timeSinceStart)
                     removeExpiredBubbles()
                     updateSoapDispenserBubbles()
@@ -754,10 +768,9 @@ def mainGame():
 
                     bubbleCoinGroup.draw(DISPLAYSURF)
                     bubbleCoinGroup.update()
-                    text_sprites.draw(DISPLAYSURF)
-                    text_sprites.update()
 
-
+                    if gameMessageOn == True:
+                        gameMessage(currMessage)
 
                     #print(str(windowWidth))
                     #print(str(windowHeight))
