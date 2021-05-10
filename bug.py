@@ -104,7 +104,7 @@ class Ant(Bug):
 
     def __init__(self, x, y):
 
-        img = pygame.image.load('ant.png')
+        img = pygame.image.load('ant1.png')
         super().__init__(x, y, img, False)  # check out supremeBug.py to see what this initializes
 
         self.health = 13
@@ -120,7 +120,8 @@ class Ant(Bug):
 
     def moveBack(self):
         super().moveBack(self.defaultSpeed)
-class BigWave(pygame.sprite.Sprite):
+
+class GiantBug(Bug):
 
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
@@ -129,58 +130,19 @@ class BigWave(pygame.sprite.Sprite):
         scaleFactor = defaults.scaleFactorH
         if defaults.scaleFactorW < defaults.scaleFactorH:
             scaleFactor = defaults.scaleFactorW
-        self.health = 5
-        self.image = pygame.transform.scale(pygame.image.load("BIG-WAVE.png"), (400,300))
-
+        self.image = pygame.transform.scale(pygame.image.load("ant (1).png"), (400,600))
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
+        self.health = 13
+        self.speed = 6
+        self.defaultSpeed = 10
+        self.damage = 1
 
     def update(self):
-        self.rect.x -= 20
-        if (self.rect.x == (DISPLAYSURF.get_width()) / 4):
-            self.rect.x += 20
-            self.kill()
-class Entry(pygame.sprite.Sprite):
+        super().update(self.speed)
 
-    def __init__(self, x, y):
-        pygame.sprite.Sprite.__init__(self)
-        self.x = x
-        self.y = y
-        scaleFactor = defaults.scaleFactorH
-        if defaults.scaleFactorW < defaults.scaleFactorH:
-            scaleFactor = defaults.scaleFactorW
-        self.health = 5
-        self.image = pygame.transform.scale(pygame.image.load("Bugs-Are-Coming.png"), (400,300))
+    def damageCS(self, cleaningSupply):
+        cleaningSupply.health -= self.damage
 
-        self.rect = self.image.get_rect()
-        self.rect.center = (x, y)
-
-    def update(self):
-        self.rect.x -= 20
-        if (self.rect.x == (DISPLAYSURF.get_width()) / 4):
-            self.rect.x += 20
-            self.kill()
-        # if self.health == 0:
-        #     self.kill()
-class Final(pygame.sprite.Sprite):
-
-    def __init__(self, x, y):
-        pygame.sprite.Sprite.__init__(self)
-        self.x = x
-        self.y = y
-        scaleFactor = defaults.scaleFactorH
-        if defaults.scaleFactorW < defaults.scaleFactorH:
-            scaleFactor = defaults.scaleFactorW
-        self.health = 5
-        self.image = pygame.transform.scale(pygame.image.load("FINAL-WAVE.png"), (400,300))
-
-        self.rect = self.image.get_rect()
-        self.rect.center = (x, y)
-
-    def update(self):
-        self.rect.x -= 20
-        if (self.rect.x == (DISPLAYSURF.get_width()) / 4):
-            self.rect.x += 20
-            self.kill()
-        # if self.health == 0:
-        #     self.kill()
+    def moveBack(self):
+        super().moveBack(self.defaultSpeed)

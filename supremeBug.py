@@ -42,14 +42,13 @@ class Bug(pygame.sprite.Sprite):
             self.rect.x -= speed
 
         if (self.rect.x <= XMARG):
-            if defaults.lives >= 1:
+            if defaults.lives > 1:
                 defaults.lives -= 1
-            # else:
-            #     time.sleep(3)
-            #             #     pygame.quit()
-            #     sys.exit()
+            else:
+                time.sleep(3)
+                pygame.quit()
+                sys.exit()
             self.health = 0
-            print(defaults.lives)
         self.die()
 
     def die(self):

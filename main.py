@@ -342,6 +342,8 @@ def getBugRandomPos(bugName):
         return Ant(x, y)
     if bugName == 'ladybug':
         return LadyBug(x, y)
+    if bugName == 'giant':
+        return GiantBug(x, DISPLAYSURF.get_height()/2)
 
 
 
