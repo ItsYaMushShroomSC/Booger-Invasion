@@ -19,7 +19,7 @@ class Bullet(pygame.sprite.Sprite):
             scaleFactor = scaleFactorW
         self.health = 5
         if(type == 'spraydroplet'):
-            self.image = pygame.transform.scale(pygame.image.load("water.png"), (50,50))
+            self.image = pygame.transform.scale(pygame.image.load("waterdroplet.png"), (50,50))
             self.type = "spraydroplet"
         #self.image = pygame.transform.rotate(self.image, 90)
         if(type == 'icedroplet'):
@@ -30,6 +30,6 @@ class Bullet(pygame.sprite.Sprite):
 
     def update(self):
         if(self.type == "spraydroplet"):
-            self.rect.x += 20
+            self.rect.x += 25
         if(self.type == "icedroplet"):
             self.rect.x += 12
