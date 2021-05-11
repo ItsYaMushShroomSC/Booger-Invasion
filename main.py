@@ -72,6 +72,8 @@ bugEnterIndex = 0
 gameMessageOn = False
 currMessage = None
 
+logNum = 1
+
 # dictionary where (key: <name of cleaningsupply>, value: tuple(<order>, <price>))
 # @see https://www.w3schools.com/python/python_dictionaries.asp
 
@@ -571,6 +573,26 @@ def createProjectile(mx,my,type):
     return bullet
 
 
+def drawBackButton():
+    global bubbleFont
+
+    textSurface = bubbleFont.render('BACk bAbY', True, BLACK, WHITE)
+    textRect = textSurface.get_rect()
+    textRect.bottomright = (windowWidth, windowHeight)
+    left, top = textRect.topleft
+    DISPLAYSURF.blit(textSurface, (left, top))
+    return textRect
+
+def drawNextButton():
+    global bubbleFont
+
+    textSurface = bubbleFont.render('NeXT bAbY', True, BLACK, WHITE)
+    textRect = textSurface.get_rect()
+    textRect.bottomleft = (0, windowHeight)
+    left, top = textRect.topleft
+    DISPLAYSURF.blit(textSurface, (left, top))
+    return textRect
+
 def drawBackground():
     img = pygame.transform.smoothscale(pygame.image.load('bugsWorldBackground.jpg').convert_alpha(),
                                        (windowWidth, windowHeight))
@@ -728,6 +750,7 @@ def mainGame():
                 clicked = False
 
             if gameLevel == 0:
+                logNum = 1
                 drawOpeningScreen()
                 if clicked:
                     gameLevel = determineLevel(posX, posY)
@@ -796,6 +819,38 @@ def mainGame():
 
                     #print(str(windowWidth))
                     #print(str(windowHeight))
+
+            if gameLevel == 4:
+                objectiveImg = pygame.transform.smoothscale(pygame.image.load('objective.PNG'), (windowWidth, windowHeight))
+
+                DISPLAYSURF.blit(objectiveImg, (0, 0))
+                backButtonRect = drawBackButton()
+
+                if backButtonRect.collidepoint(posX, posY):
+                    gameLevel = 0
+
+
+            if gameLevel == 5:
+                print(str(logNum))
+                logImg = pygame.transform.smoothscale(pygame.image.load('log' + str(logNum) + '.PNG'),
+                                                            (windowWidth, windowHeight))
+
+                DISPLAYSURF.blit(logImg, (0, 0))
+                backButtonRect = drawBackButton()
+
+                if not logNum == 3:
+                    nextButtonRect = drawNextButton()
+
+                if backButtonRect.collidepoint(posX, posY):
+                    gameLevel = 0
+
+                if nextButtonRect.collidepoint(posX, posY):
+                    logNum += 1
+                    posX, posY = 0, 0
+
+
+
+
 
             if event.type == QUIT:
                 terminate()
