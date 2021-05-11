@@ -5,13 +5,13 @@ cockroach 12
 spider 16
 cockroach 20
 spider 22
-cockroach 26
+ladybug 26
 cockroach 30
 spider 30
 ladybug 35
 cockroach 36
 spider 39
-cockroach 42
+ant 42
 cockroach 45
 big_wave 49
 big_wave 50
@@ -28,3 +28,4 @@ ant 102
 ladybug 110
 wasp 111
 ladybug 120
+giant 125
