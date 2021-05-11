@@ -844,7 +844,7 @@ def mainGame():
                 if backButtonRect.collidepoint(posX, posY):
                     gameLevel = 0
 
-                if nextButtonRect.collidepoint(posX, posY):
+                if nextButtonRect.collidepoint(posX, posY) and not logNum == 3:
                     logNum += 1
                     posX, posY = 0, 0
 
