@@ -87,8 +87,8 @@ seedDictGroup2 = {1: ("doublesoapdispenser", 150, 8000), 2: ("doublespraybottle"
 
 seedDictGroup3 = {1: ("icebottle", 200, 8000), 2: ("thiccsponge", 300, 12000),
             3: ("doublesoapdispenser", 150, 8000), 4: ("flypaper", 25, 10000),
-            5: ("bowlcleaner", 200, 7000), 6: ('toiletplunger', 150, 9000),
-            7: ("doublesoapdispenser", 150, 8000), 8:("broom", 50, 9000), 9: ("acidpool", 150, 12000)}
+            5: ("doublespraybottle", 200, 5000), 6: ('toiletplunger', 150, 9000),
+            7: ("bleach", 350, 10000), 8:("broom", 50, 9000), 9: ("acidpool", 150, 12000)}
 
 currSeedDictGroup = seedDictGroup1
 
@@ -108,6 +108,16 @@ bubbleCoinGroup = pygame.sprite.Group()
 # Non-Class Methods:
 
 # the dictionary will be read and the appropriate img will be
+
+def activateBleach():
+    for cleaningSupply in cleaningSupplyGroup:
+        for bug in enemy_sprites:
+            if cleaningSupply.name == "bleach":
+                for bug in enemy_sprites:
+                    if(bug.row == cleaningSupply.y) and not bug.name == 'giantbug':
+                        print("bleach")
+                        bug.health = 0
+                cleaningSupply.health = 0
 
 def gameMessage(message):
     global gameLevel, bubbleFont, gameMessageOn, currMessage
@@ -331,6 +341,14 @@ def readFile(): # opens txt note and adds letters to gameAry which is '2D'
         level1 = open('Level1BugTimes.txt')
         for line in level1:
             bugEnterAry.append(line.rstrip().split(' '))
+    if gameLevel == 2:
+        level2 = open('Level2BugTimes.txt')
+        for line in level2:
+            bugEnterAry.append(line.rstrip().split(' '))
+    if gameLevel == 3:
+        level3 = open('Level3BugTimes.txt')
+        for line in level3:
+            bugEnterAry.append(line.rstrip().split(' '))
 
 def getBugRandomPos(bugName):
     choices = [DISPLAYSURF.get_height() / 2, DISPLAYSURF.get_height() / 2 - 121, DISPLAYSURF.get_height() / 2 - 242,
@@ -339,18 +357,29 @@ def getBugRandomPos(bugName):
     x = 3 * DISPLAYSURF.get_width() / 4
     y = random.choice(choices)
 
+    if y == DISPLAYSURF.get_height() / 2:
+        row = 2
+    if y == DISPLAYSURF.get_height() / 2 - 121:
+        row = 1
+    if y == DISPLAYSURF.get_height() / 2 - 242:
+        row = 0
+    if y == DISPLAYSURF.get_height() / 2 + 121:
+        row = 3
+    if y == DISPLAYSURF.get_height() / 2 + 242:
+        row = 4
+
     if bugName == 'spider':
-        return Spider(x, y)
+        return Spider(x, y, row)
     if bugName == 'wasp':
-        return Wasp(x, y)
+        return Wasp(x, y, row)
     if bugName == 'cockroach':
-        return Cockroach(x, y)
+        return Cockroach(x, y, row)
     if bugName == 'ant':
-        return Ant(x, y)
+        return Ant(x, y, row)
     if bugName == 'ladybug':
-        return LadyBug(x, y)
+        return LadyBug(x, y, row)
     if bugName == 'giant':
-        return GiantBug(x, DISPLAYSURF.get_height()/2)
+        return GiantBug(x, DISPLAYSURF.get_height()/2, row)
 
 
 
@@ -423,6 +452,8 @@ def getImg(name):
         return pygame.image.load('acidpool.PNG')
     if name == "broom":
         return pygame.image.load('Broom.png')
+    if name == "bleach":
+        return pygame.image.load('bleach.png')
 
 
 
@@ -485,6 +516,11 @@ def addCleaningSupply(posX, posY, name):
         setTile(posX, posY, cs)
     if name == "broom":
         cs = Broom(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
+        cleaningSupplyGroup.add_internal(cs)
+        notAcidPoolGroup.add_internal(cs)
+        setTile(posX, posY, cs)
+    if name == "bleach":
+        cs = Bleach(posX, posY, XMARGIN, YMARGIN, tileWidth, tileHeight)
         cleaningSupplyGroup.add_internal(cs)
         notAcidPoolGroup.add_internal(cs)
         setTile(posX, posY, cs)
@@ -779,6 +815,7 @@ def mainGame():
                     proj(timeSinceStart)
                     removeExpiredBubbles()
                     updateSoapDispenserBubbles()
+                    activateBleach()
 
                     sendDamage()
 

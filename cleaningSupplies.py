@@ -359,6 +359,26 @@ class Broom(CleaningSupply):
         bug.moveBack()
 
 
+class Bleach(CleaningSupply):
+
+    def __init__(self, row, column, XMARG, YMARG, tileW, tileH):
+        super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("bleach.png"), (tileW-2, tileH-2)), XMARG, YMARG, tileW, tileH)
+        self.name = 'bleach'
+
+        self.cooldown = 3000
+        self.health = 1
+        self.startcooldownframes = self.cooldown
+
+    def updateHealth(self, bugDamage, DISPLAYSURF):
+        self.health -= bugDamage
+
+        font = pygame.font.Font('cloudBubbleFont.ttf', 32 * defaults.scaleFactorH)
+        textSurface = font.render('-' + str(bugDamage), True, defaults.RED)
+        textRect = textSurface.get_rect()
+        textRect.midright = self.rect.midright
+        left, top = textRect.topleft
+        DISPLAYSURF.blit(textSurface, (left, top))
+        pygame.display.update()
 
 
 

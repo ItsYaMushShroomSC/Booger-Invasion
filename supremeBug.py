@@ -15,9 +15,10 @@ defaults.setMargins()
 XMARG = defaults.XMARGIN
 YMARG = defaults.YMARGIN
 
+
 class Bug(pygame.sprite.Sprite):
 
-    def __init__(self, x, y, img, shouldFlip):
+    def __init__(self, x, y, row, img, shouldFlip):
         self.x = x
         self.y = y
 
@@ -33,7 +34,7 @@ class Bug(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
 
-        self.frozen = False # WHETHER OR NOt the bug is frozen because there's a cleaning supply obstructing its path
+        self.frozen = False  # WHETHER OR NOt the bug is frozen because there's a cleaning supply obstructing its path
 
     def update(self, speed):
         global XMARG, lives
@@ -55,9 +56,8 @@ class Bug(pygame.sprite.Sprite):
         if self.health <= 0:
             enemy_sprites.remove_internal(self)
 
-    def moveBack(self, defSpeed):
-
-        self.rect.x = defaults.windowWidth - XMARG
-
-
-
+    def moveBack(self, defSpeed, isGiant):
+        if isGiant == False:
+            self.rect.x = defaults.windowWidth - XMARG
+        if isGiant == True:
+            self.rect.x += 121*3
