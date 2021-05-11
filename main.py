@@ -632,12 +632,12 @@ def drawOpeningScreen():
     openScreenRects.append((textRect))
     textRect.midtop = (windowWidth / 2, windowHeight / 7 + (fontSize * 6))
     DISPLAYSURF.blit(textSurface, textRect)
-    textSurface = bugFont.render('Level Four', True, BLACK, CYAN)
+    textSurface = bugFont.render('Objective', True, BLACK, CYAN)
     textRect = textSurface.get_rect()
     openScreenRects.append((textRect))
     textRect.midtop = (windowWidth / 2, windowHeight / 7 + (fontSize * 8))
     DISPLAYSURF.blit(textSurface, textRect)
-    textSurface = bugFont.render('Level Five', True, BLACK, PINK)
+    textSurface = bugFont.render('Cleaning Supply Log', True, BLACK, PINK)
     textRect = textSurface.get_rect()
     openScreenRects.append((textRect))
     textRect.midtop = (windowWidth / 2, windowHeight / 7 + (fontSize * 10))
@@ -781,11 +781,7 @@ def mainGame():
             if gameLevel == 3:
                 drawBackground()
 
-            if gameLevel == 4:
-                drawBackground()
 
-            if gameLevel == 5:
-                drawBackground()
 
             if event.type == QUIT:
                 terminate()
