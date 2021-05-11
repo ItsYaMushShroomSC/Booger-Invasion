@@ -75,15 +75,20 @@ currMessage = None
 # dictionary where (key: <name of cleaningsupply>, value: tuple(<order>, <price>))
 # @see https://www.w3schools.com/python/python_dictionaries.asp
 
+
+
 seedDictGroup1 = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000),
-            3: ("soapdispenser", 50, 5000), 4: ("flypaper", 25, 10000),
+            3: ("soapdispenser", 50, 5000), 4: ('toiletplunger', 150, 9000)}
+
+seedDictGroup2 = {1: ("doublesoapdispenser", 150, 8000), 2: ("doublespraybottle", 200, 5000), 3: ("thiccsponge", 300, 12000),
+                  4: ('toiletplunger', 150, 9000), 5: ("flypaper", 25, 10000), 6: ("acidpool", 150, 12000)}
+
+seedDictGroup3 = {1: ("icebottle", 200, 8000), 2: ("thiccsponge", 300, 12000),
+            3: ("doublesoapdispenser", 150, 8000), 4: ("flypaper", 25, 10000),
             5: ("bowlcleaner", 200, 7000), 6: ('toiletplunger', 150, 9000),
             7: ("doublesoapdispenser", 150, 8000), 8:("broom", 50, 9000), 9: ("acidpool", 150, 12000)}
 
-seedDictGroup2 = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000),
-            3: ("soapdispenser", 50, 5000), 4: ("flypaper", 25, 10000),
-            5: ("bowlcleaner", 200, 7000), 6: ('toiletplunger', 150, 9000),
-            7: ("icebottle", 200, 8000), 8:("doublespraybottle", 200, 5000), 9: ("thiccsponge", 300, 12000)}
+currSeedDictGroup = seedDictGroup1
 
 seedInventoryRects = [] # seed rects for mouse collision
 
@@ -287,7 +292,7 @@ def getSeedSelected(mouseX, mouseY, seedSelected, dictIndex): # seedSelected is 
     for seedInventoryRect in seedInventoryRects:
 
         if seedInventoryRect.collidepoint((mouseX, mouseY)):
-            values = seedDictGroup1.get(index)
+            values = currSeedDictGroup.get(index)
             seedSelected, price, noOneCares = values
             dictIndex = index
 
@@ -357,7 +362,7 @@ def getCleaningSupplySeed(index):
     return None
 
 def addCleaningSupplySeeds():
-    global cleaningSupplySeedsGroup, seedDictGroup1
+    global cleaningSupplySeedsGroup, currSeedDictGroup
 
     img = pygame.image.load('SeedPacketBackground.png')
     w, h = img.get_width()*scaleFactorH, img.get_height()*scaleFactorH
@@ -367,15 +372,23 @@ def addCleaningSupplySeeds():
 
     for i in range(1, 10):
 
-        if len(seedDictGroup1) >= i:
-            name, price, reloadTime = seedDictGroup1.get(i)
+        if len(currSeedDictGroup) >= i:
+            name, price, reloadTime = currSeedDictGroup.get(i)
             img = pygame.image.load('SeedPacketBackground' + str(price) + '.png')
+
+            w, h = img.get_width() * scaleFactorH, img.get_height() * scaleFactorH
+            img = pygame.transform.smoothscale(img, (w, h))
+
+        if len(currSeedDictGroup) < i:
+            #name, price, reloadTime = currSeedDictGroup.get(i)
+            img = pygame.image.load('SeedPacketBackground.png')
+
             w, h = img.get_width() * scaleFactorH, img.get_height() * scaleFactorH
             img = pygame.transform.smoothscale(img, (w, h))
 
         cleaningSupplyBackGrounds.add_internal(CleaningSupplySeed(img, 'bg', 1, i, 1, XMARGIN, windowWidth, windowHeight, True))
 
-    for order, values in seedDictGroup1.items():
+    for order, values in currSeedDictGroup.items():
         name, price, restockTime = values
         img = pygame.transform.smoothscale(getImg(name), (w, h))
         supplySeed = CleaningSupplySeed(img, name, price, order, restockTime, XMARGIN, windowWidth, windowHeight, False)
@@ -594,13 +607,19 @@ def drawLives():
 
 
 def determineLevel(mousePosX, mousePosY):
-    global openScreenRects
+    global openScreenRects, currSeedDictGroup
 
     if openScreenRects[0].collidepoint(mousePosX, mousePosY):
+        currSeedDictGroup = seedDictGroup1
+        addCleaningSupplySeeds()
         return 1
     elif openScreenRects[1].collidepoint(mousePosX, mousePosY):
+        currSeedDictGroup = seedDictGroup2
+        addCleaningSupplySeeds()
         return 2
     elif openScreenRects[2].collidepoint(mousePosX, mousePosY):
+        currSeedDictGroup = seedDictGroup3
+        addCleaningSupplySeeds()
         return 3
     elif openScreenRects[3].collidepoint(mousePosX, mousePosY):
         return 4
@@ -667,7 +686,7 @@ def collision2():
 
 
 def mainGame():
-    global DISPLAYSURF, gameLevel, frames, curr_time, bugEnterAry, gameMessageOn, currMessage
+    global DISPLAYSURF, gameLevel, frames, curr_time, bugEnterAry, gameMessageOn, currMessage, currSeedDictGroup, seedDictGroup1, seedDictGroup2, seedDictGroup3
 
     clicked = False
 
@@ -676,7 +695,7 @@ def mainGame():
     my_eventTime = USEREVENT + 1
     pygame.time.set_timer(my_eventTime, 150)
 
-    addCleaningSupplySeeds()
+    #addCleaningSupplySeeds()
 
 
     seedSelected = None
@@ -713,7 +732,8 @@ def mainGame():
                 if clicked:
                     gameLevel = determineLevel(posX, posY)
 
-            if gameLevel == 1:
+            if gameLevel == 1 or gameLevel == 2 or gameLevel == 3:
+
                 readFile()
 
                 if clicked == True:
@@ -776,14 +796,6 @@ def mainGame():
 
                     #print(str(windowWidth))
                     #print(str(windowHeight))
-
-            if gameLevel == 2:
-                drawBackground()
-
-            if gameLevel == 3:
-                drawBackground()
-
-
 
             if event.type == QUIT:
                 terminate()
