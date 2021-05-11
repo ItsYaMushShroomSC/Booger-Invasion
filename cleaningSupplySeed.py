@@ -16,7 +16,9 @@ class CleaningSupplySeed(pygame.sprite.Sprite):
     def __init__(self, img, name, price, order, restockTime, XMARG, windowW, windowH, isBackground):
         global XMARGIN, windowWidth, windowHeight
         # order is a number that represents where the seed is in order from (1-9) top to bottom
+
         self.image = img
+
         self.name = name
         self.price = price
         self.rect = img.get_rect()
