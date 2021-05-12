@@ -99,7 +99,7 @@ cleaningSupplyBackGrounds = pygame.sprite.Group()
 cleaningSupplySeedsGroup = pygame.sprite.Group()
 
 # Money currency
-bubbleCoins = 1000
+bubbleCoins = 0
 bubbleCoinGroup = pygame.sprite.Group()
 
 # Classes Are in other .py files
@@ -327,6 +327,9 @@ def getBugsEntering(timeElapsed): # adds the bugs entering the screen
 
             if not buggy == None:
                 enemy_sprites.add_internal(buggy)
+            if bug == 'terminate':
+                pygame.time.wait(3000)
+                terminate()
             else:
                 gameMessageOn = True
                 currMessage = bug
@@ -739,8 +742,8 @@ def collision2():
             if pygame.sprite.collide_rect(bug, bullet):
                 if(bullet.type == "icedroplet" and bug.speed > 5):
                     bug.speed -= 5
+                bug.health -= bullet.damage
                 bullet.kill()
-                bug.health -= 1
 
 
 def mainGame():

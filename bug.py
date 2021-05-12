@@ -20,8 +20,8 @@ class Spider(Bug):
         super().__init__(x, y, row, img, False) # check out supremeBug.py to see what this initializes
         self.name = 'spider'
         self.health = 5
-        self.speed = 8
-        self.defaultSpeed = 8
+        self.speed = 6
+        self.defaultSpeed = 6
         self.damage = 1
         self.row = row
 
@@ -41,9 +41,9 @@ class Cockroach(Bug):
         img = pygame.image.load('cockroach.png')
         super().__init__(x, y, row, img, False)  # check out supremeBug.py to see what this initializes
         self.name = 'cochroach'
-        self.health = 7
-        self.speed = 10
-        self.defaultSpeed = 10
+        self.health = 8
+        self.speed = 6
+        self.defaultSpeed = 6
         self.damage = 1
         self.row = row
 
@@ -127,8 +127,8 @@ class GiantBug(Bug):
     def __init__(self, x, y, row):
         pygame.sprite.Sprite.__init__(self)
         self.name = 'giantbug'
-        self.x = x
-        self.y = y
+
+        super().__init__(x, y, row, pygame.transform.scale(pygame.image.load("ant (1).png"), (400,600)), False)  # check out supremeBug.py to see what this initializes
         scaleFactor = defaults.scaleFactorH
         if defaults.scaleFactorW < defaults.scaleFactorH:
             scaleFactor = defaults.scaleFactorW
