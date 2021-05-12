@@ -1,14 +1,8 @@
 Bugs_Are_Coming 1
 Bugs_Are_Coming 2
-spider 4
-cockroach 12
 spider 16
-cockroach 20
 spider 22
-cockroach 26
 cockroach 30
-spider 30
-ladybug 35
 cockroach 36
 spider 39
 cockroach 42
@@ -28,3 +22,7 @@ ant 102
 ladybug 110
 wasp 111
 ladybug 120
+Winner 130
+Winner 131
+Winner 132
+terminate 135
