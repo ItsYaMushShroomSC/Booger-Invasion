@@ -746,6 +746,28 @@ def collision2():
                 bullet.kill()
 
 
+def end_screen():
+    global DISPLAYSURF
+    running = True
+    while running:
+
+        for event in pygame.event.get():
+
+            if event.type == KEYDOWN:
+
+                if event.key == K_ESCAPE:
+                    running = False
+
+            elif event.type == QUIT:
+                running = False
+
+
+
+        # Fill the screen with black
+        DISPLAYSURF.fill((0, 0, 0))
+        pygame.display.update()
+
+
 def mainGame():
     global DISPLAYSURF, gameLevel, frames, curr_time, bugEnterAry, gameMessageOn, currMessage, currSeedDictGroup, seedDictGroup1, seedDictGroup2, seedDictGroup3
 
@@ -788,6 +810,8 @@ def mainGame():
             else:
                 clicked = False
 
+
+
             if gameLevel == 0:
                 logNum = 1
                 drawOpeningScreen()
@@ -797,7 +821,8 @@ def mainGame():
             if gameLevel == 1 or gameLevel == 2 or gameLevel == 3:
 
                 readFile()
-
+                if defaults.lives <= 1:
+                    end_screen()
                 if clicked == True:
                     dictIndex, seedSelected = getSeedSelected(posX, posY, seedSelected, dictIndex)
                     seedSelected = addSelectedCleaningSupply(dictIndex, seedSelected, posX, posY)

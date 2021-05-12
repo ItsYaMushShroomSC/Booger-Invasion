@@ -2,10 +2,11 @@ import pygame, time
 import sys
 from pygame.locals import *
 import defaults
+
 import random
 
 DISPLAYSURF = defaults.DISPLAYSURF
-
+END_GAME = defaults.END_GAME
 choices = [DISPLAYSURF.get_height() / 2, DISPLAYSURF.get_height() / 2 - 121, DISPLAYSURF.get_height() / 2 - 242,
            DISPLAYSURF.get_height() / 2 + 121, DISPLAYSURF.get_height() / 2 + 242]
 
@@ -37,7 +38,7 @@ class Bug(pygame.sprite.Sprite):
         self.frozen = False  # WHETHER OR NOt the bug is frozen because there's a cleaning supply obstructing its path
 
     def update(self, speed):
-        global XMARG, lives
+        global XMARG, lives, END_GAME
 
         if self.frozen == False:
             self.rect.x -= speed
@@ -46,9 +47,11 @@ class Bug(pygame.sprite.Sprite):
             if defaults.lives > 1:
                 defaults.lives -= 1
             else:
-                time.sleep(3)
-                pygame.quit()
-                sys.exit()
+                # time.sleep(3)
+                # pygame.quit()
+                END_GAME = True
+                print("END GAME")
+                # sys.exit()
             self.health = 0
         self.die()
 
@@ -61,3 +64,6 @@ class Bug(pygame.sprite.Sprite):
             self.rect.x = defaults.windowWidth - XMARG
         if isGiant == True:
             self.rect.x += 121*3
+
+
+

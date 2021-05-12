@@ -15,6 +15,8 @@ scaleFactorH = int(windowHeight / 864)
 XMARGIN = 200 * scaleFactorW
 YMARGIN = 100 * scaleFactorH
 
+END_GAME = False
+
 game_l = 0
 # Text Font:
 fontSize = 54 * scaleFactorH
