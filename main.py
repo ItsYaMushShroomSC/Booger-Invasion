@@ -883,7 +883,7 @@ def mainGame():
 
             if gameLevel == 5:
                 print(str(logNum))
-                logImg = pygame.transform.smoothscale(pygame.image.load('log' + str(logNum) + '.PNG'),
+                logImg = pygame.transform.smoothscale(pygame.image.load('plantlog' + str(logNum) + '.png'),
                                                             (windowWidth, windowHeight))
 
                 DISPLAYSURF.blit(logImg, (0, 0))
