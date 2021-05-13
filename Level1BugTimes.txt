@@ -22,7 +22,5 @@ ant 102
 ladybug 110
 wasp 111
 ladybug 120
-Winner 130
-Winner 131
-Winner 132
-terminate 135
+near_end 125
+
