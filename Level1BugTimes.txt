@@ -23,4 +23,3 @@ ladybug 110
 wasp 111
 ladybug 120
 near_end 125
-
