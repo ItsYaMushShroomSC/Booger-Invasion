@@ -73,6 +73,8 @@ gameMessageOn = False
 currMessage = None
 
 logNum = 1
+winTimeCount = 0
+nearEnd = False
 
 # dictionary where (key: <name of cleaningsupply>, value: tuple(<order>, <price>))
 # @see https://www.w3schools.com/python/python_dictionaries.asp
@@ -312,11 +314,20 @@ def getSeedSelected(mouseX, mouseY, seedSelected, dictIndex): # seedSelected is 
 
     return dictIndex, seedSelected # seedSelected and price return None when no seedpackets were selected
 
+
 def getBugsEntering(timeElapsed): # adds the bugs entering the screen
     # timeElapsed is seconds from since the game started
-    global bugEnterIndex, gameMessageOn, currMessage
+    global bugEnterIndex, gameMessageOn, currMessage, nearEnd, winTimeCount
 
     index = 0
+
+    if nearEnd == True and len(enemy_sprites) == 0:
+        gameMessageOn = True
+        currMessage = 'Winner'
+        winTimeCount += 1
+    if winTimeCount >= 3:
+        terminate()
+
     for i in range(len(bugEnterAry)):
         bug = str(bugEnterAry[i][0])
         time = int(bugEnterAry[i][1]) * 1000
@@ -325,12 +336,12 @@ def getBugsEntering(timeElapsed): # adds the bugs entering the screen
             bugEnterIndex += 1
             buggy = getBugRandomPos(bug)
 
+
             if not buggy == None:
                 enemy_sprites.add_internal(buggy)
-            if bug == 'terminate':
-                pygame.time.wait(3000)
-                terminate()
-            else:
+            if bug == 'near_end':
+                nearEnd = True
+            if buggy == None and not bug == 'near_end':
                 gameMessageOn = True
                 currMessage = bug
 

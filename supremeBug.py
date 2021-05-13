@@ -60,4 +60,4 @@ class Bug(pygame.sprite.Sprite):
         if isGiant == False:
             self.rect.x = defaults.windowWidth - XMARG
         if isGiant == True:
-            self.rect.x += 121*3
+            self.rect.x += 121
