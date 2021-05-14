@@ -175,8 +175,12 @@ def sendDamage(): # every 1 second senddamage should be caleld and damages the c
                 if not cleaningSupply.name == 'toiletplunger' and not cleaningSupply.name == 'acidpool' and not cleaningSupply.name == 'broom':
                     cleaningSupply.updateHealth(bug.damage, DISPLAYSURF)
 
-            if cleaningSupply.name == 'flypaper' and cleaningSupply.shouldRemove == True and pygame.sprite.collide_mask(cleaningSupply, bug):
+            if cleaningSupply.name == 'flypaper' and cleaningSupply.shouldRemove == True and not bug.name == 'giantbug' and pygame.sprite.collide_mask(cleaningSupply, bug):
                 enemy_sprites.remove_internal(bug)
+
+            if cleaningSupply.name == 'flypaper' and cleaningSupply.shouldRemove == True and bug.name == 'giantbug' and pygame.sprite.collide_mask(
+                    cleaningSupply, bug):
+                bug.health -= 5
 
             if cleaningSupply.name == 'acidpool' and pygame.sprite.collide_mask(cleaningSupply, bug):
                 cleaningSupply.damageBugOnAcid(DISPLAYSURF, bug)
@@ -194,6 +198,8 @@ def sendDamage(): # every 1 second senddamage should be caleld and damages the c
             setTile(cleaningSupply.x, cleaningSupply.y, None)
             cleaningSupplyGroup.remove_internal(cleaningSupply)
             notAcidPoolGroup.remove_internal(cleaningSupply)
+
+
 
 
 def checkBugCleaningSupplyCollision():
@@ -325,7 +331,7 @@ def getBugsEntering(timeElapsed): # adds the bugs entering the screen
         gameMessageOn = True
         currMessage = 'Winner'
         winTimeCount += 1
-    if winTimeCount >= 3:
+    if winTimeCount >= 5:
         terminate()
 
     for i in range(len(bugEnterAry)):
@@ -706,7 +712,7 @@ def drawOpeningScreen():
 
     DISPLAYSURF.fill(WHITE)
 
-    textSurface = cleaningFont.render('Cleaning Supplies Vs. Bugs:', True, WHITE, BLACK)
+    textSurface = cleaningFont.render('Booger Invasion', True, WHITE, BLACK)
     textRect = textSurface.get_rect()
     textRect.midtop = (windowWidth / 2, windowHeight / 8 + (fontSize))
     DISPLAYSURF.blit(textSurface, textRect)
