@@ -138,7 +138,7 @@ class GiantBug(Bug):
         self.health = 100
         self.speed = 6
         self.defaultSpeed = 6
-        self.damage = 1
+        self.damage = 2
         self.row = row
 
     def update(self):

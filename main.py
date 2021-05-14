@@ -117,7 +117,6 @@ def activateBleach():
             if cleaningSupply.name == "bleach":
                 for bug in enemy_sprites:
                     if(bug.row == cleaningSupply.y) and not bug.name == 'giantbug':
-                        print("bleach")
                         bug.health = 0
                 cleaningSupply.health = 0
 
@@ -295,8 +294,7 @@ def addSelectedCleaningSupply(dictKey, seedSelected, posX, posY):
                 for col in range(9):
 
                     if floorGridRects[col][row].collidepoint((posX, posY)) and floorGrid[col][row] == None and supplySeed.inStock:
-                        #print(str(col))
-                        #print(str(row))
+
                         supplySeed.resetRestockTime()
                         bubbleCoins -= supplySeed.price
                         addCleaningSupply(col, row, seedSelected)
@@ -604,7 +602,6 @@ def drawTiles(shouldDraw):
 
 #generates projectile every 5 seconds
 def proj(time):
-    print(f'{time} o')
     for supply in cleaningSupplyGroup:
 
         if (time / 1000 ) % 3 == 0 and supply.name == "spraybottle" :
@@ -874,8 +871,6 @@ def mainGame():
                     if gameMessageOn == True:
                         gameMessage(currMessage)
 
-                    #print(str(windowWidth))
-                    #print(str(windowHeight))
 
             if gameLevel == 4:
                 objectiveImg = pygame.transform.smoothscale(pygame.image.load('objective.PNG'), (windowWidth, windowHeight))
@@ -888,7 +883,7 @@ def mainGame():
 
 
             if gameLevel == 5:
-                print(str(logNum))
+
                 logImg = pygame.transform.smoothscale(pygame.image.load('plantlog' + str(logNum) + '.png'),
                                                             (windowWidth, windowHeight))
 
