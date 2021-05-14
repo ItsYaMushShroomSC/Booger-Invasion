@@ -85,7 +85,7 @@ seedDictGroup1 = {1: ("spraybottle", 100, 5000), 2: ("sponge", 50, 8000),
             3: ("soapdispenser", 50, 5000), 4: ('toiletplunger', 150, 9000)}
 
 seedDictGroup2 = {1: ("doublesoapdispenser", 150, 8000), 2: ("doublespraybottle", 200, 5000), 3: ("thiccsponge", 300, 12000),
-                  4: ('toiletplunger', 150, 9000), 5: ("flypaper", 25, 10000), 6: ("acidpool", 150, 12000)}
+                  4: ('toiletplunger', 150, 9000), 5: ("flypaper", 25, 10000), 6: ("acidpool", 150, 12000), 7: ("spraybottle", 100, 5000)}
 
 seedDictGroup3 = {1: ("icebottle", 200, 8000), 2: ("thiccsponge", 300, 12000),
             3: ("doublesoapdispenser", 150, 8000), 4: ("flypaper", 25, 10000),
@@ -254,7 +254,7 @@ def removeClickedBubbles(mouseX, mouseY):
             bubbleCoins += 50
         if coin.rect.collidepoint((mouseX, mouseY)) == True and coin.isDouble == True:
             bubbleCoinGroup.remove_internal(coin)
-            bubbleCoins += 100
+            bubbleCoins += 75
 
 
 def removeExpiredBubbles():
@@ -266,7 +266,7 @@ def removeExpiredBubbles():
             bubbleCoins += 50
         if coin.getShouldRemove() == True and coin.isDouble == True:
             bubbleCoinGroup.remove_internal(coin)
-            bubbleCoins += 100
+            bubbleCoins += 75
 
 
 
@@ -413,7 +413,7 @@ def getCleaningSupplySeed(index):
 def addCleaningSupplySeeds():
     global cleaningSupplySeedsGroup, currSeedDictGroup
 
-    img = pygame.image.load('SeedPacketBackground.png')
+    img = pygame.image.load('SeedPacketBackground.png').convert_alpha()
     w, h = img.get_width()*scaleFactorH, img.get_height()*scaleFactorH
     img = pygame.transform.smoothscale(img, (w, h))
 
@@ -423,14 +423,14 @@ def addCleaningSupplySeeds():
 
         if len(currSeedDictGroup) >= i:
             name, price, reloadTime = currSeedDictGroup.get(i)
-            img = pygame.image.load('SeedPacketBackground' + str(price) + '.png')
+            img = pygame.image.load('SeedPacketBackground' + str(price) + '.png').convert_alpha()
 
             w, h = img.get_width() * scaleFactorH, img.get_height() * scaleFactorH
             img = pygame.transform.smoothscale(img, (w, h))
 
         if len(currSeedDictGroup) < i:
             #name, price, reloadTime = currSeedDictGroup.get(i)
-            img = pygame.image.load('SeedPacketBackground.png')
+            img = pygame.image.load('SeedPacketBackground.png').convert_alpha()
 
             w, h = img.get_width() * scaleFactorH, img.get_height() * scaleFactorH
             img = pygame.transform.smoothscale(img, (w, h))
@@ -447,31 +447,31 @@ def addCleaningSupplySeeds():
 def getImg(name):
 
     if name == "spraybottle":
-        return pygame.image.load('spraybottle.PNG')
+        return pygame.image.load('spraybottle.PNG').convert_alpha()
     if name == 'doublespraybottle':
-        return pygame.image.load('doublespraybottle.PNG')
+        return pygame.image.load('doublespraybottle.PNG').convert_alpha()
     if name == "sponge":
-        return pygame.image.load('sponge.PNG')
+        return pygame.image.load('sponge.PNG').convert_alpha()
     if name == "thiccsponge":
-        return pygame.image.load('doublesponge.PNG')
+        return pygame.image.load('doublesponge.PNG').convert_alpha()
     if name == "soapdispenser":
-        return pygame.image.load('soapdispenser.PNG')
+        return pygame.image.load('soapdispenser.PNG').convert_alpha()
     if name == "doublesoapdispenser":
-        return pygame.image.load('douplesoapdispenser.PNG')
+        return pygame.image.load('douplesoapdispenser.PNG').convert_alpha()
     if name == "flypaper":
-        return pygame.image.load('flypaper.PNG')
+        return pygame.image.load('flypaper.PNG').convert_alpha()
     if name == "bowlcleaner":
-        return pygame.image.load('bowlcleaner.png')
+        return pygame.image.load('bowlcleaner.png').convert_alpha()
     if name == "toiletplunger":
-        return pygame.image.load('PlungerUpright.png.png')
+        return pygame.image.load('PlungerUpright.png.png').convert_alpha()
     if name == "icebottle":
-        return pygame.image.load('icespraybottle.PNG')
+        return pygame.image.load('icespraybottle.PNG').convert_alpha()
     if name == "acidpool":
-        return pygame.image.load('acidpool.PNG')
+        return pygame.image.load('acidpool.PNG').convert_alpha()
     if name == "broom":
-        return pygame.image.load('Broom.png')
+        return pygame.image.load('Broom.png').convert_alpha()
     if name == "bleach":
-        return pygame.image.load('bleach.png')
+        return pygame.image.load('bleach.png').convert_alpha()
 
 
 
@@ -574,9 +574,9 @@ def drawTiles(shouldDraw):
     if scaleFactorW < scaleFactorH:
         scaleFactor = scaleFactorW
 
-    img1 = pygame.transform.smoothscale(pygame.image.load('Floor Tile-1.png.png'),
+    img1 = pygame.transform.smoothscale(pygame.image.load('Floor Tile-1.png.png').convert_alpha(),
                                         (100 * scaleFactor, 121 * scaleFactor))
-    img2 = pygame.transform.smoothscale(pygame.image.load('Floor Tile-2.png.png'),
+    img2 = pygame.transform.smoothscale(pygame.image.load('Floor Tile-2.png.png').convert_alpha(),
                                         (100 * scaleFactor, 121 * scaleFactor))
     img = img1
     tileWidth, tileHeight = (100 * scaleFactor), (121 * scaleFactor)
@@ -753,7 +753,7 @@ def terminate():  # terminates game
 def collision2():
     for bug in enemy_sprites:
         for bullet in projectileGroup:
-            if pygame.sprite.collide_rect(bug, bullet):
+            if pygame.sprite.collide_mask(bug, bullet):
                 if(bullet.type == "icedroplet" and bug.speed > 5):
                     bug.speed -= 5
                 bug.health -= bullet.damage
@@ -873,7 +873,7 @@ def mainGame():
 
 
             if gameLevel == 4:
-                objectiveImg = pygame.transform.smoothscale(pygame.image.load('objective.PNG'), (windowWidth, windowHeight))
+                objectiveImg = pygame.transform.smoothscale(pygame.image.load('objective.PNG').convert_alpha(), (windowWidth, windowHeight))
 
                 DISPLAYSURF.blit(objectiveImg, (0, 0))
                 backButtonRect = drawBackButton()
@@ -884,7 +884,7 @@ def mainGame():
 
             if gameLevel == 5:
 
-                logImg = pygame.transform.smoothscale(pygame.image.load('plantlog' + str(logNum) + '.png'),
+                logImg = pygame.transform.smoothscale(pygame.image.load('plantlog' + str(logNum) + '.png').convert_alpha(),
                                                             (windowWidth, windowHeight))
 
                 DISPLAYSURF.blit(logImg, (0, 0))
