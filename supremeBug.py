@@ -34,6 +34,8 @@ class Bug(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
 
+        self.mask = pygame.mask.from_surface(self.image)
+
         self.frozen = False  # WHETHER OR NOt the bug is frozen because there's a cleaning supply obstructing its path
 
     def update(self, speed):
@@ -50,6 +52,9 @@ class Bug(pygame.sprite.Sprite):
                 pygame.quit()
                 sys.exit()
             self.health = 0
+
+        self.mask = pygame.mask.from_surface(self.image)
+
         self.die()
 
     def die(self):
@@ -61,3 +66,5 @@ class Bug(pygame.sprite.Sprite):
             self.rect.x = defaults.windowWidth - XMARG
         if isGiant == True:
             self.rect.x += 121
+
+        self.mask = pygame.mask.from_surface(self.image)

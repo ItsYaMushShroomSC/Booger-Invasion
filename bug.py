@@ -16,7 +16,7 @@ YMARG = defaults.YMARGIN
 class Spider(Bug):
 
     def __init__(self, x, y, row):
-        img = pygame.image.load('spider.png')
+        img = pygame.image.load('spider.png').convert_alpha()
         super().__init__(x, y, row, img, False) # check out supremeBug.py to see what this initializes
         self.name = 'spider'
         self.health = 5
@@ -38,7 +38,7 @@ class Cockroach(Bug):
 
     def __init__(self, x, y, row):
 
-        img = pygame.image.load('cockroach.png')
+        img = pygame.image.load('cockroach.png').convert_alpha()
         super().__init__(x, y, row, img, False)  # check out supremeBug.py to see what this initializes
         self.name = 'cochroach'
         self.health = 8
@@ -60,7 +60,7 @@ class LadyBug(Bug):
 
     def __init__(self, x, y, row):
 
-        img = pygame.image.load('ladybug.png')
+        img = pygame.image.load('ladybug.png').convert_alpha()
         super().__init__(x, y, row, img, False)  # check out supremeBug.py to see what this initializes
         self.name = 'ladybug'
         self.health = 6
@@ -82,7 +82,7 @@ class Wasp(Bug):
 
     def __init__(self, x, y, row):
 
-        img = pygame.transform.flip(pygame.image.load('wasp.png'), True, False)
+        img = pygame.transform.flip(pygame.image.load('wasp.png').convert_alpha(), True, False)
         super().__init__(x, y, row, img, False)  # check out supremeBug.py to see what this initializes
         self.name = 'wasp'
         self.health = 10
@@ -104,7 +104,7 @@ class Ant(Bug):
 
     def __init__(self, x, y, row):
 
-        img = pygame.image.load('ant.png')
+        img = pygame.image.load('ant.png').convert_alpha()
         super().__init__(x, y, row, img, False)  # check out supremeBug.py to see what this initializes
         self.name = 'ant'
         self.health = 6
@@ -128,14 +128,14 @@ class GiantBug(Bug):
         pygame.sprite.Sprite.__init__(self)
         self.name = 'giantbug'
 
-        super().__init__(x, y, row, pygame.transform.scale(pygame.image.load("ant (1).png"), (400,600)), False)  # check out supremeBug.py to see what this initializes
+        super().__init__(x, y, row, pygame.transform.scale(pygame.image.load("ant (1).png").convert_alpha(), (400,600)), False)  # check out supremeBug.py to see what this initializes
         scaleFactor = defaults.scaleFactorH
         if defaults.scaleFactorW < defaults.scaleFactorH:
             scaleFactor = defaults.scaleFactorW
-        self.image = pygame.transform.scale(pygame.image.load("ant (1).png"), (400,600))
+        self.image = pygame.transform.scale(pygame.image.load("ant (1).png").convert_alpha(), (400,600))
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
-        self.health = 100
+        self.health = 200
         self.speed = 6
         self.defaultSpeed = 6
         self.damage = 2

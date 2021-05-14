@@ -13,7 +13,7 @@ class SprayBottle(CleaningSupply):
 
     def __init__(self, row, column, XMARG, YMARG, tileW, tileH):
 
-        super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("spraybottle.png"), (tileW-2, tileH-2)), XMARG, YMARG, tileW, tileH)
+        super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("spraybottle.png").convert_alpha(), (tileW-2, tileH-2)), XMARG, YMARG, tileW, tileH)
 
         self.name = 'spraybottle'
         self.cooldown = 480
@@ -36,7 +36,7 @@ class SprayBottlex2(CleaningSupply):
 
     def __init__(self, row, column, XMARG, YMARG, tileW, tileH):
 
-        super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("doublespraybottle.png"), (tileW-2, tileH-2)), XMARG, YMARG, tileW, tileH)
+        super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("doublespraybottle.png").convert_alpha(), (tileW-2, tileH-2)), XMARG, YMARG, tileW, tileH)
 
         self.name = 'doublespraybottle'
         self.cooldown = 480
@@ -60,7 +60,7 @@ class IceBottle(CleaningSupply):
 
     def __init__(self, row, column, XMARG, YMARG, tileW, tileH):
 
-        super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("icespraybottle.PNG"), (tileW-2,
+        super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("icespraybottle.PNG").convert_alpha(), (tileW-2,
                                                                                                      tileH-2)), XMARG, YMARG, tileW, tileH)
 
         self.name = 'icebottle'
@@ -87,7 +87,7 @@ class Sponge(CleaningSupply):
 
     def __init__(self, row, column, XMARG, YMARG, tileW, tileH):
 
-        super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("sponge.png"), (tileW-2, tileH-2)), XMARG, YMARG, tileW, tileH)
+        super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("sponge.png").convert_alpha(), (tileW-2, tileH-2)), XMARG, YMARG, tileW, tileH)
         self.name = 'sponge'
         self.health = 30
 
@@ -106,7 +106,7 @@ class ThiccSponge(CleaningSupply):
 
     def __init__(self, row, column, XMARG, YMARG, tileW, tileH):
 
-        super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("doublesponge.PNG"), (tileW-2, tileH-2)), XMARG, YMARG, tileW, tileH)
+        super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("doublesponge.PNG").convert_alpha(), (tileW-2, tileH-2)), XMARG, YMARG, tileW, tileH)
         self.name = 'thiccsponge'
         self.health = 100
 
@@ -129,7 +129,7 @@ class Flypaper(CleaningSupply):
 
     def __init__(self, row, column, XMARG, YMARG, tileW, tileH):
 
-        super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("flypaper.png"), (tileW-2, tileH-2)), XMARG, YMARG, tileW, tileH)
+        super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("flypaper.png").convert_alpha(), (tileW-2, tileH-2)), XMARG, YMARG, tileW, tileH)
         self.name = 'flypaper'
         self.health = 1 # when flypaper is stepped on, it will explode
         self.explode = False
@@ -152,7 +152,7 @@ class Flypaper(CleaningSupply):
 
         if self.health <= 0:
             self.explode = True
-            self.image = pygame.transform.smoothscale(pygame.image.load('explosionimg.PNG'), (self.tileW-2, self.tileH-2))
+            self.image = pygame.transform.smoothscale(pygame.image.load('explosionimg.PNG').convert_alpha(), (self.tileW-2, self.tileH-2))
 
 
 #flypaperGroup.add(Flypaper(0, 0))
@@ -162,7 +162,7 @@ class Flypaper(CleaningSupply):
 class SoapDispenser(CleaningSupply):
 
     def __init__(self, row, column, XMARG, YMARG, tileW, tileH):
-        super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("soapdispenser.png"), (tileW-2, tileH-2)), XMARG, YMARG, tileW, tileH)
+        super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("soapdispenser.png").convert_alpha(), (tileW-2, tileH-2)), XMARG, YMARG, tileW, tileH)
         self.name = 'soapdispenser'
 
         self.cooldown = 8000 #8 seconds
@@ -194,7 +194,7 @@ class SoapDispenser(CleaningSupply):
 class DoubleSoapDispenser(CleaningSupply):
 
     def __init__(self, row, column, XMARG, YMARG, tileW, tileH):
-        super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("douplesoapdispenser.PNG"), (tileW-2, tileH-2)), XMARG, YMARG, tileW, tileH)
+        super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("douplesoapdispenser.PNG").convert_alpha(), (tileW-2, tileH-2)), XMARG, YMARG, tileW, tileH)
         self.name = 'doublesoapdispenser'
 
         self.cooldown = 8000 #8 seconds
@@ -226,7 +226,7 @@ class DoubleSoapDispenser(CleaningSupply):
 class BowlCleaner(CleaningSupply):
 
     def __init__(self, row, column, XMARG, YMARG, tileW, tileH):
-        super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("bowlcleaner.png"), (tileW-2, tileH-2)), XMARG, YMARG, tileW, tileH)
+        super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("bowlcleaner.png").convert_alpha(), (tileW-2, tileH-2)), XMARG, YMARG, tileW, tileH)
         self.name = 'bowlcleaner'
 
         self.cooldown = 2400 #15 seconds
@@ -248,8 +248,8 @@ class BowlCleaner(CleaningSupply):
 class ToiletPlunger(CleaningSupply):
 
     def __init__(self, row, column, XMARG, YMARG, tileW, tileH):
-        self.uprightImg = pygame.transform.smoothscale(pygame.image.load('PlungerUpright.png.png'), (tileW - 2, tileH - 2))
-        self.hittingImg = pygame.transform.smoothscale(pygame.image.load('PlungerHitting.png.png'), (tileW * 3 - 2, tileH))
+        self.uprightImg = pygame.transform.smoothscale(pygame.image.load('PlungerUpright.png.png').convert_alpha(), (tileW - 2, tileH - 2))
+        self.hittingImg = pygame.transform.smoothscale(pygame.image.load('PlungerHitting.png.png').convert_alpha(), (tileW * 3 - 2, tileH))
 
         super().__init__(row, column, self.uprightImg, XMARG, YMARG, tileW, tileH)
 
@@ -320,7 +320,7 @@ class AcidPool(CleaningSupply):
 
     def __init__(self, row, column, XMARG, YMARG, tileW, tileH):
 
-        super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("acidpool.PNG"), (tileW-2, tileH-2)), XMARG, YMARG, tileW, tileH)
+        super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("acidpool.PNG").convert_alpha(), (tileW-2, tileH-2)), XMARG, YMARG, tileW, tileH)
         self.name = 'acidpool'
         self.health = 10
 
@@ -328,7 +328,7 @@ class AcidPool(CleaningSupply):
 
         bug.health -= .75
 
-        poisonCloudImg = pygame.transform.smoothscale(pygame.image.load('poison cloud.png'), (self.rect.h, self.rect.w))
+        poisonCloudImg = pygame.transform.smoothscale(pygame.image.load('poison cloud.png').convert_alpha(), (self.rect.h, self.rect.w))
         poisonCloudRect = poisonCloudImg.get_rect()
         poisonCloudRect.midright = self.rect.midright
         left, top = poisonCloudRect.topleft
@@ -340,14 +340,14 @@ class Broom(CleaningSupply):
 
     def __init__(self, row, column, XMARG, YMARG, tileW, tileH):
         super().__init__(row, column,
-                         pygame.transform.smoothscale(pygame.image.load("Broom.png"), (tileW - 2, tileH - 2)), XMARG,
+                         pygame.transform.smoothscale(pygame.image.load("Broom.png").convert_alpha(), (tileW - 2, tileH - 2)), XMARG,
                          YMARG, tileW, tileH)
         self.name = 'broom'
         self.health = 1000 # health doesn't matter because broom is only used once
 
     def updateHealth(self, DISPLAYSURF, bug):
 
-        poisonCloudImg = pygame.transform.smoothscale(pygame.image.load('windSwirl.png'), (self.rect.h, self.rect.w))
+        poisonCloudImg = pygame.transform.smoothscale(pygame.image.load('windSwirl.png').convert_alpha(), (self.rect.h, self.rect.w))
         poisonCloudRect = poisonCloudImg.get_rect()
         poisonCloudRect.midright = self.rect.midright
         left, top = poisonCloudRect.topleft
@@ -362,7 +362,7 @@ class Broom(CleaningSupply):
 class Bleach(CleaningSupply):
 
     def __init__(self, row, column, XMARG, YMARG, tileW, tileH):
-        super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("bleach.png"), (tileW-2, tileH-2)), XMARG, YMARG, tileW, tileH)
+        super().__init__(row, column, pygame.transform.smoothscale(pygame.image.load("bleach.png").convert_alpha(), (tileW-2, tileH-2)), XMARG, YMARG, tileW, tileH)
         self.name = 'bleach'
 
         self.cooldown = 3000
