@@ -82,7 +82,7 @@ class Wasp(Bug):
 
     def __init__(self, x, y, row):
 
-        img = pygame.image.load('wasp.png')
+        img = pygame.transform.flip(pygame.image.load('wasp.png'), True, False)
         super().__init__(x, y, row, img, False)  # check out supremeBug.py to see what this initializes
         self.name = 'wasp'
         self.health = 10
